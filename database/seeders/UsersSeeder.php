@@ -15,9 +15,9 @@ class UsersSeeder extends Seeder
     {
         DB::table('users')->insert([
             'name'=>'Admin',
-            'email'=>'admin@syncwavecrm.com',
+            'email'=>'admin@yourprojectcamp.com',
             'is_employee'=>'2',
-            'password'=> bcrypt('admin@021'),
+            'password'=> bcrypt('yourprojectcamp@021'),
         ]);
     }
 }

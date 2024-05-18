@@ -61,6 +61,7 @@
                                     <option value="6" {{ $data->is_authorized == 6 ? 'selected' : ' ' }}>Paypal</option>
                                     <option value="7" {{ $data->is_authorized == 7 ? 'selected' : ' ' }}>Maverick</option>
                                     <option value="8" {{ $data->is_authorized == 8 ? 'selected' : ' ' }}>Square</option>
+                                    <option value="9" {{ $data->is_authorized == 9 ? 'selected' : ' ' }}>NMI</option>
                                 </select>
                             </div>
                             <div class="col-md-12 form-group mb-3">

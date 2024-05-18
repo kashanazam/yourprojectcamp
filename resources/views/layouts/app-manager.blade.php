@@ -151,19 +151,8 @@
                     <h5 class="modal-title" id="exampleModalCenterTitle-2"> Payment Information </h5>
                 </div>
                 <div class="modal-body">
-                    {{-- <h5 class="mb-1 font-weight-bold">Zelle</h5> --}}
-                    {{-- <p class="mb-0">finance@designared.com</p> --}}
-                    {{-- <hr class="mt-3 mb-3">
-                    <h5 class="mb-1 font-weight-bold">Cash app</h5> --}}
-                    {{-- <p class="mb-0">finance@designared.com</p> --}}
-                    {{-- <hr class="mt-3 mb-3"> --}}
                     <h5 class="mb-1 font-weight-bold">Wire</h5>
-                    {{-- <p class="mb-2">1. Wells Fargo<br>Designared LLC<br>Account # 5166861889<br>Address: 2000 N Collins Street Arlington Tx 76011</p>
-                    <h5 class="mb-1 font-weight-bold">Routing & balance info</h5>
-                    <p>Account number 5166861889<br>Direct deposite & electronic payments 111900659<br>Domestic wire transfers 121000248<br>International wire transfers WFBIUS6S</p>
-                     --}}
-                    <p class="mb-2">1. Bank of America<br>Name: Designared LLC<br>Address: 2800 NE Green oaks BLVD apt 3204 Grand prairie, TX 75050<br>Routing Number: 111000025 (wires-Use this routing number for all incoming wire transfers)<br>Checking Account: 4881 2438 5870</p>
-                    {{-- <p class="mb-2">2. Bank of america<br>Name: RaptorApps LLC<br>Address: 738 Fawn Valley Dr, Allen, TX, 75002<br>Routing Number: 026009593 (wires-Use this routing number for all incoming wire transfers)<br>Checking Account: 488123347657+</p> --}}
+                    <p class="mb-2"></p>
                 </div>
             </div>
         </div>

@@ -1745,7 +1745,7 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: white;
-  background-color: #61d5e4;
+  background-color: #df3c3f;
   border-color: #0076c2;
   }
   .btn-primary:hover {
@@ -3905,7 +3905,7 @@ input[type="button"].btn-block {
 
 .badge-primary {
   color: #fff;
-  background-color: #61d5e4;
+  background-color: #df3c3f;
   }
   .badge-primary[href]:hover, .badge-primary[href]:focus {
     color: #fff;
@@ -7105,7 +7105,7 @@ button.bg-gray-900:focus {
   color: #fff !important; }
 
 .text-primary {
-  color: #61d5e4 !important;
+  color: #df3c3f !important;
 }
 
 a.text-primary:hover, a.text-primary:focus {
@@ -16641,7 +16641,7 @@ a.typo_link.text-gray-900:after {
       .layout-sidebar-large .sidebar-left .navigation-left .nav-item.active {
         color: #663399; }
         .layout-sidebar-large .sidebar-left .navigation-left .nav-item.active .nav-item-hold, .layout-sidebar-large .sidebar-left .navigation-left .nav-item:hover .nav-item-hold {
-          color: #61d5e4;
+          color: #df3c3f;
           }
       .layout-sidebar-large .sidebar-left .navigation-left .nav-item .nav-item-hold {
         display: block;
@@ -16671,7 +16671,7 @@ a.typo_link.text-gray-900:after {
         bottom: 0;
         border-style: solid;
         border-width: 0 0 30px 30px;
-        border-color: transparent transparent #61d5e4 transparent;
+        border-color: transparent transparent #df3c3f transparent;
         }
 
 .layout-sidebar-large .sidebar-left-secondary {
@@ -17759,7 +17759,7 @@ ul.metismenu {
   font-size: 32px; }
 
 .card-icon [class^="i-"], .card-icon .lead {
-  color: #61d5e4;
+  color: #df3c3f;
   }
 
 .card-icon-big .card-body {
@@ -18097,16 +18097,17 @@ html [type="button"],
 
 .btn-primary,
 .btn-outline-primary {
-  border-color: #61d5e4;
+  border-color: #df3c3f;
   }
   .btn-primary .btn-spinner,
   .btn-outline-primary .btn-spinner {
     animation: btn-glow-primary 1s ease infinite; }
   .btn-primary:hover,
   .btn-outline-primary:hover {
-    background: #6bc8df;
-    box-shadow: 0 8px 25px -8px #6bc8df;
-    border-color: #6bc8df; }
+    background: #505f68;
+    box-shadow: 0 8px 25px -8px #505f68;
+    border-color: #505f68;
+    }
   .btn-primary:focus,
   .btn-outline-primary:focus {
     box-shadow: none;

@@ -34,6 +34,8 @@ class Merchant extends Model
             return 'Maverick';
         }elseif($merchant_id == 8){
             return 'Square';
+        }elseif($merchant_id == 9){
+            return 'NMI';
         }
     }
 

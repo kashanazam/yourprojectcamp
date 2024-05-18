@@ -56,6 +56,7 @@
                                     <option value="6">Paypal</option>
                                     <option value="7">Maverick</option>
                                     <option value="8">Square</option>
+                                    <option value="9">NMI</option>
                                 </select>
                             </div>
                             <div class="col-md-12 form-group mb-3">

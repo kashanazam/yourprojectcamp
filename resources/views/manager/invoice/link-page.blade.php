@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <h4 class="font-weight-bold">Invoice Info</h4>
-                                    <p>#{{$_getInvoiceData->invoice_number}}</p>
+                                    <p>{{$_getInvoiceData->invoice_number}}</p>
                                 </div>
                                 <div class="col-md-6 text-sm-right">
                                     <p class="mb-1">

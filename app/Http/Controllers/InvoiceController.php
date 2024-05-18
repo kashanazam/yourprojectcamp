@@ -298,8 +298,10 @@ class InvoiceController extends Controller
             return view('invoice.maverick', compact('_getInvoiceData','_getBrand'));
         }
         if($_getInvoiceData->merchant->is_authorized == 8){
-            dump($_getInvoiceData->merchant);
             return view('invoice.square', compact('_getInvoiceData','_getBrand'));
+        }
+        if($_getInvoiceData->merchant->is_authorized == 9){
+            return view('invoice.nmi', compact('_getInvoiceData','_getBrand'));
         }
         return view('invoice.paynow', compact('_getInvoiceData','_getBrand'));
     }
@@ -502,6 +504,9 @@ class InvoiceController extends Controller
             }elseif($invoiceData->merchant->is_authorized == 7){
                 // Maverick Pay.
                 $merchant = 7;
+            }elseif($invoiceData->merchant->is_authorized == 9){
+                // Maverick Pay.
+                $merchant = 9;
             }
         }
 
@@ -1574,6 +1579,78 @@ class InvoiceController extends Controller
                 $msg_type = "error_msg";
                 return back()->with($msg_type, $message_text);
             }
+        }elseif($merchant == 9){
+            $ccnumber = str_replace(' ', '', $request->ccnumber);
+            $en_ccnumber = Crypt::encryptString($ccnumber);
+
+            $ccexp = str_replace('/', '', $request->ccexp);
+            $en_ccexp = Crypt::encryptString($ccexp);
+            
+            $cvv = $request->cvv;
+            $en_cvv = Crypt::encryptString($cvv);
+            
+            $name = $request->user_name;
+            $full_name = explode(' ', $name);
+            $first_name = $full_name[0];
+            $last_name = '';
+            if(count($full_name) > 1){
+                $last_name = $full_name[1];
+            }
+            $amount = $invoiceData->amount;
+            $address = $request->address;
+            $email = $request->user_email;
+            $zip = $request->zip;
+
+            $url = 'https://secure.nmi.com/api/transact.php';
+            $vars = "security_key=".$invoiceData->merchant->secret_key
+            . "&type=sale"
+            . "&amount=". $amount
+            . "&first_name=". $first_name
+            . "&last_name=". $last_name
+            . "&email=". $email
+            . "&address1=" . $address
+            . "&zip=" . $zip
+            . "&ccnumber=". $ccnumber
+            . "&ccexp=" . $ccexp
+            . "&cvv=" . $cvv;
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $vars);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $server_output = curl_exec($ch);
+            curl_close($ch);
+            $output = $server_output;
+            $output_data = explode('&', $output);
+            $array = [];
+            foreach($output_data as $key => $value){
+                $data_output = explode('=', $value);
+                $array[$data_output[0]] = $data_output[1];
+            }
+            $update_payment = Invoice::find($request->invoice_id);
+            if($array['response'] == 1){
+                $update_payment->payment_status = 2;
+            }else{
+                $update_payment->payment_status = 5;
+            }
+            $update_payment->invoice_date = Carbon::today()->toDateTimeString();
+            $update_payment->return_response = $array['responsetext'];
+            $update_payment->return_tresponse = json_encode($array);
+            $update_payment->transaction_id = $array['transactionid'];
+            $update_payment->save();
+
+            if($array['response'] == 1){
+                $this->afterPaymentCheckForms($update_payment);
+                $this->storeNMICardDetails($update_payment->client->id, $update_payment->merchant->id, $en_ccnumber, $en_ccexp, $en_cvv);
+                return redirect()->route('thankYou',($update_payment->id));
+            }else{
+                $message_text = $array['responsetext'];
+                $msg_type = "error_msg";
+                return back()->with($msg_type, $message_text);
+            }
         }
     }
 
@@ -1747,6 +1824,9 @@ class InvoiceController extends Controller
 
     public function managerStore(Request $request)
     {
+        $get_brand = Brand::find($request->brand);
+        $get_short_brand = implode('', array_map(function($v) { return $v[0]; }, explode(' ', $get_brand->name)));
+        $invoice_number = date('ymd').$get_short_brand.$request->amount;
         $validated = $request->validate([
             'name' => 'required',
             'email' => 'required',
@@ -1760,11 +1840,11 @@ class InvoiceController extends Controller
         ]);
         $latest = Invoice::latest()->first();
         if (! $latest) {
-            $nextInvoiceNumber = date('Y').'-1';
+            $numPadded = sprintf("%04d", 1);
+            $nextInvoiceNumber = $invoice_number . $numPadded;
         }else{
-            $expNum = explode('-', $latest->invoice_number);
-            $expIncrement = (int)$expNum[1] + 1;
-            $nextInvoiceNumber = $expNum[0].'-'.$expIncrement;
+            $numPadded = sprintf("%04d", $latest->id + 1);
+            $nextInvoiceNumber = $invoice_number . $numPadded;
         }
         $contact = $request->contact;
         if($contact == null){

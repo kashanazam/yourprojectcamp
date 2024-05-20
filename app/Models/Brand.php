@@ -10,7 +10,7 @@ class Brand extends Model
     use HasFactory;
 
     protected $table = 'brands';
-    protected $fillable = ['name', 'url', 'status', 'logo', 'auth_key', 'phone', 'phone_tel', 'email', 'address', 'address_link', 'sign'];
+    protected $fillable = ['name', 'url', 'status', 'logo', 'auth_key', 'phone', 'phone_tel', 'email', 'address', 'address_link', 'sign', 'opt_hide'];
 
     public function user()
     {
@@ -19,6 +19,10 @@ class Brand extends Model
 
     public function services(){
         return $this->hasMany(Service::class);
+    }
+
+    public function merchants(){
+        return $this->belongsToMany(Merchant::class);
     }
 
 }

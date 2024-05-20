@@ -68,6 +68,21 @@
                                 <option value="£">£ - Euro</option>
                             </select>
                         </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label for="merchant">Select Merchant<span>*</span></label>
+                            <select name="merchant[]" id="merchant" class="form-control select2" required multiple>
+                                @foreach ($merchant as $key => $value)
+                                <option value="{{ $value->id }}" {{ isset($data) && in_array($value->id, $data->merchants()->pluck('merchant_id')->toArray()) ? 'selected' : '' }}>{{ $value->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2 form-group mb-3">
+                            <label for="opt_hide">Option to Hide<span>*</span></label>
+                            <select name="opt_hide" id="opt_hide" class="form-control" required>
+                                <option value="0" {{ $data->opt_hide == 0 ? 'selected' : '' }}>NO</option>
+                                <option value="1" {{ $data->opt_hide == 1 ? 'selected' : '' }}>YES</option>
+                            </select>
+                        </div>
                         <div class="col-md-12">
                             <button class="btn btn-primary" type="submit">Update Brand</button>
                         </div>

@@ -56,4 +56,8 @@ class Merchant extends Model
             return '';
         }
     }
+
+    public function brands(){
+        return $this->belongsToMany(Brand::class);
+    }
 }

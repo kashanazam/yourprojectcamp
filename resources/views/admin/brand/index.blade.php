@@ -59,6 +59,21 @@
                                 <option value="£">£ - Euro</option>
                             </select>
                         </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label for="merchant">Select Merchant<span>*</span></label>
+                            <select name="merchant[]" id="merchant" class="form-control select2" required multiple>
+                                @foreach ($merchant as $key => $value)
+                                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2 form-group mb-3">
+                            <label for="opt_hide">Option to Hide<span>*</span></label>
+                            <select name="opt_hide" id="opt_hide" class="form-control" required>
+                                <option value="0">NO</option>
+                                <option value="1">YES</option>
+                            </select>
+                        </div>
                         <div class="col-md-12">
                             <button class="btn btn-primary" type="submit">Save Brand</button>
                         </div>
@@ -82,9 +97,9 @@
                                 <th>ID</th>
                                 <th>Image</th>
                                 <th>Name</th>
-                                <th>Phone</th>
-                                <th>Email</th>
+                                <th>Phone/Email</th>
                                 <th>Url</th>
+                                <th>Merchant</th>
                                 <th>Auth Key</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -96,9 +111,13 @@
                                 <td>{{$datas->id}}</td>
                                 <td><img src="{{ asset($datas->logo)}}" width="100"></td>
                                 <td><a href="{{ route('brand.show', $datas->id) }}">{{$datas->name}}</a></td>
-                                <td>{{$datas->phone}}</td>
-                                <td>{{$datas->email}}</td>
+                                <td>{{$datas->phone}}<br>{{$datas->email}}</td>
                                 <td>{{$datas->url}}</td>
+                                <td>
+                                    @foreach ($datas->merchants as $merchant)
+                                    <button class="btn btn-secondary btn-sm">{{ $merchant->name }}</button>
+                                    @endforeach
+                                </td>
                                 <td><button class="btn btn-sm btn-info" onclick="authKeyFunction(this)"><input type="hidden" value="{{$datas->auth_key}}">Copy</button></td>
                                 <td>
                                 @if($datas->status == 1)
@@ -124,9 +143,9 @@
                                 <th>ID</th>
                                 <th>Image</th>
                                 <th>Name</th>
-                                <th>Phone</th>
-                                <th>Email</th>
+                                <th>Phone/Email</th>
                                 <th>Url</th>
+                                <th>Merchant</th>
                                 <th>Auth Key</th>
                                 <th>Status</th>
                                 <th>Action</th>

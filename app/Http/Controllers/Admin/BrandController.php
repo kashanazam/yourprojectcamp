@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
+use App\Models\Merchant;
 use App\Models\Client;
 use App\Models\Invoice;
 use App\Models\Project;
@@ -21,7 +22,8 @@ class BrandController extends Controller
     public function index()
     {
         $data = Brand::all();
-        return view('admin.brand.index', compact('data'));
+        $merchant = Merchant::where('status', 1)->get();
+        return view('admin.brand.index', compact('data', 'merchant'));
     }
 
     /**
@@ -54,6 +56,8 @@ class BrandController extends Controller
             'sign' => 'required'
         ]);
 
+        $merchants = $request->merchant;
+
         $request->request->add(['auth_key' => sha1(time())]);
         if($request->has('image')){
             $file = $request->file('image');
@@ -62,7 +66,9 @@ class BrandController extends Controller
             $path = 'uploads/brands/'.$name;
             $request->request->add(['logo' => $path]);
         }
-        Brand::create($request->all());
+        $brand = Brand::create($request->all());
+        $brand->merchants()->attach($merchants);
+        
         return redirect()->route('brand.index')->with('success','Brand created Successfully.');
     }
 
@@ -91,7 +97,8 @@ class BrandController extends Controller
     public function edit($id)
     {
         $data = Brand::find($id);
-        return view('admin.brand.edit', compact('data'));
+        $merchant = Merchant::where('status', 1)->get();
+        return view('admin.brand.edit', compact('data', 'merchant'));
     }
 
     /**
@@ -113,6 +120,7 @@ class BrandController extends Controller
             'address_link' => 'required',
             'sign' => 'required'
         ]);
+        $merchants = $request->merchant;
         if($request->has('image')){
             $file = $request->file('image');
             $name = $file->getClientOriginalName();
@@ -125,6 +133,7 @@ class BrandController extends Controller
            } 
         }
         $brand->update($request->all());
+        $brand->merchants()->sync($merchants);
         return redirect()->route('brand.edit', $brand->id)->with('success','Brand Updated Successfully.');
     }
 

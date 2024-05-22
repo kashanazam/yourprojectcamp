@@ -20,7 +20,7 @@ class Client extends Model
     }
 
     public function added_by(){
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'assign_id');
     }
 
 

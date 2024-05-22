@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\InvoiceController;
 use App\Models\Client;
 use App\Models\Brand;
 use App\Models\User;
@@ -24,6 +25,9 @@ use Illuminate\Http\Request;
 use Auth;
 use DB;
 use App\Notifications\AssignProjectNotification;
+use Mail;
+use App\Mail\WelcomeEmail;
+use Carbon\Carbon;
 
 class AdminClientController extends Controller
 {
@@ -34,6 +38,7 @@ class AdminClientController extends Controller
      */
     public function index(Request $request)
     {
+
         $data = new Client;
         $data = $data->orderBy('id', 'desc');
         if($request->name != ''){
@@ -293,50 +298,22 @@ class AdminClientController extends Controller
         $user->is_employee = 3;
         $user->client_id = $id;
         $user->save();
+        $client->user_id = $user->id;
+        $client->save();
         foreach($invoices as $invoice){
-            $service_array = explode(',', $invoice->service);
-            for($i = 0; $i < count($service_array); $i++){
-                $service = Service::find($service_array[$i]);
-                if($service->form == 1){
-                    // Logo Form
-                    $logo_form = new LogoForm();
-                    $logo_form->invoice_id = $invoice->id;
-                    $logo_form->user_id = $user->id;
-                    $logo_form->agent_id = $invoice->sales_agent_id;
-                    $logo_form->save();
-                }elseif($service->form == 2){
-                    // Website Form
-                    $web_form = new WebForm();
-                    $web_form->invoice_id = $invoice->id;
-                    $web_form->user_id = $user->id;
-                    $web_form->agent_id = $invoice->sales_agent_id;
-                    $web_form->save();
-                }elseif($service->form == 3){
-                    // Smm Form
-                    $smm_form = new SmmForm();
-                    $smm_form->invoice_id = $invoice->id;
-                    $smm_form->user_id = $user->id;
-                    $smm_form->agent_id = $invoice->sales_agent_id;
-                    $smm_form->save();
-                }elseif($service->form == 4){
-                    // Content Writing Form
-                    $content_writing_form = new ContentWritingForm();
-                    $content_writing_form->invoice_id = $invoice->id;
-                    $content_writing_form->user_id = $user->id;
-                    $content_writing_form->agent_id = $invoice->sales_agent_id;
-                    $content_writing_form->save();
-                }elseif($service->form == 5){
-                    // Search Engine Optimization Form
-                    $seo_form = new SeoForm();
-                    $seo_form->invoice_id = $invoice->id;
-                    $seo_form->user_id = $user->id;
-                    $seo_form->agent_id = $invoice->sales_agent_id;
-                    $seo_form->save();
-                }
-
-
-            }
+            $invoice_controller = new InvoiceController;
+            $invoice_controller->afterPaymentCheckForms($invoice->id);
         }
+        $send_email_data = [
+            'logo' => asset('global/img/logo.png'),
+            'current_date' => Carbon::now(),
+            'heading' => 'Welcome to ' . env('APP_NAME') . '.',
+            'content' => 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.',
+            'company_email' => env('APP_EMAIL'),
+            'link' => '<p>Please Login with your email ' . $client->email . '. <a href="'.env('APP_URL').'">Click Here</a></p>',
+            'email' => 'daniyalbutt785@gmail.com'
+        ];
+        Mail::to($client->email)->send(new WelcomeEmail($send_email_data, 'Welcome to ' . env('APP_NAME')));
         return response()->json(['success' => true , 'message' => 'Login Created']);
     }
 

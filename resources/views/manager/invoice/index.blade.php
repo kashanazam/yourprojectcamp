@@ -79,7 +79,7 @@
                             @foreach($data as $datas)
                             <tr>
                                 <td>
-                                    <span class="btn btn-sm btn-dark">#{{ $datas->invoice_number }}</span>
+                                    <span class="btn btn-sm btn-dark">{{ $datas->invoice_number }}</span>
                                 </td>
                                 <td>
                                     @if($datas->package == 0)

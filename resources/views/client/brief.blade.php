@@ -51,7 +51,7 @@
                     @foreach($data as $key => $forms)
                     <li class="nav-item {{ (($forms->option == '') || ($forms->option == null) ? 'active' : '') }}">
                         <a class="nav-link {{ $count==0 ? 'active' : ''}}" id="form-brief-tab-{{$forms->invoice->invoice_number}}-{{$key}}" data-toggle="tab" href="#form-brief-{{$forms->invoice->invoice_number}}-{{$key}}" role="tab" aria-controls="form-brief-{{$forms->invoice->invoice_number}}-{{$key}}" aria-selected="true">
-                            {{$forms->form_name}} Brief <span>INV#{{$forms->invoice->invoice_number}}</span>
+                            {{$forms->form_name}} Brief <span>INV# {{$forms->invoice->invoice_number}}</span>
                         </a>
                     </li>
                     @php

@@ -109,7 +109,7 @@ class ClientController extends Controller
             'status' => 'required',
             'brand_id' => 'required',
         ]);
-        $request->request->add(['user_id' => auth()->user()->id]);
+        $request->request->add(['assign_id' => auth()->user()->id]);
         $client = Client::create($request->all());
         return redirect()->route('client.generate.payment', $client->id);
     }
@@ -122,7 +122,7 @@ class ClientController extends Controller
             'status' => 'required',
             'brand_id' => 'required',
         ]);
-        $request->request->add(['user_id' => auth()->user()->id]);
+        $request->request->add(['assign_id' => auth()->user()->id]);
         $client = Client::create($request->all());
         return redirect()->route('manager.generate.payment', $client->id);
     }

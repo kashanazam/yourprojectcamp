@@ -1663,111 +1663,147 @@ class InvoiceController extends Controller
     }
 
     public function afterPaymentCheckForms($get_invoice){
+        $get_invoice = Invoice::find($get_invoice);
         $user = Client::where('email', $get_invoice->client->email)->first();
         $user_client = User::where('email', $get_invoice->client->email)->first();
-        if($user_client == null){
-            $data = new User();
-            $data->name = $get_invoice->client->name . ' ' . $get_invoice->client->last_name;
-            $data->email = $get_invoice->client->email;
-            $data->is_employee = 3;
-            $data->client_id = $user->id;
-            $data->password = Hash::make(Str::random(15));
-            $data->save();
-            $user_client = User::find($data->id);
-        }
 
-
-        if($user_client != null){
-            $no_form = new NoForm();
-            $no_form->name = $get_invoice->custom_package;
-            $no_form->invoice_id = $get_invoice->id;
-
-            if($user_client != null){
-                $no_form->user_id = $user_client->id;
+        $service_array = explode(',', $get_invoice->service);
+        for($i = 0; $i < count($service_array); $i++){
+            $service = Service::find($service_array[$i]);
+            if($service->form == 0){
+                //No Form
+                if($get_invoice->createform == 1){
+                    $no_form = new NoForm();
+                    $no_form->name = $get_invoice->custom_package;
+                    $no_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $no_form->user_id = $user_client->id;
+                    }
+                    $no_form->client_id = $user->id;
+                    $no_form->agent_id = $get_invoice->sales_agent_id;
+                    $no_form->save();
+                }
+            }elseif($service->form == 1){
+                // Logo Form
+                if($get_invoice->createform == 1){
+                    $logo_form = new LogoForm();
+                    $logo_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $logo_form->user_id = $user_client->id;
+                    }
+                    $logo_form->client_id = $user->id;
+                    $logo_form->agent_id = $get_invoice->sales_agent_id;
+                    $logo_form->save();
+                }
+            }elseif($service->form == 2){
+                // Website Form
+                if($get_invoice->createform == 1){
+                    $web_form = new WebForm();
+                    $web_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $web_form->user_id = $user_client->id;
+                    }
+                    $web_form->client_id = $user->id;
+                    $web_form->agent_id = $get_invoice->sales_agent_id;
+                    $web_form->save();
+                }
+            }elseif($service->form == 3){
+                // Smm Form
+                if($get_invoice->createform == 1){
+                    $smm_form = new SmmForm();
+                    $smm_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $smm_form->user_id = $user_client->id;
+                    }
+                    $smm_form->client_id = $user->id;
+                    $smm_form->agent_id = $get_invoice->sales_agent_id;
+                    $smm_form->save();
+                }
+            }elseif($service->form == 4){
+                // Content Writing Form
+                if($get_invoice->createform == 1){
+                    $content_writing_form = new ContentWritingForm();
+                    $content_writing_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $content_writing_form->user_id = $user_client->id;
+                    }
+                    $content_writing_form->client_id = $user->id;
+                    $content_writing_form->agent_id = $get_invoice->sales_agent_id;
+                    $content_writing_form->save();
+                }
+            }elseif($service->form == 5){
+                // Search Engine Optimization Form
+                if($get_invoice->createform == 1){
+                    $seo_form = new SeoForm();
+                    $seo_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $seo_form->user_id = $user_client->id;
+                    }
+                    $seo_form->client_id = $user->id;
+                    $seo_form->agent_id = $get_invoice->sales_agent_id;
+                    $seo_form->save();
+                }
+            }elseif($service->form == 6){
+                // Book Formatting & Publishing
+                if($get_invoice->createform == 1){
+                    $book_formatting_form = new BookFormatting();
+                    $book_formatting_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $book_formatting_form->user_id = $user_client->id;
+                    }
+                    $book_formatting_form->client_id = $user->id;
+                    $book_formatting_form->agent_id = $get_invoice->sales_agent_id;
+                    $book_formatting_form->save();
+                }
+            }elseif($service->form == 7){
+                // Book Formatting & Publishing
+                if($get_invoice->createform == 1){
+                    $book_writing_form = new BookWriting();
+                    $book_writing_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $book_writing_form->user_id = $user_client->id;
+                    }
+                    $book_writing_form->client_id = $user->id;
+                    $book_writing_form->agent_id = $get_invoice->sales_agent_id;
+                    $book_writing_form->save();
+                }
+            }elseif($service->form == 8){
+                // Author Website
+                if($get_invoice->createform == 1){
+                    $author_website_form = new AuthorWebsite();
+                    $author_website_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $author_website_form->user_id = $user_client->id;
+                    }
+                    $author_website_form->client_id = $user->id;
+                    $author_website_form->agent_id = $get_invoice->sales_agent_id;
+                    $author_website_form->save();
+                }
+            }elseif($service->form == 9){
+                // Proofreading
+                if($get_invoice->createform == 1){
+                    $proofreading_form = new Proofreading();
+                    $proofreading_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $proofreading_form->user_id = $user_client->id;
+                    }
+                    $proofreading_form->client_id = $user->id;
+                    $proofreading_form->agent_id = $get_invoice->sales_agent_id;
+                    $proofreading_form->save();
+                }
+            }elseif($service->form == 10){
+                // Book Cover
+                if($get_invoice->createform == 1){
+                    $bookcover_form = new BookCover();
+                    $bookcover_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $bookcover_form->user_id = $user_client->id;
+                    }
+                    $bookcover_form->client_id = $user->id;
+                    $bookcover_form->agent_id = $get_invoice->sales_agent_id;
+                    $bookcover_form->save();
+                }
             }
-            $no_form->client_id = $user->id;
-            $no_form->agent_id = $get_invoice->sales_agent_id;
-            $no_form->save();
-
-            // $service_array = explode(',', $get_invoice->service);
-            // for($i = 0; $i < count($service_array); $i++){
-            //     $service = Service::find($service_array[$i]);
-            //     if($service->form == 0){
-            //         //No Form
-            //         if($get_invoice->createform == 1){
-            //             $no_form = new NoForm();
-            //             $no_form->name = $get_invoice->custom_package;
-            //             $no_form->invoice_id = $get_invoice->id;
-
-            //             if($user_client != null){
-            //                 $no_form->user_id = $user_client->id;
-            //             }
-            //             $no_form->client_id = $user->id;
-            //             $no_form->agent_id = $get_invoice->sales_agent_id;
-            //             $no_form->save();
-            //         }
-            //     }elseif($service->form == 1){
-            //         // Logo Form
-            //         if($get_invoice->createform == 1){
-            //             $logo_form = new LogoForm();
-            //             $logo_form->invoice_id = $get_invoice->id;
-            //             if($user_client != null){
-            //                 $logo_form->user_id = $user_client->id;
-            //             }
-            //             $logo_form->client_id = $user->id;
-            //             $logo_form->agent_id = $get_invoice->sales_agent_id;
-            //             $logo_form->save();
-            //         }
-            //     }elseif($service->form == 2){
-            //         // Website Form
-            //         if($get_invoice->createform == 1){
-            //             $web_form = new WebForm();
-            //             $web_form->invoice_id = $get_invoice->id;
-            //             if($user_client != null){
-            //                 $web_form->user_id = $user_client->id;
-            //             }
-            //             $web_form->client_id = $user->id;
-            //             $web_form->agent_id = $get_invoice->sales_agent_id;
-            //             $web_form->save();
-            //         }
-            //     }elseif($service->form == 3){
-            //         // Smm Form
-            //         if($get_invoice->createform == 1){
-            //             $smm_form = new SmmForm();
-            //             $smm_form->invoice_id = $get_invoice->id;
-            //             if($user_client != null){
-            //                 $smm_form->user_id = $user_client->id;
-            //             }
-            //             $smm_form->client_id = $user->id;
-            //             $smm_form->agent_id = $get_invoice->sales_agent_id;
-            //             $smm_form->save();
-            //         }
-            //     }elseif($service->form == 4){
-            //         // Content Writing Form
-            //         if($get_invoice->createform == 1){
-            //             $content_writing_form = new ContentWritingForm();
-            //             $content_writing_form->invoice_id = $get_invoice->id;
-            //             if($user_client != null){
-            //                 $content_writing_form->user_id = $user_client->id;
-            //             }
-            //             $content_writing_form->client_id = $user->id;
-            //             $content_writing_form->agent_id = $get_invoice->sales_agent_id;
-            //             $content_writing_form->save();
-            //         }
-            //     }elseif($service->form == 5){
-            //         // Search Engine Optimization Form
-            //         if($get_invoice->createform == 1){
-            //             $seo_form = new SeoForm();
-            //             $seo_form->invoice_id = $get_invoice->id;
-            //             if($user_client != null){
-            //                 $seo_form->user_id = $user_client->id;
-            //             }
-            //             $seo_form->client_id = $user->id;
-            //             $seo_form->agent_id = $get_invoice->sales_agent_id;
-            //             $seo_form->save();
-            //         }
-            //     }
-            // }
         }
 
         $customerName = $get_invoice->client->name . ' ' . $get_invoice->client->last_name;
@@ -1851,12 +1887,7 @@ class InvoiceController extends Controller
             $contact = '#';
         }
 		$invoice = new Invoice;
-        if($request->createform != null){
-            $invoice->createform = $request->createform;
-        }else{
-            $invoice->createform = 1;
-        }
-
+        $invoice->createform = $request->createform;
         $invoice->name = $request->name;
         $invoice->email = $request->email;
         $invoice->contact = $contact;
@@ -2206,30 +2237,10 @@ class InvoiceController extends Controller
         $invoice->payment_status = 2;
         $user = Client::where('email', $invoice->client->email)->first();
         $user_client = User::where('email', $invoice->client->email)->first();
-
-        if($user_client == null){
-            $data = new User();
-            $data->name = $invoice->client->name . ' ' . $invoice->client->last_name;
-            $data->email = $invoice->client->email;
-            $data->is_employee = 3;
-            $data->client_id = $user->id;
-            $data->password = Hash::make(Str::random(15));
-            $data->save();
-            $user_client = User::find($data->id);
-        }
-        
-        if($user_client != null){
-            $no_form = new NoForm();
-            $no_form->name = $invoice->custom_package;
-            $no_form->invoice_id = $invoice->id;
-            if($user_client != null){
-                $no_form->user_id = $user_client->id;
-            }
-            $no_form->client_id = $user->id;
-            $no_form->agent_id = $invoice->sales_agent_id;
-            $no_form->save();
-        }
         $invoice->save();
+        if($user_client != null){
+            $this->afterPaymentCheckForms($invoice->id);
+        }
         return redirect()->back()->with('success','Invoice# ' . $invoice->invoice_number . ' Mark as Paid.');
     }
 
@@ -2322,4 +2333,5 @@ class InvoiceController extends Controller
         $invoice->save();
         return redirect()->route('sale.link',($invoice->id));
     }
+    
 }

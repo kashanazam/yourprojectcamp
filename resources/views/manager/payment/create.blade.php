@@ -31,7 +31,7 @@
                                 <label for="contact">Contact</label>
                                 <input type="text" id="contact" class="form-control" value="{{ $user->contact }}" placeholder="Contact" name="contact">
                             </div>
-                            <div class="col-md-4 form-group mb-3">
+                            <div class="col-md-3 form-group mb-3">
                                 <label for="brand">Brand Name <span>*</span></label>
                                 <select name="brand" id="brand" class="form-control select2" required>
                                     <option value="">Select Brand</option>
@@ -48,21 +48,21 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4 form-group mb-3">
+                            <div class="col-md-3 form-group mb-3">
                                 <label for="package">Package <span>*</span></label>
                                 <select name="package" id="package" class="form-control" required>
                                     <option value="">Select Package</option>
                                     <option value="0" selected>Custom Package</option>
                                 </select>
                             </div>
-                            {{-- <div class="col-md-3 form-group mb-3">
+                            <div class="col-md-2 form-group mb-3">
                                 <label for="createform">Create form of Service <span>*</span></label>
                                 <select name="createform" id="createform" class="form-control" required>
                                     <option value="">Select Option</option>
                                     <option value="1">YES</option>
                                     <option value="0">NO</option>
                                 </select>
-                            </div> --}}
+                            </div>
                             <div class="col-md-3 form-group mb-3">
                                 <label for="custom_package">Name for a Custom Package</label>
                                 <input type="text" id="custom_package" class="form-control" value="" placeholder="Custom Package Name" name="custom_package">

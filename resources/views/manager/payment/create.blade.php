@@ -34,7 +34,6 @@
                             <div class="col-md-3 form-group mb-3">
                                 <label for="brand">Brand Name <span>*</span></label>
                                 <select name="brand" id="brand" class="form-control select2" required>
-                                    <option value="">Select Brand</option>
                                     @foreach($brand as $brands)
                                     <option value="{{ $brands->id }}" {{ $brands->id == $user->brand_id ? 'selected' : '' }}>{{ $brands->name }} - {{ $brands->url }}</option>
                                     @endforeach
@@ -90,9 +89,8 @@
                             <div class="col-md-3 form-group mb-3">
                                 <label for="merchant">Merchant<span>*</span></label>
                                 <select name="merchant" id="merchant" class="form-control" required>
-                                    <option value="">Select Merchant</option>
-                                    @foreach($merchant as $key => $merchants)
-                                    <option value="{{ $merchants->id }}">{{ $merchants->name }}</option>
+                                    @foreach($brand[0]->merchants as $key => $merchants)
+                                    <option value="{{ $merchants->id }}" {{ $key == 0 ? 'selected' : '' }}>{{ $merchants->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -117,25 +115,33 @@
         </div>
     </div>
 </div>
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @push('scripts')
 <script>
-    // $( "#brand" ).change(function() {
-    //     if($(this).val() != ''){
-    //         $.getJSON("{{ url('service-list') }}/"+ $(this).val(), function(jsonData){
-    //             console.log(jsonData);
-    //             select = '';
-    //             $.each(jsonData, function(i,data)
-    //             {
-    //                 select +='<option value="'+data.id+'">'+data.name+'</option>';
-    //             });
-    //             $("#service").html(select);
-    //         });
-    //     }else{
-    //         $("#service").html('');
-    //     }
-    // });
+    $('#brand').change(function(){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('manager.brands.merchant') }}",
+            dataType : 'json',
+            data: {
+                id: $(this).val()
+            },
+            success: function(data) {
+                var html = '';
+                var data = data.data;
+                for(var i = 0; i < data.length; i++){
+                    html += '<option value="'+data[i].id+'">'+ data[i].name +'</option>';
+                }
+                $('#merchant').html(html);
+            }
+        });
+    });
 </script>
 @endpush

@@ -147,4 +147,9 @@ class BrandController extends Controller
     {
         //
     }
+
+    public function brandMerchant(Request $request){
+        $merchant = Brand::find($request->id)->merchants;
+        return response()->json(['data' => $merchant]);
+    }
 }

@@ -298,5 +298,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('manager/notification', [HomeController::class, 'managerNotification'])->name('manager.notification');
         Route::post('manager/payment/auto', [InvoiceController::class, 'managerPaymentAuto'])->name('manager.payment.auto');
         Route::post('manager/payment/paybynmi', [InvoiceController::class, 'managerPaymentPaybynmi'])->name('manager.payment.paybynmi');
+        Route::post('brands/merchant', [BrandController::class, 'brandMerchant'])->name('manager.brands.merchant');
     });
 });

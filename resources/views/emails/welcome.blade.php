@@ -8,19 +8,13 @@
         <th style="text-align:right;font-weight:400;">{{ $mailData['current_date'] }}</th>
       </tr>
     </thead>
-    <h1>{{$mailData['heading']}}</h1>
+    <h2>{{$mailData['heading']}}</h2>
     <tbody>
       <tr>
         <td style="height:15px;"></td>
       </tr>
       <tr>
           {!!$mailData['content']!!}
-      </tr>
-      <tr>
-        <td style="height:15px;"></td>
-      </tr>
-      <tr>
-        {!!$mailData['link']!!}
       </tr>
       <tr>
         <td style="height:35px;"></td>
@@ -30,8 +24,8 @@
     <tfooter>
       <tr>
         <td colspan="2" style="font-size:14px;padding:50px 15px 0 15px;">
-          <strong style="display:block;margin:0 0 10px 0;">Regards</strong>{{ env('APP_NAME') }}<br>
-          <b>Email:</b>{{$mailData['company_email']}}
+          <strong style="display:block;margin:0 0 10px 0;">Best regards,<br>
+          {{$mailData['brand_name']}} Support Team
         </td>
       </tr>
     </tfooter>

@@ -307,13 +307,12 @@ class AdminClientController extends Controller
         $send_email_data = [
             'logo' => asset('global/img/logo.png'),
             'current_date' => Carbon::now(),
-            'heading' => 'Welcome to ' . env('APP_NAME') . '.',
-            'content' => 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.',
+            'heading' => 'Welcome to ' . env('APP_NAME') . ' – Access Your Projects Today!',
+            'content' => '<p>Dear '. $client->name . ' ' . $client->last_name .'</p><p>Welcome to '.env('APP_NAME').'!</p><p>We are thrilled to have you on board. YourProjectCamp is designed to give you seamless access and comprehensive oversight of your projects. To get started, we have set up your account with the following credentials:</p><p><b>Username:</b> '.$client->email.'<br><b>Password:</b> ' . $pass . '</p><p>You can log in using the credentials above at the following link: <a href="https://yourprojectcamp.com/">https://yourprojectcamp.com/</a></p><br><p>Once logged in, please follow these steps to get started:</p><ul><li><p>You will see a couple of forms related to the services you have opted for. Please fill these out to ensure we have all the necessary information.</p></li><li><p>A dedicated project manager will reach out to you in due course to further guide you through the process and help you manage your project better.</p></li></ul><p>Thank you for choosing ' . $client->brand->name . '. We look forward to supporting your needs and helping make your project a success story.</p>',
             'company_email' => env('APP_EMAIL'),
-            'link' => '<p>Please Login with your email ' . $client->email . '. <a href="'.env('APP_URL').'">Click Here</a></p>',
-            'email' => 'daniyalbutt785@gmail.com'
+            'brand_name' => $client->brand->name
         ];
-        Mail::to($client->email)->send(new WelcomeEmail($send_email_data, 'Welcome to ' . env('APP_NAME')));
+        Mail::to($client->email)->send(new WelcomeEmail($send_email_data, 'Welcome to ' . env('APP_NAME') . ' – Access Your Projects Today!'));
         return response()->json(['success' => true , 'message' => 'Login Created']);
     }
 

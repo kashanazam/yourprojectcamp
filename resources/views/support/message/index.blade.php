@@ -9,6 +9,15 @@
         margin-bottom: 30px;
     }
     .ul-widget3-body p {margin-bottom: 4px;}
+
+    .loader {
+        text-align: center;
+        display: none;
+    }
+
+    .loader img {
+        width: 30px;
+    }
 </style>
 @endpush
 @section('content')
@@ -122,6 +131,9 @@
                         <button type="submit" class="btn btn-primary w-100">
                         <i class="la la-check-square-o"></i> Send Message
                         </button>
+                        <div class="loader">
+                            <img src="{{ asset('newglobal/images/loader.gif') }}" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -153,7 +165,7 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.9.2/ckeditor.js" integrity="sha512-OF6VwfoBrM/wE3gt0I/lTh1ElROdq3etwAquhEm2YI45Um4ird+0ZFX1IwuBDBRufdXBuYoBb0mqXrmUA2VnOA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('newglobal/js/image-uploader.min.js') }}"></script>
 <script>
     $(document).ready(function(){
@@ -235,6 +247,7 @@ function Clicked_h_btnAddFileUploadControl() {
     }
 
     $('#message-post').submit(function(){
+        $(this).find('.loader').show();
         $(this).find('.btn-primary').hide();
     })
 </script>

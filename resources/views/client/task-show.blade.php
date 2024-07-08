@@ -1,4 +1,5 @@
 @extends('layouts.app-client')
+@section('title', 'Message')
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css" integrity="sha512-6qkvBbDyl5TDJtNJiC8foyEVuB6gxMBkrKy67XpqnIDxyvLLPJzmTjAj1dRJfNdmXWqD10VbJoeN4pOQqDwvRA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.4.2/css/all.min.css" integrity="sha512-NicFTMUg/LwBeG8C7VG+gC4YiiRtQACl98QdkmfsLy37RzXdkaUAuPyVMND0olPP4Jn8M/ctesGSB2pgUBDRIw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -82,10 +83,17 @@
     .message-box-wrapper .card-body {
         padding: 15px;
     }
+    .loader img {
+        width: 20px;
+    }
+
+    .loader {
+        text-align: center;
+        display: none;
+    }
 </style>
 @endpush
 @section('content')
-
 <div class="breadcrumb">
     <h1 class="mr-2">Messages</h1>
     <button class="btn btn-primary ml-auto" id="write-message">Write A Message</button>
@@ -156,7 +164,7 @@
 
 <div class="left-message-box-wrapper">
     <div class="left-message-box">
-        <form class="form" action="{{ route('client.send.messages') }}" enctype="multipart/form-data" method="post">
+        <form class="form" id="send_message" action="{{ route('client.send.messages') }}" enctype="multipart/form-data" method="post">
             @csrf
             <input type="hidden" name="task_id" value="">
             <div class="form-body">
@@ -176,6 +184,9 @@
                         <button type="submit" class="btn btn-primary w-100">
                         <i class="la la-check-square-o"></i> Send Message
                         </button>
+                        <div class="loader">
+                            <img src="{{ asset('newglobal/images/loader.gif') }}" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -185,12 +196,20 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('global/js/sidebar.script.min.js') }}"></script>
 <script src="{{ asset('global/js/fileinput.js') }}"></script>
 <script src="{{ asset('global/js/fileinput-theme.js') }}"></script>
 <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js" integrity="sha512-Yk47FuYNtuINE1w+t/KT4BQ7JaycTCcrvlSvdK/jry6Kcxqg5vN7/svVWCxZykVzzJHaxXk5T9jnFemZHSYgnw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function(){
+
+        $('#send_message').submit(function(e){
+            e.preventDefault();
+            $(this).find('button.btn.btn-primary').hide();
+            $(this).find('.loader').show();
+            $('#send_message')[0].submit();
+        })
         $('#write-message').click(function(){
             $('.left-message-box-wrapper').addClass('fixed-option');
         });

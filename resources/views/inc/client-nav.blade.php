@@ -9,16 +9,13 @@
     </div>
     <div class="d-flex align-items-center">
         <!-- / Mega menu -->
-        <div class="search-bar">
-            <input type="text" placeholder="Search">
-            <i class="search-icon text-muted i-Magnifi-Glass1"></i>
-        </div>
+        
     </div>
     <div style="margin: auto"></div>
     <div class="header-part-right">
-        <label class="switch switch-dark mb-0"><span>Dark</span>
+        {{-- <label class="switch switch-dark mb-0"><span>Dark</span>
             <input type="checkbox" id="theme-mode"/><span class="slider"></span>
-        </label>
+        </label> --}}
         <!-- Full screen toggle -->
         <i class="i-Full-Screen header-icon d-none d-sm-inline-block" data-fullscreen></i>
         <!-- Grid menu Dropdown -->
@@ -103,8 +100,16 @@
                 <div class="triangle"></div>
             </li> -->
 
-            <li class="nav-item {{ (request()->routeIs('client.fetch.messages') || request()->routeIs('client.home')) ? 'active' : '' }}">
-                <a class="nav-item-hold" href="{{ route('client.fetch.messages') }}">
+            <li class="nav-item {{ request()->routeIs('client.home') ? 'active' : '' }}">
+                <a class="nav-item-hold" href="{{ route('client.home') }}">
+                    <i class="nav-icon i-Bar-Chart"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+
+            <li class="nav-item {{ request()->routeIs('client.message') ? 'active' : '' }}">
+                <a class="nav-item-hold" href="{{ route('client.message') }}">
                     <i class="nav-icon i-Speach-Bubble-3"></i>
                     <span class="nav-text">Message</span>
                 </a>

@@ -175,110 +175,18 @@ class AdminClientController extends Controller
         $user->client_id = $id;
         $user->save();
         foreach($invoices as $invoice){
-            $service_array = explode(',', $invoice->service);
-            for($i = 0; $i < count($service_array); $i++){
-                $service = Service::find($service_array[$i]);
-                if($service->form == 0){
-                    if($invoice->createform == 1){
-                        $no_form = new NoForm();
-                        $no_form->invoice_id = $invoice->id;
-                        $no_form->user_id = $user->id;
-                        $no_form->agent_id = $invoice->sales_agent_id;
-                        $no_form->save();
-                    }
-                }elseif($service->form == 1){
-                    if($invoice->createform == 1){
-                        // Logo Form
-                        $logo_form = new LogoForm();
-                        $logo_form->invoice_id = $invoice->id;
-                        $logo_form->user_id = $user->id;
-                        $logo_form->agent_id = $invoice->sales_agent_id;
-                        $logo_form->save();
-                    }
-                }elseif($service->form == 2){
-                    if($invoice->createform == 1){
-                        // Website Form
-                        $web_form = new WebForm();
-                        $web_form->invoice_id = $invoice->id;
-                        $web_form->user_id = $user->id;
-                        $web_form->agent_id = $invoice->sales_agent_id;
-                        $web_form->save();
-                    }
-                }elseif($service->form == 3){
-                    if($invoice->createform == 1){
-                        // Smm Form
-                        $smm_form = new SmmForm();
-                        $smm_form->invoice_id = $invoice->id;
-                        $smm_form->user_id = $user->id;
-                        $smm_form->agent_id = $invoice->sales_agent_id;
-                        $smm_form->save();
-                    }
-                }elseif($service->form == 4){
-                    if($invoice->createform == 1){
-                        // Content Writing Form
-                        $content_writing_form = new ContentWritingForm();
-                        $content_writing_form->invoice_id = $invoice->id;
-                        $content_writing_form->user_id = $user->id;
-                        $content_writing_form->agent_id = $invoice->sales_agent_id;
-                        $content_writing_form->save();
-                    }
-                }elseif($service->form == 5){
-                    if($invoice->createform == 1){
-                        // Search Engine Optimization Form
-                        $seo_form = new SeoForm();
-                        $seo_form->invoice_id = $invoice->id;
-                        $seo_form->user_id = $user->id;
-                        $seo_form->agent_id = $invoice->sales_agent_id;
-                        $seo_form->save();
-                    }
-                }elseif($service->form == 6){
-                    if($invoice->createform == 1){
-                        // Book Formatting & Publishing Form
-                        $book_formatting_form = new BookFormatting();
-                        $book_formatting_form->invoice_id = $invoice->id;
-                        $book_formatting_form->user_id = $user->id;
-                        $book_formatting_form->agent_id = $invoice->sales_agent_id;
-                        $book_formatting_form->save();
-                    }
-                }elseif($service->form == 7){
-                    if($invoice->createform == 1){
-                        // Book Writing Form
-                        $book_writing_form = new BookWriting();
-                        $book_writing_form->invoice_id = $invoice->id;
-                        $book_writing_form->user_id = $user->id;
-                        $book_writing_form->agent_id = $invoice->sales_agent_id;
-                        $book_writing_form->save();
-                    }
-                }elseif($service->form == 8){
-                    if($invoice->createform == 1){
-                        // AuthorWebsite Form
-                        $author_website_form = new AuthorWebsite();
-                        $author_website_form->invoice_id = $invoice->id;
-                        $author_website_form->user_id = $user->id;
-                        $author_website_form->agent_id = $invoice->sales_agent_id;
-                        $author_website_form->save();
-                    }
-                }elseif($service->form == 9){
-                    if($invoice->createform == 1){
-                        // Proofreading Form
-                        $proofreading_form = new Proofreading();
-                        $proofreading_form->invoice_id = $invoice->id;
-                        $proofreading_form->user_id = $user->id;
-                        $proofreading_form->agent_id = $invoice->sales_agent_id;
-                        $proofreading_form->save();
-                    }
-                }elseif($service->form == 10){
-                    if($invoice->createform == 1){
-                        // BookCover Form
-                        $bookcover_form = new BookCover();
-                        $bookcover_form->invoice_id = $invoice->id;
-                        $bookcover_form->user_id = $user->id;
-                        $bookcover_form->agent_id = $invoice->sales_agent_id;
-                        $bookcover_form->save();
-                    }
-                }
-            }
+            $invoice_controller = new InvoiceController;
+            $invoice_controller->afterPaymentCheckForms($invoice->id);
         }
+        $send_email_data = [
+            'logo' => asset('global/img/logo.png'),
+            'current_date' => Carbon::now(),
+            'heading' => 'Welcome to ' . env('APP_NAME') . ' – Access Your Projects Today!',
+            'content' => '<p>Dear '. $client->name . ' ' . $client->last_name .'</p><p>Welcome to '.env('APP_NAME').'!</p><p>We are thrilled to have you on board. YourProjectCamp is designed to give you seamless access and comprehensive oversight of your projects. To get started, we have set up your account with the following credentials:</p><p><b>Username:</b> '.$client->email.'<br><b>Password:</b> ' . $pass . '</p><p>You can log in using the credentials above at the following link: <a href="https://yourprojectcamp.com/">https://yourprojectcamp.com/</a></p><br><p>Once logged in, please follow these steps to get started:</p><ul><li><p>You will see a couple of forms related to the services you have opted for. Please fill these out to ensure we have all the necessary information.</p></li><li><p>A dedicated project manager will reach out to you in due course to further guide you through the process and help you manage your project better.</p></li></ul><p>Thank you for choosing ' . $client->brand->name . '. We look forward to supporting your needs and helping make your project a success story.</p>',
+            'company_email' => env('APP_EMAIL'),
+            'brand_name' => $client->brand->name
+        ];
+        Mail::to($client->email)->send(new WelcomeEmail($send_email_data, 'Welcome to ' . env('APP_NAME') . ' – Access Your Projects Today!'));
         return response()->json(['success' => true , 'message' => 'Login Created']);
     }
 

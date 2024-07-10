@@ -110,13 +110,13 @@ class ClientChatController extends Controller
             'url' => '',
         ];
         $sale = User::find(Auth::user()->client->user_id);
-        $sale->notify(new MessageNotification($messageData));
-        \Mail::to($sale->email)->send(new \App\Mail\ClientNotifyMail($details));
+        // $sale->notify(new MessageNotification($messageData));
+        // \Mail::to($sale->email)->send(new \App\Mail\ClientNotifyMail($details));
         $projects = Project::select('user_id')->where('client_id', Auth::user()->id)->get();
         foreach($projects as $project){
             \Mail::to($project->added_by->email)->send(new \App\Mail\ClientNotifyMail($details));
             $project->added_by->notify(new MessageNotification($messageData));
-        } 
+        }
        
         $adminusers = User::where('is_employee', 2)->get();
         foreach($adminusers as $adminuser){

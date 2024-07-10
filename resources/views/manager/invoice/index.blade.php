@@ -71,7 +71,7 @@
                                 <th>Amount</th>
                                 <th>Date</th>
                                 <th>Merchant</th>
-                                {{-- <th>Create Login</th> --}}
+                                <th>Create Login</th>
                                 <th>Active</th>
                             </tr>
                         </thead>
@@ -112,10 +112,10 @@
                                     <span class="btn btn-{{ App\Models\Invoice::STATUS_COLOR[$datas->payment_status] }} btn-sm">
                                         {{ App\Models\Invoice::PAYMENT_STATUS[$datas->payment_status] }}
                                         @if($datas->payment_status == 1)
-                                        {{-- <form method="post" action="{{ route('manager.invoice.paid', $datas->id) }}">
+                                        <form method="post" action="{{ route('manager.invoice.paid', $datas->id) }}">
                                             @csrf
                                             <button type="submit" class="mark-paid btn btn-danger p-0">Click</button>
-                                        </form> --}}
+                                        </form>
                                         @endif
                                     </span>
                                 </td>
@@ -164,7 +164,7 @@
                                 <th>Status</th>
                                 <th>Amount</th>
                                 <th>Date</th>
-                                {{-- <th>Create Login</th> --}}
+                                <th>Create Login</th>
                                 <th>Merchant</th>
                                 <th>Active</th>
                             </tr>

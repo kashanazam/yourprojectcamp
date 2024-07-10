@@ -15,7 +15,7 @@
                 </tr>
                 <tr>
                     <td colspan="2" style="width:100%;padding: 0px 20px;vertical-align:top">
-                        <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px">Message</span> {!! $details['discription'] !!}<br><a href="{{ env('APP_ENV') }}">Please login to reply on this message....</a></p>
+                        <p style="margin:0 0 10px 0;padding:0;font-size:14px;"><span style="display:block;font-weight:bold;font-size:13px">Message</span> {!! $details['discription'] !!}<br><a href="{{ env('APP_URL') }}">Please login to reply on this message....</a></p>
                     </td>
                 </tr>
             </tbody>

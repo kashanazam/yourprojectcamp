@@ -127,14 +127,14 @@
                                 <td>
                                     {{ $datas->merchant->name }} <br><button class="btn btn-sm btn-secondary">{{ $datas->merchant->get_merchant_name() }}</button>
                                 </td>
-                                {{-- <td>                                    
+                                <td>                                    
                                     @if($datas->payment_status == 2)
                                     <a href="javascript:;" class="btn btn-{{ $datas->client->user == null ? 'primary' : 'success' }} btn-sm auth-create" data-id="{{ $datas->client->id }}" data-auth="{{ $datas->client->user == null ? 0 : 1 }}" data-password="{{ $datas->client->user == null ? '' : $datas->client->user->password }}">{{ $datas->client->user == null ? 'Click Here' : 'Reset Pass' }}</a>
                                     @else
                                     <span class="btn btn-info btn-sm">Payment Pending</span>
                                     @endif
 
-                                </td> --}}
+                                </td>
                                 <td>
                                     <div>
                                         @if($datas->payment_status == 1)

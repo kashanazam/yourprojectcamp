@@ -77,7 +77,7 @@
                         </thead>
                         <tbody>
                             @foreach($data as $datas)
-                            <tr>
+                            <tr id="invoice-{{ $datas->id }}">
                                 <td>
                                     <span class="btn btn-sm btn-dark">{{ $datas->invoice_number }}</span>
                                 </td>
@@ -127,7 +127,7 @@
                                 <td>
                                     {{ $datas->merchant->name }} <br><button class="btn btn-sm btn-secondary">{{ $datas->merchant->get_merchant_name() }}</button>
                                 </td>
-                                <td>                                    
+                                <td>
                                     @if($datas->payment_status == 2)
                                     <a href="javascript:;" class="btn btn-{{ $datas->client->user == null ? 'primary' : 'success' }} btn-sm auth-create" data-id="{{ $datas->client->id }}" data-auth="{{ $datas->client->user == null ? 0 : 1 }}" data-password="{{ $datas->client->user == null ? '' : $datas->client->user->password }}">{{ $datas->client->user == null ? 'Click Here' : 'Reset Pass' }}</a>
                                     @else
@@ -230,6 +230,10 @@
                     success:function(data) {
                         if(data.success == true){
                             swal("Auth Created", "Password is : " + inputValue, "success");
+                            $('tr#invoice-'+id).find('.auth-create').addClass('btn-success');
+                            $('tr#invoice-'+id).find('.auth-create').text('Reset Pass');
+                            $('tr#invoice-'+id).find('.auth-create')[0].setAttribute("data-password", data.password);
+                            $('tr#invoice-'+id).find('.auth-create')[0].setAttribute("data-auth", 1);
                         }else{
                             return swal({
                                 title:"Error",

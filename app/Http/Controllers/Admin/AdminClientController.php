@@ -187,7 +187,7 @@ class AdminClientController extends Controller
             'brand_name' => $client->brand->name
         ];
         Mail::to($client->email)->send(new WelcomeEmail($send_email_data, 'Welcome to ' . env('APP_NAME') . ' – Access Your Projects Today!'));
-        return response()->json(['success' => true , 'message' => 'Login Created']);
+        return response()->json(['success' => true , 'message' => 'Login Created', 'password' => Hash::make($pass)]);
     }
 
 

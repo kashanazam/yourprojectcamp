@@ -19,7 +19,7 @@
                     </td>
                 </tr>
             </tbody>
-            <tfooter>
+            <tfoot>
                 <tr>
                     <td colspan="2" style="font-size:14px;padding:50px 15px 0 15px;">
                         <strong style="display:block;margin:0 0 10px 0;">Regards</strong> {{ $details['sender_name'] }}<br> {{ $details['sender_email'] }}<br><br>
@@ -27,7 +27,7 @@
                         <b>Email:</b> {{ $details['brand_email'] }}
                     </td>
                 </tr>
-            </tfooter>
+            </tfoot>
         </table>
     </body>
 </html>

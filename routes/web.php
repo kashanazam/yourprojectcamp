@@ -71,7 +71,7 @@ Route::get('/send-notification/{task_id}/{role}', [TaskController::class, 'sendT
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'is_client'], function(){
         Route::get('client/home', [ClientController::class, 'clientDashboard'])->name('client.home');
-        Route::get('client/message', [ClientController::class, 'clientTaskshow'])->name('client.message');
+        Route::get('client/message/{notify?}', [ClientController::class, 'clientTaskshow'])->name('client.message');
         Route::get('client/chat', [ClientChatController::class, 'clientChat'])->name('client.chat');
         Route::get('client/messages', [ClientController::class, 'clientTaskshow'])->name('client.fetch.messages');
         Route::post('client/messages', [ClientChatController::class, 'sendMessage'])->name('client.send.messages');
@@ -173,7 +173,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('support/subtask/store', [TaskController::class, 'supportTaskStore'])->name('support.subtask.store');
         Route::post('support/files/{id}', [TaskController::class, 'insertFiles'])->name('support.insert.sale.files');
         Route::post('support/files/show/client', [TaskController::class, 'showFilesToClient'])->name('support.client.file.show');
-        Route::get('support/message/{id}/{name}/show', [SupportController::class, 'getMessageBySupportClientId'])->name('support.message.show.id');
+        Route::get('support/message/{id}/{name}/show/{notify?}', [SupportController::class, 'getMessageBySupportClientId'])->name('support.message.show.id');
         Route::get('/support/message/edit/{id}', [SupportController::class, 'editMessageBySupportClientId'])->name('support.message.edit');
         Route::post('/support/message/update', [SupportController::class, 'updateSupportMessage'])->name('support.message.update');
     });

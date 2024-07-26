@@ -570,7 +570,13 @@ class SupportController extends Controller
         return response()->json(['success' => true, 'data' => $message]);
     }
 
-    public function getMessageBySupportClientId($id, $name){
+    public function getMessageBySupportClientId($id, $name, $notify = null){
+        if($notify != null){
+            $Notification = Auth::user()->Notifications->find($notify);
+            if($Notification){
+                $Notification->markAsRead();
+            }   
+        }
         $user = User::find($id);
         $messages = Message::where('client_id', $id)->orderBy('id', 'desc')->get();
         return view('support.message.index', compact('messages', 'user'));

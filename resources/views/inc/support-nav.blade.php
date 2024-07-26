@@ -40,6 +40,8 @@
                 <a href="{{ route('create.task.by.project.id', ['id' => $notifications->data['project_id'], 'name' => $notifications->data['text'], 'notify' => $notifications->id]) }}" class="dropdown-item d-flex">
                 @elseif($notifications->type == 'App\Notifications\TaskNotification')
                 <a href="{{ route('support.task.show', ['id' => $notifications->data['task_id'], 'notify' => $notifications->id]) }}" class="dropdown-item d-flex">
+                @elseif($notifications->type == 'App\Notifications\MessageNotification')
+                <a href="{{ route('support.message.show.id', ['id' => $notifications->data['id'], 'name' => $notifications->data['name'], 'notify' => $notifications->id]) }}" class="dropdown-item d-flex">
                 @else
                 @php
                 $task_id = 0;

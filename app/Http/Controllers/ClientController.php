@@ -333,9 +333,9 @@ class ClientController extends Controller
     }
 
     public function clientTaskshow($id, $notify = null){
-        $notifications = Auth::user()->Notifications->markAsRead();
-        if($notify != null){
-            $Notification = Auth::user()->Notifications->find($notify);
+        // $notifications = Auth::user()->Notifications->markAsRead();
+        if($id != null){
+            $Notification = Auth::user()->Notifications->find($id);
             if($Notification){
                 $Notification->markAsRead();
             }   

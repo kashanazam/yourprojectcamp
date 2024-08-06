@@ -32,7 +32,7 @@
                                 <label for="contact">Contact</label>
                                 <input type="text" id="contact" class="form-control" value="{{ $user->contact }}" placeholder="Contact" name="contact">
                             </div>
-                            <div class="col-md-4 form-group mb-3">
+                            <div class="col-md-3 form-group mb-3">
                                 <label for="brand">Brand Name <span>*</span></label>
                                 <select name="brand" id="brand" class="form-control select2" required>
                                     <option value="">Select Brand</option>
@@ -44,20 +44,27 @@
                             <div class="col-md-4 form-group mb-3">
                                 <label for="service">Service <span>*</span></label>
                                 <select name="service[]" id="service" class="form-control select2" required multiple>
-                                    <option value="">Select Service</option>
                                     @foreach($services as $service)
                                     <option value="{{ $service->id }}">{{$service->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4 form-group mb-3">
+                            <div class="col-md-3 form-group mb-3">
                                 <label for="package">Package <span>*</span></label>
                                 <select name="package" id="package" class="form-control" required>
                                     <option value="">Select Package</option>
-                                    <option value="0">Custom Package</option>
+                                    <option value="0" selected>Custom Package</option>
                                 </select>
                             </div>
-                            <div class="col-md-4 form-group mb-3">
+                            <div class="col-md-2 form-group mb-3">
+                                <label for="createform">Create form of Service <span>*</span></label>
+                                <select name="createform" id="createform" class="form-control" required="">
+                                    <option value="">Select Option</option>
+                                    <option value="1">YES</option>
+                                    <option value="0">NO</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
                                 <label for="custom_package">Name for a Custom Package</label>
                                 <input type="text" id="custom_package" class="form-control" value="" placeholder="Custom Package Name" name="custom_package">
                             </div>
@@ -66,7 +73,7 @@
                                 <select name="currency" id="currency" class="form-control select2" required>
                                     <option value="">Select Currency</option>
                                     @foreach($currencies as $currency)
-                                    <option value="{{$currency->id}}">{{$currency->name}} - {{$currency->short_name}}</option>
+                                    <option value="{{$currency->id}}" {{ $currency->short_name == 'USD' ? 'selected' : '' }}>{{$currency->name}} - {{$currency->short_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -74,11 +81,18 @@
                                 <label for="amount">Amount<span>*</span></label>
                                 <input step=".01" type="number" id="amount" class="form-control" value="" placeholder="Amount" name="amount" required min="1">
                             </div>
-                            <div class="col-md-4 form-group mb-3">
+                            <div class="col-md-2 form-group mb-3">
                                 <label for="payment_type">Payment Type<span>*</span></label>
                                 <select class="form-control" name="payment_type" id="payment_type">
                                     <option value="0">One-Time Charge</option>
-                                    <option value="1">Three-Time Charge</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 form-group mb-3">
+                                <label for="merchant">Merchant<span>*</span></label>
+                                <select name="merchant" id="merchant" class="form-control" required>
+                                    @foreach($brand[0]->merchants as $key => $merchants)
+                                    <option value="{{ $merchants->id }}" {{ $key == 0 ? 'selected' : '' }}>{{ $merchants->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-12 form-group mb-3">

@@ -133,6 +133,15 @@
                                         <span class="ul-btn__icon"><i class="i-Eye-Visible"></i></span>
                                         <span class="ul-btn__text">View</span>
                                     </a>
+                                    <form method="POST" action="{{ route('admin.invoice.delete', $datas->id) }}"
+                                        style="display: inline-block;">
+                                        {{ method_field('DELETE') }}
+                                        {{ csrf_field() }}
+                                        <button class="btn btn-danger btn-icon btn-sm" type="submit">
+                                            <span class="ul-btn__icon"><i class="i-Delete-File"></i></span>
+                                            <span class="ul-btn__text">Delete</span>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach

@@ -161,6 +161,9 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+        $get_brand = Brand::find($request->brand);
+        $get_short_brand = implode('', array_map(function($v) { return $v[0]; }, explode(' ', $get_brand->name)));
+        $invoice_number = date('ymd').$get_short_brand.$request->amount;
         $validated = $request->validate([
             'name' => 'required',
             'email' => 'required',
@@ -169,25 +172,26 @@ class InvoiceController extends Controller
             'package' => 'required',
             'currency' => 'required',
             'amount' => 'required',
-            'payment_type' => 'required'
+            'payment_type' => 'required',
+            'merchant' => 'required'
         ]);
-
-
         $latest = Invoice::latest()->first();
         if (! $latest) {
-            $nextInvoiceNumber = date('Y').'-1';
+            $numPadded = sprintf("%04d", 1);
+            $nextInvoiceNumber = $invoice_number . $numPadded;
         }else{
-            $expNum = explode('-', $latest->invoice_number);
-            $expIncrement = (int)$expNum[1] + 1;
-            $nextInvoiceNumber = $expNum[0].'-'.$expIncrement;
+            $numPadded = sprintf("%04d", $latest->id + 1);
+            $nextInvoiceNumber = $invoice_number . $numPadded;
         }
-		$invoice = new Invoice;
-        $invoice->name = $request->name;
-        $invoice->email = $request->email;
         $contact = $request->contact;
         if($contact == null){
             $contact = '#';
         }
+
+		$invoice = new Invoice;
+        $invoice->createform = $request->createform;
+        $invoice->name = $request->name;
+        $invoice->email = $request->email;
         $invoice->contact = $contact;
         $invoice->brand = $request->brand;
         $invoice->package = $request->package;
@@ -202,8 +206,41 @@ class InvoiceController extends Controller
         $invoice->payment_type = $request->payment_type;
 		$service = implode(",",$request->service);
 		$invoice->service = $service;
+        $invoice->merchant_id = $request->merchant;
+        $invoice->invoice_id = bin2hex(random_bytes(24));
         $invoice->save();
 		$id = $invoice->id;
+
+        $id = Crypt::encrypt($id);
+		$invoiceId = Crypt::decrypt($id);
+		$_getInvoiceData = Invoice::findOrFail($invoiceId);
+		$_getBrand = Brand::where('id',$_getInvoiceData->brand)->first();
+        $package_name = '';
+        if($_getInvoiceData->package == 0){
+            $package_name = strip_tags($_getInvoiceData->custom_package);
+        }
+        $sendemail = $request->sendemail;
+        if($sendemail == 1){
+            // Send Invoice Link To Email
+            $details = [
+                'brand_name' => $_getBrand->name,
+                'brand_logo' => $_getBrand->logo,
+                'brand_phone' => $_getBrand->phone,
+                'brand_email' => $_getBrand->email,
+                'brand_address' => $_getBrand->address,
+                'invoice_number' => $_getInvoiceData->invoice_number,
+                'currency_sign' => $_getInvoiceData->currency_show->sign,
+                'amount' => $_getInvoiceData->amount,
+                'name' => $_getInvoiceData->name,
+                'email' => $_getInvoiceData->email,
+                'contact' => $_getInvoiceData->contact,
+                'date' => $_getInvoiceData->created_at->format('jS M, Y'),
+                'link' => route('client.paynow', $id),
+                'package_name' => $package_name,
+                'discription' => $_getInvoiceData->discription
+            ];
+            // \Mail::to($_getInvoiceData->email)->send(new \App\Mail\InoviceMail($details));
+        }
 		return redirect()->route('admin.link',($invoice->id));
     }
 
@@ -271,9 +308,11 @@ class InvoiceController extends Controller
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Invoice $invoice)
+    public function destroy($invoice)
     {
-        //
+        $data = Invoice::find($invoice);
+        $data->delete();
+        return redirect()->back()->with('success','Invoice Deleted Successfully');
     }
 
     public function payNow($id){

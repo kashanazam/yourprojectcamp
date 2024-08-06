@@ -141,6 +141,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('client/{client}/{id}', [AdminClientController::class, 'showNotification'])->name('admin.client.shownotification');
         Route::get('create-invoice/{id}', [InvoiceController::class, 'index'])->name('admin.invoice.index');
         Route::post('invoice', [InvoiceController::class, 'store'])->name('admin.invoice.create');
+        Route::delete('invoice/{id}', [InvoiceController::class, 'destroy'])->name('admin.invoice.delete');
         Route::any('invoice/generated/{id}', [InvoiceController::class, 'linkPage'])->name('admin.link');
         Route::get('invoice', [InvoiceController::class, 'invoiceAll'])->name('admin.invoice');
         Route::get('invoice/{id}', [InvoiceController::class, 'getInvoice'])->name('admin.single.invoice');

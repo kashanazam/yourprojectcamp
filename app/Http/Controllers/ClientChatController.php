@@ -19,6 +19,7 @@ use Auth;
 use Notification;
 use \Carbon\Carbon;
 use DateTimeZone;
+use Pusher\Pusher;
 
 class ClientChatController extends Controller
 {
@@ -48,6 +49,7 @@ class ClientChatController extends Controller
 
     public function sendMessage(Request $request)
     {
+
         $this->validate($request, [
             'message' => 'required',
         ]);
@@ -122,6 +124,20 @@ class ClientChatController extends Controller
         foreach($adminusers as $adminuser){
             Notification::send($adminuser, new MessageNotification($messageData));
         }
+
+        $pusher = new Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            [
+                'cluster' => env('PUSHER_APP_CLUSTER'),
+                'useTLS' => true,
+            ]
+        );
+
+        $pusher->trigger('private.' .  $sale->id, 'receivemessage', ['data' => $request->message, 'user' => Auth::user(), 'date' =>  now()->format('d m, y'), 'image' => 'new-customer.png', 'link' => route('support.message.get.by.support')]);
+
+
         return redirect()->back()->with('success', 'Message Send Successfully.');
     }
 

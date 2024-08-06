@@ -96,10 +96,9 @@
 @section('content')
 <div class="breadcrumb">
     <h1 class="mr-2">Messages</h1>
-    <button class="btn btn-primary ml-auto" id="write-message">Write A Message</button>
+    <button class="btn btn-primary ml-auto write-message">Write A Message</button>
 </div>
 <div class="separator-breadcrumb border-top"></div>
-
 <section id="basic-form-layouts">
     <div class="row">
         <div class="col-md-12 message-box-wrapper" >
@@ -159,6 +158,9 @@
             </div>
             @endforeach
         </div>
+        <div class="col-md-12">
+            <button class="btn btn-primary ml-auto write-message">Write A Message</button>
+        </div>
     </div>
 </section>
 
@@ -210,13 +212,14 @@
             $(this).find('.loader').show();
             $('#send_message')[0].submit();
         })
-        $('#write-message').click(function(){
+        $('.write-message').click(function(){
             $('.left-message-box-wrapper').addClass('fixed-option');
         });
         $('#close-message-left').click(function(){
             $('.left-message-box-wrapper').removeClass('fixed-option');
         })
-        CKEDITOR.replace('description');
+        // CKEDITOR.replace('description');
+        
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -423,6 +426,7 @@ function Clicked_h_btnAddFileUploadControl() {
     }
     $(".message-box-wrapper").mCustomScrollbar({
         setHeight:500,
+        live:true
     });
     $(".message-box-wrapper").mCustomScrollbar("scrollTo", "bottom");
 </script>

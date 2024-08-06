@@ -33,7 +33,7 @@
                                             @endif
                                         </div>
                                         <div class="ul-widget2__info ul-widget4__users-info">
-                                            <a class="ul-widget2__title" href="#">{{$message['f_name']}} {{$message['l_name']}}</a>
+                                            <a class="ul-widget2__title" href="{{ route('support.message.show.id', ['id' => $message['id'] ,'name' => $message['f_name'] . ' ' . $message['l_name']]) }}">{{$message['f_name']}} {{$message['l_name']}}</a>
                                             <span class="ul-widget2__username" href="#">{!! strip_tags($message['message']) !!}</span>
                                         </div>
                                         @if($message['task_id'] != 0)

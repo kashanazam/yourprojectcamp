@@ -28,74 +28,8 @@
         </div>
     </div>
     <!-- notification-->
-    <div class="col-lg-4 col-md-4 mb-4">
-        <div class="card mb-4">
-            <div class="display-date">
-                <span id="day">day</span>,
-                <span id="daynum">00</span>
-                <span id="month">month</span>
-                <span id="year">0000</span>
-            </div>
-            <div class="display-time"></div>
-        </div>
-    </div>
 </div>
 @endsection
 @push('scripts')
-<script>
-    const displayTime = document.querySelector(".display-time");
-    // Time
-    function showTime() {
-    let time = new Date();
-    displayTime.innerText = time.toLocaleTimeString("en-US", { hour12: true });
-    setTimeout(showTime, 1000);
-    }
 
-    showTime();
-
-    // Date
-    function updateDate() {
-    let today = new Date();
-
-    // return number
-    let dayName = today.getDay(),
-        dayNum = today.getDate(),
-        month = today.getMonth(),
-        year = today.getFullYear();
-
-    const months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-    ];
-    const dayWeek = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-    ];
-    // value -> ID of the html element
-    const IDCollection = ["day", "daynum", "month", "year"];
-    // return value array with number as a index
-    const val = [dayWeek[dayName], dayNum, months[month], year];
-    for (let i = 0; i < IDCollection.length; i++) {
-        document.getElementById(IDCollection[i]).firstChild.nodeValue = val[i];
-    }
-    }
-
-    updateDate();
-
-</script>
 @endpush

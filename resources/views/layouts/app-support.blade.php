@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name') }} - @yield('title')</title> 
+    <title>{{ config('app.name') }} - @yield('title')</title>
     <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('global/img/apple-icon-57x57.png') }}">
     <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('global/img/apple-icon-60x60.png') }}">
     <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('global/img/apple-icon-72x72.png') }}">
@@ -15,7 +16,7 @@
     <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('global/img/apple-icon-144x144.png') }}">
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('global/img/apple-icon-152x152.png') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('global/img/apple-icon-180x180.png') }}">
-    <link rel="icon" type="image/png" sizes="192x192"  href="{{ asset('global/img/android-icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('global/img/android-icon-192x192.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('global/img/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('global/img/favicon-96x96.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('global/img/favicon-16x16.png') }}">
@@ -31,19 +32,22 @@
     <link href="{{ asset('newglobal/css/sweetalert2.min.css') }}" rel="stylesheet" />
     @stack('styles')
     <style>
-        .select2-container .select2-selection--single{
+        .select2-container .select2-selection--single {
             height: 34px;
         }
-        .select2-container--default .select2-selection--single .select2-selection__rendered{
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
             color: #444;
             line-height: 31px;
             background-color: #f8f9fa;
         }
+
         .select2-container--default .select2-selection--single {
             background-color: transparent;
             border: 1px solid #ced4da;
             border-radius: 4px;
         }
+
         a.brands-list {
             margin-left: 20px;
         }
@@ -61,6 +65,7 @@
         }
     </style>
 </head>
+
 <body class="text-left">
     <div class="app-admin-wrap layout-sidebar-large">
         @include('inc.support-nav')
@@ -75,7 +80,7 @@
                     <div class="d-flex align-items-center">
                         <img class="logo" src="{{ asset('global/img/sidebarlogo.png') }}" alt="">
                         <div>
-                            <p class="m-0">&copy; <?php echo date("Y"); ?> {{ config('app.name') }}</p>
+                            <p class="m-0">&copy; <?php echo date('Y'); ?> {{ config('app.name') }}</p>
                             <p class="m-0">All rights reserved</p>
                         </div>
                     </div>
@@ -98,22 +103,22 @@
     @yield('script')
 
     @stack('scripts')
-    @if(session()->has('success'))
-    <script>
-        var timerInterval;
-        swal({
-            type: 'success',
-            title: 'Success!',
-            text: "{{ session()->get('success') }}",
-            buttonsStyling: false,
-            confirmButtonClass: 'btn btn-lg btn-success',
-            timer: 2000
-        });
-    </script>
+    @if (session()->has('success'))
+        <script>
+            var timerInterval;
+            swal({
+                type: 'success',
+                title: 'Success!',
+                text: "{{ session()->get('success') }}",
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-lg btn-success',
+                timer: 2000
+            });
+        </script>
     @endif
     <script>
-        @if(count($errors) > 0)
-            @foreach($errors->all() as $error)
+        @if (count($errors) > 0)
+            @foreach ($errors->all() as $error)
                 toastr.error("{{ $error }}", {
                     timeOut: "50000"
                 });
@@ -121,25 +126,31 @@
         @endif
     </script>
     <script>
-        if($('#zero_configuration_table').length != 0){
+        if ($('#zero_configuration_table').length != 0) {
             $('#zero_configuration_table').DataTable({
-                order: [[0, "desc"]],
+                order: [
+                    [0, "desc"]
+                ],
                 responsive: true,
             });
         }
 
-        if($('.select2').length != 0){
+        if ($('.select2').length != 0) {
             $('.select2').select2();
         }
     </script>
     <script>
-        $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         setInterval(() => {
             $.ajax({
-                type:'POST',
-                url:"{{ url('keep-alive') }}",
-                success:function(data){
-                    if(data.ok == false){
+                type: 'POST',
+                url: "{{ url('keep-alive') }}",
+                success: function(data) {
+                    if (data.ok == false) {
                         document.getElementById('logout-form').submit();
                     }
                 }
@@ -212,5 +223,83 @@
 
         });
     </script>
+    <script>
+        var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+            cluster: 'ap2',
+            authEndpoint: '/broadcasting/auth',
+            auth: {
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+            }
+        });
+        var channel = pusher.subscribe('private.{{ Auth::user()->id }}');
+
+
+        channel.bind('receivemessage', function(data) {
+            if (window.location.pathname.includes('/support/message')) {
+
+                $('#mCSB_1_container').append(`<div class="card mb-3 right-card">
+                 <div class="card-body">
+                     <div class="card-content collapse show">
+                         <div class="ul-widget__body mt-0">
+                             <div class="ul-widget3 message_show">
+                                 <div class="ul-widget3-item mt-0 mb-0">
+                                     <div class="ul-widget3-header">
+                                         <div class="ul-widget3-info">
+                                             <a class="__g-widget-username" href="#">
+                                                 <span class="t-font-bolder">${data.user.name} ${data.user.last_name}</span>
+                                             </a>
+                                         </div>
+                                     </div>
+                                     <div class="ul-widget3-body">
+                                         <p></p><p>${data.message}</p><p></p>
+                                         <span class="ul-widget3-status text-success t-font-bolder">
+                                             ${data.date}
+                                         </span>
+                                     </div>
+                                     <div class="file-wrapper">
+                                                                             </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>`)
+                $(".message-box-wrapper").mCustomScrollbar("scrollTo", "bottom");
+                console.log(data);
+
+            }
+            if (!window.Notification) {
+                console.log('Browser does not support notifications.');
+            } else {
+                // check if permission is already granted
+                if (Notification.permission === 'granted') {
+                    var notify = new Notification('New Message', {
+                        body: data.message,
+                        icon: '{{ asset('icons') }}/' + data.image,
+                    });
+                    notify.onclick = function(event) {
+                        event.preventDefault();
+                        window.open(data.link, '_blank');
+                    }
+                } else {
+                    // request permission from user
+                    Notification.requestPermission().then(function(p) {
+                        if (p === 'granted') {
+                            // show notification here
+                        } else {
+                            console.log('User blocked notifications.');
+                        }
+                    }).catch(function(err) {
+                        console.error(err);
+                    });
+                }
+            }
+
+
+        });
+    </script>
 </body>
+
 </html>

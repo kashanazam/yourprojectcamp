@@ -11,6 +11,7 @@ class MessageNotification extends Notification
 {
     use Queueable;
     private $messageData;
+    private $notification_id;
     /**
      * Create a new notification instance.
      *

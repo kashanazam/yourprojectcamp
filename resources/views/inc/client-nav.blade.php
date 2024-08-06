@@ -27,9 +27,6 @@
             </div>
             <!-- Lead Notification dropdown -->
             <div class="dropdown-menu dropdown-menu-right notification-dropdown rtl-ps-none" aria-labelledby="dropdownNotification" data-perfect-scrollbar data-suppress-scroll-x="true">
-                @php
-                $k = 0;
-                @endphp
                 @foreach(auth()->user()->unreadnotifications as $notifications)
                 <a href="{{ route('client.message', ['notify' => $notifications->id]) }}" class="dropdown-item d-flex">
                     <div class="notification-icon">
@@ -44,12 +41,6 @@
                         <p class="text-small text-muted m-0">{{$notifications->data['details']}}</p>
                     </div>
                 </a>
-                @if($loop->last)
-                    
-                @endif
-                @php
-                    $k++;
-                @endphp
                 @endforeach
             </div>
         </div>

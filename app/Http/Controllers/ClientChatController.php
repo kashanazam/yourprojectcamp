@@ -111,20 +111,7 @@ class ClientChatController extends Controller
             'details' => Str::limit(filter_var($request->message, FILTER_SANITIZE_STRING), 40 ),
             'url' => '',
         ];
-        $sale = User::find(Auth::user()->client->user_id);
-        // $sale->notify(new MessageNotification($messageData));
-        // \Mail::to($sale->email)->send(new \App\Mail\ClientNotifyMail($details));
-        $projects = Project::select('user_id')->where('client_id', Auth::user()->id)->get();
-        foreach($projects as $project){
-            \Mail::to($project->added_by->email)->send(new \App\Mail\ClientNotifyMail($details));
-            $project->added_by->notify(new MessageNotification($messageData));
-        }
-       
-        $adminusers = User::where('is_employee', 2)->get();
-        foreach($adminusers as $adminuser){
-            Notification::send($adminuser, new MessageNotification($messageData));
-        }
-
+        
         $pusher = new Pusher(
             env('PUSHER_APP_KEY'),
             env('PUSHER_APP_SECRET'),
@@ -134,9 +121,19 @@ class ClientChatController extends Controller
                 'useTLS' => true,
             ]
         );
-
-        $pusher->trigger('private.' .  $sale->id, 'receivemessage', ['data' => $request->message, 'user' => Auth::user(), 'date' =>  now()->format('d m, y'), 'image' => 'new-customer.png', 'link' => route('support.message.get.by.support')]);
-
+        $sale = User::find(Auth::user()->client->user_id);
+        $projects = Project::select('user_id')->where('client_id', Auth::user()->id)->get();
+        foreach($projects as $project){
+            \Mail::to($project->added_by->email)->send(new \App\Mail\ClientNotifyMail($details));
+            $project->added_by->notify(new MessageNotification($messageData));
+            $last_notify = $project->added_by->notifications()->latest()->first();
+            $pusher->trigger('private.' .  $project->added_by->id, 'receivemessage', ['title' => 'Incoming Message', 'full_message' => $request->message ,'message' => \Illuminate\Support\Str::limit(strip_tags($request->message), 40, '...'), 'user' => Auth::user(), 'date' =>  now()->format('d m, y'), 'image' => 'new-message.png', 'link' => route('client.message', ['notify' => $last_notify->id])]);
+        }
+       
+        $adminusers = User::where('is_employee', 2)->get();
+        foreach($adminusers as $adminuser){
+            Notification::send($adminuser, new MessageNotification($messageData));
+        }
 
         return redirect()->back()->with('success', 'Message Send Successfully.');
     }

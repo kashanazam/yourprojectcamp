@@ -159,26 +159,6 @@
     </script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
-        if (!window.Notification) {
-            console.log('Browser does not support notifications.');
-        } else {
-            // check if permission is already granted
-            if (Notification.permission === 'granted') {
-                // show notification here
-            } else {
-                // request permission from user
-                Notification.requestPermission().then(function(p) {
-                    if (p === 'granted') {
-                        // show notification here
-                    } else {
-                        console.log('User blocked notifications.');
-                    }
-                }).catch(function(err) {
-                    console.error(err);
-                });
-            }
-        }
-
         Pusher.logToConsole = true;
         var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
             cluster: 'ap2',
@@ -191,9 +171,6 @@
         });
         var channel = pusher.subscribe('private.{{ Auth::user()->id }}');
         channel.bind('send-task-notifiction', function(data) {
-            console.log('manager')
-            console.log('send-event')
-            console.log(data)
             if (!window.Notification) {
                 console.log('Browser does not support notifications.');
             } else {
@@ -211,7 +188,10 @@
                     // request permission from user
                     Notification.requestPermission().then(function(p) {
                         if (p === 'granted') {
-                            // show notification here
+                            var notify = new Notification(data.title, {
+                                body: data.message,
+                                icon: '{{ asset('icons') }}/' + data.image,
+                            });
                         } else {
                             console.log('User blocked notifications.');
                         }
@@ -237,68 +217,85 @@
 
 
         channel.bind('receivemessage', function(data) {
-            if (window.location.pathname.includes('/support/message')) {
-
-                $('#mCSB_1_container').append(`<div class="card mb-3 right-card">
-                 <div class="card-body">
-                     <div class="card-content collapse show">
-                         <div class="ul-widget__body mt-0">
-                             <div class="ul-widget3 message_show">
-                                 <div class="ul-widget3-item mt-0 mb-0">
-                                     <div class="ul-widget3-header">
-                                         <div class="ul-widget3-info">
-                                             <a class="__g-widget-username" href="#">
-                                                 <span class="t-font-bolder">${data.user.name} ${data.user.last_name}</span>
-                                             </a>
-                                         </div>
-                                     </div>
-                                     <div class="ul-widget3-body">
-                                         <p></p><p>${data.message}</p><p></p>
-                                         <span class="ul-widget3-status text-success t-font-bolder">
-                                             ${data.date}
-                                         </span>
-                                     </div>
-                                     <div class="file-wrapper">
-                                                                             </div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>`)
-                $(".message-box-wrapper").mCustomScrollbar("scrollTo", "bottom");
-                console.log(data);
-
-            }
-            if (!window.Notification) {
-                console.log('Browser does not support notifications.');
-            } else {
-                // check if permission is already granted
-                if (Notification.permission === 'granted') {
-                    var notify = new Notification('New Message', {
-                        body: data.message,
-                        icon: '{{ asset('icons') }}/' + data.image,
-                    });
-                    notify.onclick = function(event) {
-                        event.preventDefault();
-                        window.open(data.link, '_blank');
-                    }
-                } else {
-                    // request permission from user
-                    Notification.requestPermission().then(function(p) {
-                        if (p === 'granted') {
-                            // show notification here
-                        } else {
-                            console.log('User blocked notifications.');
-                        }
-                    }).catch(function(err) {
-                        console.error(err);
-                    });
+            $('#dropdownNotification span').text(parseInt($('#dropdownNotification span').text()) + 1);
+            $('.notification-dropdown').prepend(`<a href="${data.link}" class="dropdown-item d-flex">
+                    <div class="notification-icon">
+                        <i class="i-Speach-Bubble-8 text-primary mr-1"></i>
+                    </div>
+                    <div class="notification-details flex-grow-1">
+                        <p class="m-0 d-flex align-items-center">
+                            <span class="lead-heading">${data.user.name} ${data.user.last_name} has send you a Message</span>
+                            <span class="flex-grow-1"></span>
+                            <span class="text-small text-muted ml-3">Now</span>
+                        </p>
+                        <p class="text-small text-muted m-0">${data.message}</p>
+                    </div>
+                </a>`);
+                if($('.message-box-wrapper').length != 0){
+                    $('.message-box-wrapper').prepend(`<div class="card mb-3 right-card">
+                        <div class="card-body">
+                            <div class="card-content collapse show">
+                                <div class="ul-widget__body mt-0">
+                                    <div class="ul-widget3 message_show">
+                                        <div class="ul-widget3-item mt-0 mb-0">
+                                            <div class="ul-widget3-header">
+                                                <div class="ul-widget3-info">
+                                                    <a class="__g-widget-username" href="#">
+                                                        <span class="t-font-bolder">${data.user.name} ${data.user.last_name}</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="ul-widget3-body">
+                                                <p></p><p>${data.full_message}</p><p></p>
+                                                <span class="ul-widget3-status text-success t-font-bolder">
+                                                    ${data.date}
+                                                </span>
+                                            </div>
+                                            <div class="file-wrapper">
+                                                                                    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`);
+                    $(".message-box-wrapper").mCustomScrollbar("scrollTo", "bottom");
                 }
-            }
 
-
-        });
+                if (!window.Notification) {
+                    console.log('Browser does not support notifications.');
+                } else {
+                    // check if permission is already granted
+                    if (Notification.permission === 'granted') {
+                        var notify = new Notification('New Message', {
+                            body: data.message,
+                            icon: '{{ asset('icons') }}/' + data.image,
+                        });
+                        notify.onclick = function(event) {
+                            event.preventDefault();
+                            window.open(data.link, '_blank');
+                        }
+                    } else {
+                        // request permission from user
+                        Notification.requestPermission().then(function(p) {
+                            if (p === 'granted') {
+                                var notify = new Notification('New Message', {
+                                    body: data.message,
+                                    icon: '{{ asset('icons') }}/' + data.image,
+                                });
+                                notify.onclick = function(event) {
+                                    event.preventDefault();
+                                    window.open(data.link, '_blank');
+                                }
+                            } else {
+                                console.log('User blocked notifications.');
+                            }
+                        }).catch(function(err) {
+                            console.error(err);
+                        });
+                    }
+                }
+            });
     </script>
 </body>
 

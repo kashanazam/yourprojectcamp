@@ -42,6 +42,13 @@
                     </div>
                 </a>
                 @endforeach
+                <a href="{{ route('client.read.notification') }}" class="dropdown-item d-flex mark-as-read">
+                    <div class="notification-details flex-grow-1">
+                        <p class="m-0 d-flex align-items-center">
+                            <span class="lead-heading">MARK AS READ</span>
+                        </p>
+                    </div>
+                </a>
             </div>
         </div>
         <!-- Notificaiton End -->

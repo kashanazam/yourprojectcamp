@@ -26754,3 +26754,36 @@ div#auto-charge {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.announcment-body {
+  padding: 25px !important;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.25rem;
+}
+
+.announcment-body::before {
+  position: absolute;
+  content: "";
+  bottom: -29px;
+  left: -46px;
+  width: 80px;
+  height: 80px;
+  background-color: #df3c3f;
+  border-radius: 50px;
+}
+
+.announcment-body::after {
+  position: absolute;
+  content: "";
+  top: -29px;
+  right: -46px;
+  width: 80px;
+  height: 80px;
+  background-color: #df3c3f;
+  border-radius: 50px;
+}
+
+.announcment-img img {
+  height: 110px;
+}

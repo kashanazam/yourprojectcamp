@@ -232,7 +232,7 @@
                     </div>
                 </a>`);
                 if($('.message-box-wrapper').length != 0){
-                    $('.message-box-wrapper').prepend(`<div class="card mb-3 right-card">
+                    $('.message-box-wrapper').append(`<div class="card mb-3 right-card">
                         <div class="card-body">
                             <div class="card-content collapse show">
                                 <div class="ul-widget__body mt-0">
@@ -259,7 +259,7 @@
                             </div>
                         </div>
                     </div>`);
-                    $(".message-box-wrapper").mCustomScrollbar("scrollTo", "bottom");
+                    document.getElementById('message-box-wrapper').scrollIntoView({ behavior: 'smooth', block: 'end' });
                 }
 
                 if (!window.Notification) {

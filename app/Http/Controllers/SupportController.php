@@ -46,7 +46,8 @@ class SupportController extends Controller
     public function index()
     {
         $project_count = Project::where('user_id', Auth()->user()->id)->orderBy('id', 'desc')->count();
-        return view('support.home', compact('project_count'));
+        $task_count = Task::where('user_id', Auth()->user()->id)->count();
+        return view('support.home', compact('project_count', 'task_count'));
     }
 
     public function projects(Request $request)
@@ -618,7 +619,7 @@ class SupportController extends Controller
             }
         }
         $user = User::find($id);
-        $messages = Message::where('client_id', $id)->orderBy('id', 'desc')->get();
+        $messages = Message::where('client_id', $id)->orderBy('id', 'asc')->get();
         return view('support.message.index', compact('messages', 'user'));
     }
 

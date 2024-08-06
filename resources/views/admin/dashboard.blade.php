@@ -18,74 +18,92 @@
         <div class="row">
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="card card-icon mb-4">
-                    <div class="card-body text-center"><i class="i-Library"></i>
-                        <p class="text-muted mt-2 mb-2">Category</p>
-                        <p class="text-primary text-24 line-height-1 m-0">{{$category_count}}</p>
-                    </div>
+                    <a href="{{ route('category.index') }}">
+                        <div class="card-body text-center"><i class="i-Library"></i>
+                            <p class="text-muted mt-2 mb-2">Category</p>
+                            <p class="text-primary text-24 line-height-1 m-0">{{$category_count}}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="card card-icon mb-4">
-                    <div class="card-body text-center"><i class="i-Medal-2"></i>
-                        <p class="text-muted mt-2 mb-2">Brand</p>
-                        <p class="text-primary text-24 line-height-1 m-0">{{$brand_count}}</p>
-                    </div>
+                    <a href="{{ route('brand.index') }}">
+                        <div class="card-body text-center"><i class="i-Medal-2"></i>
+                            <p class="text-muted mt-2 mb-2">Brand</p>
+                            <p class="text-primary text-24 line-height-1 m-0">{{$brand_count}}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="card card-icon mb-4">
-                    <div class="card-body text-center"><i class="i-Cash-register-2"></i>
-                        <p class="text-muted mt-2 mb-2">Currency</p>
-                        <p class="text-primary text-24 line-height-1 m-0">{{$currency_count}}</p>
-                    </div>
+                    <a href="{{ route('currency.index') }}">
+                        <div class="card-body text-center"><i class="i-Cash-register-2"></i>
+                            <p class="text-muted mt-2 mb-2">Currency</p>
+                            <p class="text-primary text-24 line-height-1 m-0">{{$currency_count}}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="card card-icon mb-4">
-                    <div class="card-body text-center"><i class="i-Suitcase"></i>
-                        <p class="text-muted mt-2 mb-2">Projects</p>
-                        <p class="text-primary text-24 line-height-1 m-0">{{$project_count}}</p>
-                    </div>
+                    <a href="{{ route('admin.project.index') }}">
+                        <div class="card-body text-center"><i class="i-Suitcase"></i>
+                            <p class="text-muted mt-2 mb-2">Projects</p>
+                            <p class="text-primary text-24 line-height-1 m-0">{{$project_count}}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="card card-icon mb-4">
-                    <div class="card-body text-center"><i class="i-Add-UserStar"></i>
-                        <p class="text-muted mt-2 mb-2">Production</p>
-                        <p class="text-primary text-24 line-height-1 m-0">{{$production_count}}</p>
-                    </div>
+                    <a href="{{ route('admin.user.production') }}">
+                        <div class="card-body text-center"><i class="i-Add-UserStar"></i>
+                            <p class="text-muted mt-2 mb-2">Production</p>
+                            <p class="text-primary text-24 line-height-1 m-0">{{$production_count}}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="card card-icon mb-4">
-                    <div class="card-body text-center"><i class="i-Administrator"></i>
-                        <p class="text-muted mt-2 mb-2">Sale Agent</p>
-                        <p class="text-primary text-24 line-height-1 m-0">{{$member_count}}</p>
-                    </div>
+                    <a href="{{ route('admin.user.sales') }}">
+                        <div class="card-body text-center"><i class="i-Administrator"></i>
+                            <p class="text-muted mt-2 mb-2">Sale Agent</p>
+                            <p class="text-primary text-24 line-height-1 m-0">{{$member_count}}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="card card-icon mb-4">
-                    <div class="card-body text-center"><i class="i-Checked-User"></i>
-                        <p class="text-muted mt-2 mb-2">Leads</p>
-                        <p class="text-primary text-24 line-height-1 m-0">{{$leads_count}}</p>
-                    </div>
+                    <a href="{{ route('admin.client.index') }}">
+                        <div class="card-body text-center"><i class="i-Checked-User"></i>
+                            <p class="text-muted mt-2 mb-2">Leads</p>
+                            <p class="text-primary text-24 line-height-1 m-0">{{$leads_count}}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="card card-icon mb-4">
-                    <div class="card-body text-center"><i class="i-Credit-Card"></i>
-                        <p class="text-muted mt-2 mb-2">Paid Invoices</p>
-                        <p class="text-primary text-24 line-height-1 m-0">{{$paid_invoice}}</p>
-                    </div>
+                    <a href="{{ route('admin.invoice') }}?status=2">
+                        <div class="card-body text-center"><i class="i-Credit-Card"></i>
+                            <p class="text-muted mt-2 mb-2">Paid Invoices</p>
+                            <p class="text-primary text-24 line-height-1 m-0">{{$paid_invoice}}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="card card-icon mb-4">
-                    <div class="card-body text-center"><i class="i-Credit-Card-3"></i>
-                        <p class="text-muted mt-2 mb-2">UnPaid Invoices</p>
-                        <p class="text-primary text-24 line-height-1 m-0">{{$un_paid_invoice}}</p>
-                    </div>
+                    <a href="{{ route('admin.invoice') }}?status=1">
+                        <div class="card-body text-center"><i class="i-Credit-Card-3"></i>
+                            <p class="text-muted mt-2 mb-2">UnPaid Invoices</p>
+                            <p class="text-primary text-24 line-height-1 m-0">{{$un_paid_invoice}}</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>

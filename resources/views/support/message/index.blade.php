@@ -5,7 +5,7 @@
     .ul-widget2__username {
        font-size: 0.8rem;
     }
-    button#write-message {
+    button.write-message {
         margin-bottom: 30px;
     }
     .ul-widget3-body p {margin-bottom: 4px;}
@@ -37,14 +37,14 @@
 <section class="widgets-content">
     <!-- begin::users-->
     <div class="row">
-    <div class="col-md-12 text-right">
-        <button class="btn btn-primary ml-auto" id="write-message">Write A Message</button>
+        <div class="col-md-12 text-right">
+            <button class="btn btn-primary ml-auto write-message">Write A Message</button>
+        </div>
     </div>
-</div>
 </section>
 <section id="basic-form-layouts">
     <div class="row">
-        <div class="col-md-12 message-box-wrapper">
+        <div class="col-md-12 message-box-wrapper" id="message-box-wrapper">
         @foreach($messages as $message)
             <div class="card mb-3 {{ $message->role_id == Auth()->user()->is_employee ? 'left-card' : 'right-card' }}">
                 <div class="card-body">
@@ -102,7 +102,10 @@
                     </div>
                 </div>
             </div>
-            @endforeach
+        @endforeach
+        <div class="col-md-12 text-right">
+            <button class="btn btn-primary ml-auto write-message mb-0">Write A Message</button>
+        </div>
         </div>
     </div>
 </section>
@@ -170,6 +173,7 @@
 <script>
     $(document).ready(function(){
         $('.input-images').imageUploader();
+        document.getElementById('message-box-wrapper').scrollIntoView({ behavior: 'smooth', block: 'end' });
     });
     CKEDITOR.replace('editmessage');
     CKEDITOR.replace('message');
@@ -190,7 +194,7 @@
         });
     }
      $(document).ready(function(){
-        $('#write-message').click(function(){
+        $('.write-message').click(function(){
             $('.left-message-box-wrapper').addClass('fixed-option');
         });
         $('#close-message-left').click(function(){

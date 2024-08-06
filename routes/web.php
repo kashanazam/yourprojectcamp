@@ -141,9 +141,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('client/{client}/{id}', [AdminClientController::class, 'showNotification'])->name('admin.client.shownotification');
         Route::get('create-invoice/{id}', [InvoiceController::class, 'index'])->name('admin.invoice.index');
         Route::post('invoice', [InvoiceController::class, 'store'])->name('admin.invoice.create');
+        Route::post('update/invoice/{id}', [InvoiceController::class, 'updateInvoice'])->name('admin.invoice.update');
         Route::delete('invoice/{id}', [InvoiceController::class, 'destroy'])->name('admin.invoice.delete');
         Route::any('invoice/generated/{id}', [InvoiceController::class, 'linkPage'])->name('admin.link');
         Route::get('invoice', [InvoiceController::class, 'invoiceAll'])->name('admin.invoice');
+        Route::get('invoice/{id}/edit', [InvoiceController::class, 'invoiceEdit'])->name('admin.invoice.edit');
         Route::get('invoice/{id}', [InvoiceController::class, 'getInvoice'])->name('admin.single.invoice');
         Route::get('brief-pending', [LogoFormController::class, 'getBriefPending'])->name('admin.brief.pending');
         Route::get('pending/projects', [LogoFormController::class, 'getPendingProject'])->name('admin.pending.project');

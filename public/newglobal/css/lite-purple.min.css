@@ -26799,3 +26799,16 @@ div#auto-charge {
 .mark-as-read p {
     justify-content: center;
 }
+
+.btn-blue {
+    background-color: #24a0ed;
+    color: white;
+    border-color: #0076c2;
+}
+
+.btn-blue:hover {
+    color: white;
+    background: #24a0ed;
+    box-shadow: 0 8px 25px -8px #24a0ed;
+    border-color: #24a0ed;
+}

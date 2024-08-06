@@ -244,12 +244,90 @@ class InvoiceController extends Controller
 		return redirect()->route('admin.link',($invoice->id));
     }
 
+    public function invoiceEdit($id){
+        $data = Invoice::find($id);
+        $user = Client::find($data->client_id);
+        $brand = Brand::all();
+        $services = Service::all();
+        $currencies =  Currency::all();
+        return view('admin.invoice.edit', compact('data', 'user', 'brand', 'services', 'currencies'));
+    }
+
     public function linkPage($id){
 		$id = Crypt::encrypt($id);
 		$invoiceId = Crypt::decrypt($id);
 		$_getInvoiceData = Invoice::findOrFail($invoiceId);
 		$_getBrand = Brand::where('id',$_getInvoiceData->brand)->first();
         return view('admin.invoice.link-page', compact('_getInvoiceData', 'id', '_getInvoiceData', '_getBrand'));
+    }
+
+    public function updateInvoice($id, Request $request){
+        $invoice = Invoice::find($id);
+        $validated = $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'brand' => 'required',
+            'service' => 'required',
+            'package' => 'required',
+            'currency' => 'required',
+            'amount' => 'required',
+            'payment_type' => 'required',
+            'merchant' => 'required'
+        ]);
+        $contact = '#';
+        if($request->contact != null){
+            $contact = $request->contact;
+        }
+        $invoice->createform = $request->createform;
+        $invoice->name = $request->name;
+        $invoice->email = $request->email;
+        $invoice->contact = $contact;
+        $invoice->brand = $request->brand;
+        $invoice->package = $request->package;
+        $invoice->currency = $request->currency;
+        $invoice->client_id = $request->client_id;
+        $invoice->discription = $request->discription;
+        $invoice->amount = $request->amount;
+        $invoice->custom_package = $request->custom_package;
+        $invoice->payment_type = $request->payment_type;
+        $service = implode(",",$request->service);
+        $invoice->service = $service;
+        $invoice->merchant_id = $request->merchant;
+        $invoice->invoice_id = bin2hex(random_bytes(24));
+        $invoice->save();
+        $id = $invoice->id;
+
+        $id = Crypt::encrypt($id);
+        $invoiceId = Crypt::decrypt($id);
+        $_getInvoiceData = Invoice::findOrFail($invoiceId);
+        $_getBrand = Brand::where('id',$_getInvoiceData->brand)->first();
+        $package_name = '';
+        if($_getInvoiceData->package == 0){
+            $package_name = strip_tags($_getInvoiceData->custom_package);
+        }
+        $sendemail = $request->sendemail;
+        if($sendemail == 1){
+            // Send Invoice Link To Email
+            $details = [
+                'brand_name' => $_getBrand->name,
+                'brand_logo' => $_getBrand->logo,
+                'brand_phone' => $_getBrand->phone,
+                'brand_email' => $_getBrand->email,
+                'brand_address' => $_getBrand->address,
+                'invoice_number' => $_getInvoiceData->invoice_number,
+                'currency_sign' => $_getInvoiceData->currency_show->sign,
+                'amount' => $_getInvoiceData->amount,
+                'name' => $_getInvoiceData->name,
+                'email' => $_getInvoiceData->email,
+                'contact' => $_getInvoiceData->contact,
+                'date' => $_getInvoiceData->created_at->format('jS M, Y'),
+                'link' => route('client.paynow', $id),
+                'package_name' => $package_name,
+                'discription' => $_getInvoiceData->discription
+            ];
+            // \Mail::to($_getInvoiceData->email)->send(new \App\Mail\InoviceMail($details));
+        }
+        return redirect()->route('admin.link',($invoice->id));
     }
 
     public function linkPageSale($id){

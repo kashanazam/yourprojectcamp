@@ -26787,3 +26787,15 @@ div#auto-charge {
 .announcment-img img {
   height: 110px;
 }
+
+.mark-as-read {
+    background-color: #df3c3f;
+    color: white;
+    font-weight: bold;
+    height: auto !important;
+    padding: 8px !important;
+}
+
+.mark-as-read p {
+    justify-content: center;
+}

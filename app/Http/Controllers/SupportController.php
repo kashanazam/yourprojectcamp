@@ -50,6 +50,12 @@ class SupportController extends Controller
         return view('support.home', compact('project_count', 'task_count'));
     }
 
+    public function markAsRead(){
+        $user = User::find(Auth()->user()->id);
+        $user->notifications->markAsRead();
+        return back();
+    }
+
     public function projects(Request $request)
     {
         $data = new Project;

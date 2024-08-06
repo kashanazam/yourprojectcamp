@@ -176,6 +176,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('support/message/{id}/{name}/show/{notify?}', [SupportController::class, 'getMessageBySupportClientId'])->name('support.message.show.id');
         Route::get('/support/message/edit/{id}', [SupportController::class, 'editMessageBySupportClientId'])->name('support.message.edit');
         Route::post('/support/message/update', [SupportController::class, 'updateSupportMessage'])->name('support.message.update');
+        Route::get('support/read/notification', [SupportController::class, 'markAsRead'])->name('support.read.notification');
     });
 });
 

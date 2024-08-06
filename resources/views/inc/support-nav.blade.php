@@ -32,9 +32,6 @@
             </div>
             <!-- Lead Notification dropdown -->
             <div class="dropdown-menu dropdown-menu-right notification-dropdown rtl-ps-none" aria-labelledby="dropdownNotification" data-perfect-scrollbar data-suppress-scroll-x="true">
-                @php
-                $k = 0;
-                @endphp
                 @foreach(auth()->user()->unreadnotifications as $notifications)
                 @if($notifications->type == 'App\Notifications\AssignProjectNotification')
                 <a href="{{ route('create.task.by.project.id', ['id' => $notifications->data['project_id'], 'name' => $notifications->data['text'], 'notify' => $notifications->id]) }}" class="dropdown-item d-flex">
@@ -72,13 +69,14 @@
                         <p class="text-small text-muted m-0">Name: {{$notifications->data['name']}}</p>
                     </div>
                 </a>
-                @if($loop->last)
-
-                @endif
-                @php
-                    $k++;
-                @endphp
                 @endforeach
+                <a href="{{ route('support.read.notification') }}" class="dropdown-item d-flex mark-as-read">
+                    <div class="notification-details flex-grow-1">
+                        <p class="m-0 d-flex align-items-center">
+                            <span class="lead-heading">MARK AS READ</span>
+                        </p>
+                    </div>
+                </a>
             </div>
         </div>
         <!-- Notificaiton End -->

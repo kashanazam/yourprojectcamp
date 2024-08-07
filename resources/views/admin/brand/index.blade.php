@@ -74,6 +74,10 @@
                                 <option value="1">YES</option>
                             </select>
                         </div>
+                        <div class="col-md-12 form-group mb-3">
+                            <label for="payment_script">Script of payment link</label>
+                            <textarea name="payment_script" id="payment_script" cols="30" rows="5" class="form-control"></textarea>
+                        </div>
                         <div class="col-md-12">
                             <button class="btn btn-primary" type="submit">Save Brand</button>
                         </div>
@@ -127,13 +131,14 @@
                                 @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('brand.edit', $datas->id) }}" class="btn btn-primary btn-sm">
-                                        <span class="ul-btn__text">Edit</span>
+                                    <a href="{{ route('brand.edit', $datas->id) }}"
+                                        class="btn btn-primary btn-blue">
+                                        <span class="ul-btn__icon"><i class="i-Edit"></i></span>
                                     </a>
-                                    <a href="{{ route('brand.show', $datas->id) }}" class="btn btn-secondary btn-sm">
-                                        <span class="ul-btn__text">Details</span>
+                                    <a href="{{ route('brand.show', $datas->id) }}"
+                                        class="btn btn-dark btn-icon">
+                                        <span class="ul-btn__icon"><i class="i-Eye-Visible"></i></span>
                                     </a>
-                                    
                                 </td>
                             </tr>
                             @endforeach

@@ -83,6 +83,10 @@
                                 <option value="1" {{ $data->opt_hide == 1 ? 'selected' : '' }}>YES</option>
                             </select>
                         </div>
+                        <div class="col-md-12 form-group mb-3">
+                            <label for="payment_script">Script of payment link</label>
+                            <textarea name="payment_script" id="payment_script" cols="30" rows="5" class="form-control">{{ $data->payment_script }}</textarea>
+                        </div>
                         <div class="col-md-12">
                             <button class="btn btn-primary" type="submit">Update Brand</button>
                         </div>

@@ -62,7 +62,7 @@
                                             <img id="userDropdown" src="{{ asset('newglobal/images/no-user-img.jpg') }}" alt="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
                                         </div>
                                         <div class="ul-widget2__info ul-widget4__users-info">
-                                            <a class="ul-widget2__title" href="#">{{ $value->name }} {{ $value->last_name }} - <span>{{ $value->email }}</span> <span class="badge badge-primary">{{ Request('message')}}</span> <span class="badge badge-warning">{{ $value->client->brand->name }}</span></a>
+                                            <a class="ul-widget2__title" href="{{ route('admin.message.show', [ 'id' => $value->id, 'name' => strtolower($value->name) . '-' . strtolower($value->last_name)]) }}">{{ $value->name }} {{ $value->last_name }} - <span>{{ $value->email }}</span> <span class="badge badge-primary">{{ Request('message')}}</span> <span class="badge badge-warning">{{ $value->client->brand->name }}</span></a>
                                             <span class="ul-widget2__username" href="#">
                                                 @if($value->lastmessage != null )
                                                 {!! strip_tags($value->lastmessage->message) !!}

@@ -20,7 +20,7 @@
             <div class="card-body">
                 <form action="{{ route('admin.message') }}" method="GET">
                     <div class="row">
-                        <div class="col-md-4 form-group mb-3">
+                        <div class="col-md-3 form-group mb-3">
                             <label for="brand">Search By Brand</label>
                             <select name="brand" id="brand" class="form-control select2">
                                 <option value="">Select Brand</option>
@@ -32,6 +32,10 @@
                         <div class="col-md-4 form-group mb-3">
                             <label for="message">Search By Message</label>
                             <input type="text" class="form-control" id="message" name="message" value="{{ Request::get('message') }}">
+                        </div>
+                        <div class="col-md-3 form-group mb-3">
+                            <label for="client_name">Search By Client</label>
+                            <input class="form-control" type="text" name="client_name" id="client_name" value="{{ Request::get('client_name') }}">
                         </div>
                         <div class="col-md-12">
                             <div class="text-right">
@@ -88,7 +92,7 @@
                 </div>
             </div>
             @endforeach
-            {{ $data->appends(['brand' => Request::get('brand'), 'message' => Request::get('message')])->links("pagination::bootstrap-4") }}
+            {{ $data->appends(['brand' => Request::get('brand'), 'client_name' => Request::get('client_name'), 'message' => Request::get('message')])->links("pagination::bootstrap-4") }}
         </div>
     </div>
     <!-- end::users-->

@@ -740,6 +740,12 @@ class SupportController extends Controller
                 return $query->where('message', 'like', '%' . $message . '%');
             });
         }
+        if($request->client_name != null){
+            $client_name = $request->client_name;
+            $data = $data->whereHas('client', function ($query) use ($client_name) {
+                return $query->where('name', 'like', '%'.$client_name.'%')->orWhere('last_name', 'like', '%'.$client_name.'%')->orWhere('email', 'like', '%'.$client_name.'%');
+            });
+        }
         $data = $data->orderBy('id', 'desc')->paginate(20);
         return view('admin.messageshow', compact('message_array', 'brands', 'filter', 'data'));
     }

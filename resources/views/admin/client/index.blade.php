@@ -124,14 +124,12 @@
                                         </td>
                                         <td>
                                             <a href="{{ route('admin.client.edit', $datas->id) }}"
-                                                class="btn btn-primary btn-icon btn-sm">
+                                                class="btn btn-blue btn-icon btn-sm">
                                                 <span class="ul-btn__icon"><i class="i-Edit"></i></span>
-                                                <span class="ul-btn__text">Edit</span>
                                             </a>
                                             <a href="{{ route('admin.client.show', $datas->id) }}"
                                                 class="btn btn-dark btn-icon btn-sm">
                                                 <span class="ul-btn__icon"><i class="i-Eyeglasses-Smiley"></i></span>
-                                                <span class="ul-btn__text">View</span>
                                             </a>
                                             <form method="POST" action="{{ route('admin.client.destroy', $datas->id) }}"
                                                 style="display: inline-block;">
@@ -139,7 +137,6 @@
                                                 {{ csrf_field() }}
                                                 <button class="btn btn-danger btn-icon btn-sm" type="submit">
                                                     <span class="ul-btn__icon"><i class="i-Delete-File"></i></span>
-                                                    <span class="ul-btn__text">Delete</span>
                                                 </button>
                                             </form>
                                         </td>

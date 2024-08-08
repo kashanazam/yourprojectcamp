@@ -177,13 +177,28 @@ class ClientController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function managerClientUpdate(Request $request, Client $client)
-    {  
+    public function managerClientUpdate(Request $request, $id)
+    {
         $request->validate([
             'name' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'email' => 'required|unique:clients,email,$id',
         ]);
-        $client->update($request->all());
+        $client = Client::find($id);
+        $client->name = $request->name;
+        $client->last_name = $request->last_name;
+        $client->email = $request->email;
+        $client->brand_id = $request->brand_id;
+        $client->contact = $request->contact;
+        $client->save();
+        $user = User::where('client_id', $id)->first();
+        if($user != null){
+            $user->name = $request->name;
+            $user->last_name = $request->last_name;
+            $user->email = $request->email;
+            $user->contact = $request->contact;
+            $user->save();
+        }
         return redirect()->back()->with('success', 'Client Updated Successfully.');
     }
 

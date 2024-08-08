@@ -52,4 +52,5 @@ public/files
 public/uploads/brands
 public/uploads/users
 .env
-
+composer.json
+composer.lock

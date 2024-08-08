@@ -138,6 +138,14 @@ class AdminClientController extends Controller
             'status' => 'required',
         ]);
         $client->update($request->all());
+        $user = User::where('client_id', $client->id)->first();
+        if($user != null){
+            $user->name = $request->name;
+            $user->last_name = $request->last_name;
+            $user->email = $request->email;
+            $user->contact = $request->contact;
+            $user->save();
+        }
         return redirect()->back()->with('success', 'Client Updated Successfully.');
     }
 

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Aws\S3\S3Client;
+use Aws\Exception\AwsException;
 
 class ClientFile extends Model
 {
@@ -25,6 +27,30 @@ class ClientFile extends Model
         $temp = explode('.',$path);
         $extension = end($temp);
         return $extension;
+    }
+
+    public function generatePresignedUrl()
+    {
+        $filePath = $this->path;
+        $s3Client = new S3Client([
+            'version'     => 'latest',
+            'region'      => config('filesystems.disks.wasabi.region'),
+            'credentials' => [
+                'key'    => config('filesystems.disks.wasabi.key'),
+                'secret' => config('filesystems.disks.wasabi.secret'),
+            ],
+            'endpoint' => config('filesystems.disks.wasabi.endpoint'),
+        ]);
+
+        $command = $s3Client->getCommand('GetObject', [
+            'Bucket' => config('filesystems.disks.wasabi.bucket'),
+            'Key'    => $filePath,
+            'ACL'    => 'public-read',
+        ]);
+
+        $request = $s3Client->createPresignedRequest($command, '+6 days 23 hours');
+
+        return (string) $request->getUri();
     }
     
 }

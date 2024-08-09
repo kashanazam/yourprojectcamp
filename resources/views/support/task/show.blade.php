@@ -208,11 +208,11 @@
                                                             $extension = end($temp);
                                                         @endphp
                                                         @if(($extension == 'jpg') || ($extension == 'png') || (($extension == 'jpeg')))
-                                                        <a href="{{asset('files/'.$client_files->path)}}" target="_blank">
-                                                            <img src="{{asset('files/'.$client_files->path)}}" alt="{{$client_files->name}}" width="100">
+                                                        <a href="{{ $client_files->path }}" target="_blank">
+                                                            <img src="{{ $client_files->path }}" alt="{{$client_files->name}}" width="100">
                                                         </a>
                                                         @else
-                                                        <a href="{{asset('files/'.$client_files->path)}}" target="_blank">
+                                                        <a href="{{ $client_files->path }}" target="_blank">
                                                             {{$client_files->name}}.{{$extension}}
                                                         </a>
                                                         @endif
@@ -226,8 +226,8 @@
                                                         <div class="btn-group float-md-right ml-1">
                                                             <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="i-Edit"></i></button>
                                                             <div class="dropdown-menu arrow">
-                                                                <a class="dropdown-item" href="{{asset('files/'.$client_files->path)}}" target="_blank"> View</a>
-                                                                <a class="dropdown-item" href="{{asset('files/'.$client_files->path)}}" download> Download</a>
+                                                                <a class="dropdown-item" href="{{ $client_files->path }}" target="_blank"> View</a>
+                                                                <a class="dropdown-item" href="{{ $client_files->path }}" download> Download</a>
                                                                 <a class="dropdown-item" href="#" onclick="deleteFile({{$client_files->id}})"> Delete</a>
                                                             </div>
                                                         </div>
@@ -422,37 +422,6 @@
                             </div>
                             @endforeach
                         </div>
-                        <!-- <div class="col-md-12">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <h4 class="card-title mb-3">Message to Client ( {{$task->projects->client->name}} {{$task->projects->client->last_name}} )</h4>
-                                    <div class="separator-breadcrumb border-top mb-3"></div>
-                                    <form class="form" method="post" id="sendmessage" action="{{ route('support.message.send') }}" enctype="multipart/form-data">
-                                        @csrf
-                                        <input type="hidden" name="task_id" value="{{ $task->id }}">
-                                        <div class="form-body">
-                                            <div class="form-group">
-                                                <textarea id="message" rows="5" class="form-control border-primary" name="message" required>{{old('message')}}</textarea>
-                                                <table>
-                                                    <tr>
-                                                        <td colspan="3" style="vertical-align:middle; text-align:left;">
-                                                            <div id="h_ItemAttachments"></div>
-                                                            <input type="button" id="h_btnAddFileUploadControl" value="Add Attachment" onclick="Clicked_h_btnAddFileUploadControl()" class="btn btn-primary btn_Standard" />
-                                                            <div id="h_ItemAttachmentControls"></div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div class="form-actions pb-0 text-right">
-                                            <button type="submit" class="btn btn-primary">
-                                            <i class="la la-check-square-o"></i> Send Message
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
                 <div class="tab-pane fade" id="notes-show" role="tabpanel" aria-labelledby="notes-show-tab">

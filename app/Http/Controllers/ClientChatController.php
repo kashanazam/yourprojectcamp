@@ -20,6 +20,7 @@ use Notification;
 use \Carbon\Carbon;
 use DateTimeZone;
 use Pusher\Pusher;
+use Illuminate\Support\Facades\Storage;
 
 class ClientChatController extends Controller
 {
@@ -63,20 +64,23 @@ class ClientChatController extends Controller
         $message->created_at = $carbon;
         $message->client_id = Auth::user()->id;
         $message->save();
-
+        $email = Auth()->user()->email;
         if($request->hasfile('h_Item_Attachments_FileInput'))
         {
             $files_array = array();
             $i = 0;
             foreach($request->file('h_Item_Attachments_FileInput') as $file)
             {
+                $disk = Storage::disk('wasabi');
+                $data = $disk->put('messages/'.$email, $file);
+                $disk->setVisibility($data, 'public');
                 $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $name = $file_name . '_' . $i . '_]' .time().'.'.$file->extension();
-                $file->move(public_path().'/files/', $name);
+                // $file->move(public_path().'/files/', $name);
                 $i++;
                 $client_file = new ClientFile();
                 $client_file->name = $file_name;
-                $client_file->path = $name;
+                $client_file->path = $data;
                 $client_file->task_id = -1;
                 $client_file->user_id = Auth()->user()->id;
                 $client_file->user_check = Auth()->user()->is_employee;

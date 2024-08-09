@@ -127,10 +127,19 @@ class InvoiceController extends Controller
                     <td>'. $rander->merchant->name .'<br><button class="btn btn-sm btn-secondary">'.$rander->merchant->get_merchant_name().'</button></td>
                     <td><button class="btn btn-sm btn-secondary">'.date('g:i a - d M, Y', strtotime($rander->created_at)).'</button></td>
                     <td>
-                        <a href="'.route('admin.link', $rander->id).'" class="btn btn-info btn-icon btn-sm">
-                            <span class="ul-btn__icon"><i class="i-Eye-Visible"></i></span>
-                            <span class="ul-btn__text">View</span>
+                        <a href="'. route('admin.invoice.edit', ['id' => $rander->id]).'" class="btn btn-blue btn-icon">
+                            <span class="ul-btn__icon"><i class="i-Edit"></i></span>
                         </a>
+                        <a href="'.route('admin.link', $rander->id).'" class="btn btn-info btn-icon">
+                            <span class="ul-btn__icon"><i class="i-Eye-Visible"></i></span>
+                        </a>
+                        <form method="POST" action="'. route('admin.invoice.delete', $rander->id).'" style="display: inline-block;" onsubmit="return confirm("Are you sure you want to submit?");">
+                            '. method_field("DELETE") .'
+                            '. csrf_field() .'
+                            <button class="btn btn-danger btn-icon" type="submit">
+                                <span class="ul-btn__icon"><i class="i-Folder-Trash"></i></span>
+                            </button>
+                        </form>
                     </td>
                 </tr>';
             }

@@ -183,7 +183,7 @@
                                                         @endphp
                                                         @if(($extension == 'jpg') || ($extension == 'png') || (($extension == 'jpeg')))
                                                         <a href="{{asset('files/'.$client_files->path)}}" target="_blank">
-                                                            <img src="{{asset('files/'.$client_files->path)}}" alt="{{$client_files->name}}" width="100">
+                                                            <img src="{{ $client_files->generatePresignedUrl() }}" alt="{{$client_files->name}}" width="100">
                                                         </a>
                                                         @else
                                                         <a href="{{asset('files/'.$client_files->path)}}" target="_blank">

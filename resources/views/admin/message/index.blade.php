@@ -53,9 +53,10 @@
                             <div class="ul-widget3 message_show">
                                 <div class="ul-widget3-item mt-0 mb-0">
                                     <div class="ul-widget3-header">
-                                        <div class="ul-widget3-info">
-                                            <a class="__g-widget-username" href="#">
+                                        <div class="ul-widget3-info w-100">
+                                            <a class="__g-widget-username d-flex justify-content-between" href="#">
                                                 <span class="t-font-bolder">{{ $message->user->name }} {{ $message->user->last_name }}</span>
+                                                <span class="text-right">message-{{ $message->id }}</span>
                                             </a>
                                         </div>
                                         @if($message->user_id == Auth()->user()->id)
@@ -64,8 +65,8 @@
                                     </div>
                                     <div class="ul-widget3-body">
                                         {!! nl2br($message->message) !!}
-                                        <span class="ul-widget3-status text-success t-font-bolder">
-                                            {{ date('d M, y', strtotime($message->created_at)) }}
+                                        <span class="ul-widget3-status text-success t-font-bolder text-right">
+                                            {{ date('h:m a - d M, Y', strtotime($message->created_at)) }}
                                         </span>
                                     </div>
                                     <div class="file-wrapper">

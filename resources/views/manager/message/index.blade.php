@@ -55,8 +55,8 @@
                                     </div>
                                     <div class="ul-widget3-body">
                                         {!! nl2br($message->message) !!}
-                                        <span class="ul-widget3-status text-success t-font-bolder">
-                                            {{ date('d M, y', strtotime($message->created_at)) }}
+                                        <span class="ul-widget3-status text-success t-font-bolder text-right">
+                                            {{ date('h:m a - d M, Y', strtotime($message->created_at)) }}
                                         </span>
                                     </div>
                                     <div class="file-wrapper">

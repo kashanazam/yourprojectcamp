@@ -34,6 +34,7 @@ use PDF;
 use Pusher\Pusher;
 use \Carbon\Carbon;
 use DateTimeZone;
+use Illuminate\Support\Facades\Storage;
 
 class SupportController extends Controller
 {
@@ -426,21 +427,24 @@ class SupportController extends Controller
         $message->role_id = 4;
         $message->created_at = $carbon;
         $message->save();
-
-
-
+        $client = User::find($request->client_id);
+        $set_email = strtolower($client->email);
+        
         if ($request->hasfile('images')) {
             $i = 0;
             foreach ($request->file('images') as $file) {
+                $disk = Storage::disk('wasabi');
+                $data = $disk->put('messages/'.$set_email, $file);
+                $disk->setVisibility($data, 'public');
                 $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $file_actual_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $file_name = str_replace(" ", "-", $file_name);
                 $name = $file_name . '-' . $i . time() . '.' . $file->extension();
-                $file->move(public_path() . '/files/', $name);
+                // $file->move(public_path() . '/files/', $name);
                 $i++;
                 $client_file = new ClientFile();
                 $client_file->name = $file_actual_name;
-                $client_file->path = $name;
+                $client_file->path = $data;
                 $client_file->task_id = $request->task_id;
                 $client_file->user_id = Auth()->user()->id;
                 $client_file->user_check = Auth()->user()->is_employee;
@@ -450,8 +454,6 @@ class SupportController extends Controller
                 $client_file->save();
             }
         }
-
-        $client = User::find($request->client_id);
 
         $details = [
             'sender_name' => Auth::user()->name . ' ' . Auth::user()->last_name,

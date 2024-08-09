@@ -21,6 +21,7 @@ use App\Models\SubTask;
 use File;
 use DateTime;
 use Pusher\Pusher;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
@@ -75,13 +76,16 @@ class TaskController extends Controller
             $i = 0;
             foreach($request->file('filenames') as $file)
             {
+                $disk = Storage::disk('wasabi');
+                $data = $disk->put('tasks/task-'.$task->id, $file);
+                $disk->setVisibility($data, 'public');
                 $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $name = $file_name . '_' . $i . '_]' .time().'.'.$file->extension();
-                $file->move(public_path().'/files/', $name);
+                // $file->move(public_path().'/files/', $name);
                 $i++;
                 $client_file = new ClientFile();
                 $client_file->name = $file_name;
-                $client_file->path = $name;
+                $client_file->path = $data;
                 $client_file->user_id = Auth()->user()->id;
                 $client_file->user_check = Auth()->user()->is_employee;
                 $client_file->task_id = $task->id;
@@ -180,13 +184,16 @@ class TaskController extends Controller
             $i = 0;
             foreach($request->file('images') as $file)
             {
+                $disk = Storage::disk('wasabi');
+                $data = $disk->put('tasks/task-'.$id, $file);
+                $disk->setVisibility($data, 'public');
                 $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $name = $file_name . '_' . $i . '_]' .time().'.'.$file->getClientOriginalExtension();
-                $file->move(public_path().'/files/', $name);
+                // $file->move(public_path().'/files/', $name);
                 $i++;
                 $client_file = new ClientFile();
                 $client_file->name = $file_name;
-                $client_file->path = $name;
+                $client_file->path = $data;
                 $client_file->task_id = $id;
                 $client_file->subtask_id = $subtask_id;
                 $client_file->user_id = Auth()->user()->id;
@@ -209,13 +216,16 @@ class TaskController extends Controller
             $i = 0;
             foreach($request->file('images') as $file)
             {
+                $disk = Storage::disk('wasabi');
+                $data = $disk->put('tasks/task-'.$id, $file);
+                $disk->setVisibility($data, 'public');
                 $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $name = $file_name . '_' . $i . '_]' .time().'.'.$file->extension();
-                $file->move(public_path().'/files/', $name);
+                // $file->move(public_path().'/files/', $name);
                 $i++;
                 $client_file = new ClientFile();
                 $client_file->name = $file_name;
-                $client_file->path = $name;
+                $client_file->path = $data;
                 $client_file->task_id = $id;
                 $client_file->user_id = Auth()->user()->id;
                 $client_file->user_check = Auth()->user()->is_employee;
@@ -249,13 +259,16 @@ class TaskController extends Controller
             $i = 0;
             foreach($request->file('images') as $file)
             {
+                $disk = Storage::disk('wasabi');
+                $data = $disk->put('tasks/task-'.$id, $file);
+                $disk->setVisibility($data, 'public');
                 $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $name = $file_name . '_' . $i . '_]' .time().'.'.$file->getClientOriginalExtension();
-                $file->move(public_path().'/files/', $name);
+                // $file->move(public_path().'/files/', $name);
                 $i++;
                 $client_file = new ClientFile();
                 $client_file->name = $file_name;
-                $client_file->path = $name;
+                $client_file->path = $data;
                 $client_file->task_id = $id;
                 $client_file->user_id = Auth()->user()->id;
                 $client_file->user_check = Auth()->user()->is_employee;
@@ -395,13 +408,16 @@ class TaskController extends Controller
                 $i = 0;
                 foreach($request->file('filenames') as $file)
                 {
+                    $disk = Storage::disk('wasabi');
+                    $data = $disk->put('tasks/task-'.$task->id, $file);
+                    $disk->setVisibility($data, 'public');
                     $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                     $name = $file_name . '_' . $i . '_]' .time().'.'.$file->extension();
-                    $file->move(public_path().'/files/', $name);
+                    // $file->move(public_path().'/files/', $name);
                     $i++;
                     $client_file = new ClientFile();
                     $client_file->name = $file_name;
-                    $client_file->path = $name;
+                    $client_file->path = $data;
                     $client_file->user_id = Auth()->user()->id;
                     $client_file->user_check = Auth()->user()->is_employee;
                     $client_file->production_check = 1;
@@ -566,8 +582,6 @@ class TaskController extends Controller
                     return $query->where('user_id', '=', Auth()->user()->id);
                 })->first();
         
-        dump($task);
-        die();
         $messages = Message::where('sender_id', $task->projects->client->id)->orWhere('user_id', $task->projects->client->id)->orderBy('id', 'desc')->get();
 
         $notification_task = Auth()->user()->notifications->where('type', 'App\Notifications\TaskNotification')->all();

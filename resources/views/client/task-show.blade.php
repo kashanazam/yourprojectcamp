@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css" integrity="sha512-6qkvBbDyl5TDJtNJiC8foyEVuB6gxMBkrKy67XpqnIDxyvLLPJzmTjAj1dRJfNdmXWqD10VbJoeN4pOQqDwvRA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.4.2/css/all.min.css" integrity="sha512-NicFTMUg/LwBeG8C7VG+gC4YiiRtQACl98QdkmfsLy37RzXdkaUAuPyVMND0olPP4Jn8M/ctesGSB2pgUBDRIw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" type="text/css" href="{{ asset('global/css/fileinput.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('newglobal/css/image-uploader.min.css') }}">
 <style>
     div#mCSB_1_container {
         padding: 15px 15px;
@@ -27,9 +28,6 @@
     input#h_btnAddFileUploadControl {
         margin-top: 0px;
         margin-bottom: 15px;
-    }
-    div#h_ItemAttachments {
-        margin-bottom: 0px;
     }
     span.ul-widget3-status{
         display: block;
@@ -101,7 +99,7 @@
 <div class="separator-breadcrumb border-top"></div>
 <section id="basic-form-layouts">
     <div class="row">
-        <div class="col-md-12 message-box-wrapper" >
+        <div class="col-md-12 message-box-wrapper" id="message-box-wrapper">
             @foreach($messages as $message)
             <div class="card mb-3 {{ $message->role_id == Auth()->user()->is_employee ? 'left-card' : 'right-card' }}">
                 <div class="card-body">
@@ -173,15 +171,9 @@
                 <div class="form-group mb-0">
                     <h1>Write A Message <span id="close-message-left"><i class="nav-icon i-Close-Window"></i></span></h1>
                     <textarea id="message" rows="8" class="form-control border-primary" name="message" required placeholder="Write a Message">{{old('message')}}</textarea>
-                    <table>
-                        <tr>
-                            <td colspan="3" style="vertical-align:middle; text-align:left;">
-                                <div id="h_ItemAttachments"></div>
-                                <input type="button" id="h_btnAddFileUploadControl" value="Add Attachment" onclick="Clicked_h_btnAddFileUploadControl()" class="btn btn-info btn_Standard" />
-                                <div id="h_ItemAttachmentControls"></div>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="input-field">
+                        <div class="input-images" style="padding-top: .5rem;"></div>
+                    </div>
                     <div class="form-actions pb-0">
                         <button type="submit" class="btn btn-primary w-100">
                         <i class="la la-check-square-o"></i> Send Message
@@ -203,9 +195,13 @@
 <script src="{{ asset('global/js/fileinput-theme.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.9.2/ckeditor.js" integrity="sha512-OF6VwfoBrM/wE3gt0I/lTh1ElROdq3etwAquhEm2YI45Um4ird+0ZFX1IwuBDBRufdXBuYoBb0mqXrmUA2VnOA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js" integrity="sha512-Yk47FuYNtuINE1w+t/KT4BQ7JaycTCcrvlSvdK/jry6Kcxqg5vN7/svVWCxZykVzzJHaxXk5T9jnFemZHSYgnw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ asset('newglobal/js/image-uploader.min.js') }}"></script>
 <script>
     $(document).ready(function(){
-
+        $(document).ready(function(){
+            $('.input-images').imageUploader();
+            document.getElementById('message-box-wrapper').scrollIntoView({ behavior: 'smooth', block: 'end' });
+        });
         $('#send_message').submit(function(e){
             e.preventDefault();
             $(this).find('button.btn.btn-primary').hide();
@@ -378,52 +374,6 @@
 </script>
 <!-- Image Upload -->
 <script>
-g_FileUploadControlCounter = 0;
-
-function Clicked_h_btnAddFileUploadControl() {
-    var v_btnFileUploadControl = document.getElementById("h_btnAddFileUploadControl");  
-        v_btnFileUploadControl.value = "Add Another Attachment";
-
-    var n="h_Item_Attachments_FileInput[]";
-    var z="h_Item_Attachment" + g_FileUploadControlCounter;
-    var x = document.createElement("INPUT");
-
-        x.setAttribute("type", "file");
-        x.setAttribute("id", z);
-        x.setAttribute("name", n);
-        x.setAttribute("onchange", "UpdateAttachmentsDisplayList()");
-        x.setAttribute("class", "Otr_Std_pad");
-        document.getElementById("h_ItemAttachmentControls").appendChild(x);
-        g_FileUploadControlCounter++;
-    }
-
-    function Clicked_h_hrefRemoveFileUploadControl(v_Item_Attachment) {
-
-        document.getElementById(v_Item_Attachment.id).value = null;
-        UpdateAttachmentsDisplayList();
-    }
-
-    function UpdateAttachmentsDisplayList() {
-
-    var inputs = document.getElementsByTagName('input');
-    var txt='';
-
-    for(var i = 0; i < inputs.length; i++) {
-        if(inputs[i].type.toLowerCase() == 'file') {
-            if(inputs[i].value.length > 0)
-            {
-                var x = inputs[i];
-                txt += "<div class='item-attachments-wrapper'><strong>" + inputs[i].value + "</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:Clicked_h_hrefRemoveFileUploadControl(" + x.id + ");'>Delete</a></div>";
-                document.getElementById(inputs[i].id).style.visibility = "hidden";
-                document.getElementById(inputs[i].id).style.height = "0";
-                document.getElementById(inputs[i].id).style.width = "0";
-            }else{
-                document.getElementById(inputs[i].id).style.visibility = "visible";
-            }
-        }
-        document.getElementById("h_ItemAttachments").innerHTML = txt;
-        }
-    }
     $(".message-box-wrapper").mCustomScrollbar({
         setHeight:500,
         live:true

@@ -65,19 +65,16 @@ class ClientChatController extends Controller
         $message->client_id = Auth::user()->id;
         $message->save();
         $email = Auth()->user()->email;
-        if($request->hasfile('h_Item_Attachments_FileInput'))
-        {
-            $files_array = array();
+        $get_files = [];
+        if ($request->hasfile('images')) {
             $i = 0;
-            foreach($request->file('h_Item_Attachments_FileInput') as $file)
-            {
+            foreach ($request->file('images') as $file) {
                 $disk = Storage::disk('wasabi');
                 $data = $disk->put('messages/'.$email, $file);
                 $disk->setVisibility($data, 'public');
                 $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $name = $file_name . '_' . $i . '_]' .time().'.'.$file->extension();
                 // $file->move(public_path().'/files/', $name);
-                $i++;
                 $client_file = new ClientFile();
                 $client_file->name = $file_name;
                 $client_file->path = $data;
@@ -88,6 +85,10 @@ class ClientChatController extends Controller
                 $client_file->message_id = $message->id;
                 $client_file->created_at = $carbon;
                 $client_file->save();
+                $get_files[$i]['path'] = $client_file->generatePresignedUrl();
+                $get_files[$i]['name'] = $file_name;
+                $get_files[$i]['extension'] = $file->extension();
+                $i++;
             }
         }
 
@@ -131,7 +132,16 @@ class ClientChatController extends Controller
             \Mail::to($project->added_by->email)->send(new \App\Mail\ClientNotifyMail($details));
             $project->added_by->notify(new MessageNotification($messageData));
             $last_notify = $project->added_by->notifications()->latest()->first();
-            $pusher->trigger('private.' .  $project->added_by->id, 'receivemessage', ['title' => 'Incoming Message', 'full_message' => $request->message ,'message' => \Illuminate\Support\Str::limit(strip_tags($request->message), 40, '...'), 'user' => Auth::user(), 'date' =>  now()->format('d m, y'), 'image' => 'new-message.png', 'link' => route('client.message', ['notify' => $last_notify->id])]);
+            $pusher->trigger('private.' .  $project->added_by->id, 'receivemessage', [
+                'title' => 'Incoming Message',
+                'full_message' => $request->message ,
+                'message' => \Illuminate\Support\Str::limit(strip_tags($request->message), 40, '...'),
+                'user' => Auth::user(), 'date' =>  now()->format('d m, y'),
+                'image' => 'new-message.png',
+                'link' => route('client.message', ['notify' => $last_notify->id]),
+                'files' => $get_files,
+                'sender_id' => Auth::user()->id
+            ]);
         }
        
         $adminusers = User::where('is_employee', 2)->get();

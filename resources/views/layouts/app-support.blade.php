@@ -231,7 +231,25 @@
                         <p class="text-small text-muted m-0">${data.message}</p>
                     </div>
                 </a>`);
-                if($('.message-box-wrapper').length != 0){
+                var file_wrapper = '';
+                if(data.files.length != 0){
+                    for(var i = 0; i < data.files.length; i++){
+                        file_wrapper += '`<ul>`';
+                        file_wrapper += '<li><button class="btn btn-dark btn-sm">'+(i+1)+'</button></li>';
+                        var file_wrapper_image = '';
+                        if((data.files[i]['extension'] == 'jpg') || (data.files[i]['extension'] == 'png') || ((data.files[i]['extension'] == 'jpeg'))){
+                            file_wrapper_image = '<img src="'+ data.files[i]['path'] + '" alt="' + data.files[i]['name'] +'" width="40">';
+                        }else{
+                            file_wrapper_image = data.files[i]['name'] + '.' + data.files[i]['path'];
+                        }
+                        file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+file_wrapper_image+'</a></li>';
+                        file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+data.files[i]['name']+'</a></li>';
+                        file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank" download>Download</a></li>';
+                        file_wrapper += '`<ul>`';
+                    }
+                }
+                var get_sender_id = data.sender_id;
+                if($('.message-box-wrapper-' + get_sender_id).length != 0){
                     $('.message-box-wrapper').append(`<div class="card mb-3 right-card">
                         <div class="card-body">
                             <div class="card-content collapse show">
@@ -251,8 +269,7 @@
                                                     ${data.date}
                                                 </span>
                                             </div>
-                                            <div class="file-wrapper">
-                                                                                    </div>
+                                            <div class="file-wrapper">${file_wrapper}</div>
                                         </div>
                                     </div>
                                 </div>

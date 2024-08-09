@@ -429,7 +429,8 @@ class SupportController extends Controller
         $message->save();
         $client = User::find($request->client_id);
         $set_email = strtolower($client->email);
-        
+        $get_files = [];
+
         if ($request->hasfile('images')) {
             $i = 0;
             foreach ($request->file('images') as $file) {
@@ -441,7 +442,6 @@ class SupportController extends Controller
                 $file_name = str_replace(" ", "-", $file_name);
                 $name = $file_name . '-' . $i . time() . '.' . $file->extension();
                 // $file->move(public_path() . '/files/', $name);
-                $i++;
                 $client_file = new ClientFile();
                 $client_file->name = $file_actual_name;
                 $client_file->path = $data;
@@ -452,6 +452,10 @@ class SupportController extends Controller
                 $client_file->message_id = $message->id;
                 $client_file->created_at = $carbon;
                 $client_file->save();
+                $get_files[$i]['path'] = $client_file->generatePresignedUrl();
+                $get_files[$i]['name'] = $file_actual_name;
+                $get_files[$i]['extension'] = $file->extension();
+                $i++;
             }
         }
 
@@ -515,7 +519,16 @@ class SupportController extends Controller
             ]
         );
 
-        $pusher->trigger('private.' .  $message->sender_id, 'receivemessage', ['title' => 'Incoming Message', 'full_message' => $request->message ,'message' => \Illuminate\Support\Str::limit(strip_tags($request->message), 40, '...'), 'user' => Auth::user(), 'date' =>  now()->format('d m, y'), 'image' => 'new-message.png', 'link' => route('client.message', ['notify' => $last_notify->id])]);
+        $pusher->trigger('private.' .  $message->sender_id, 'receivemessage', [
+            'title' => 'Incoming Message',
+            'full_message' => $request->message ,
+            'message' => \Illuminate\Support\Str::limit(strip_tags($request->message), 40, '...'),
+            'user' => Auth::user(),
+            'date' =>  now()->format('d m, y'),
+            'image' => 'new-message.png',
+            'link' => route('client.message', ['notify' => $last_notify->id]),
+            'files' => $get_files
+        ]);
         return redirect()->back()->with('success', 'Message Send Successfully.')->with('data', 'message');;
     }
 

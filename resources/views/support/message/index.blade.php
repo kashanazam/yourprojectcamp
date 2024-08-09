@@ -44,7 +44,7 @@
 </section>
 <section id="basic-form-layouts">
     <div class="row">
-        <div class="col-md-12 message-box-wrapper" id="message-box-wrapper">
+        <div class="col-md-12 message-box-wrapper message-box-wrapper-{{ $user->id }}" id="message-box-wrapper">
         @foreach($messages as $message)
             <div class="card mb-3 {{ $message->role_id == Auth()->user()->is_employee ? 'left-card' : 'right-card' }}">
                 <div class="card-body">

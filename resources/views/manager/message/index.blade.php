@@ -68,20 +68,20 @@
                                             </li>
                                             <li>
                                                 @if(($client_file->get_extension() == 'jpg') || ($client_file->get_extension() == 'png') || (($client_file->get_extension() == 'jpeg')))
-                                                <a href="{{asset('files/'.$client_file->path)}}" target="_blank">
-                                                    <img src="{{asset('files/'.$client_file->path)}}" alt="{{$client_file->name}}" width="40">
+                                                <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank">
+                                                    <img src="{{ $client_file->generatePresignedUrl() }}" alt="{{$client_file->name}}" width="40">
                                                 </a>
                                                 @else
-                                                <a href="{{asset('files/'.$client_file->path)}}" target="_blank">
+                                                <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank">
                                                     {{$client_file->name}}.{{$client_file->get_extension()}}
                                                 </a>
                                                 @endif
                                             </li>
                                             <li>
-                                                <a href="{{asset('files/'.$client_file->path)}}" target="_blank">{{$client_file->name}}</a>
+                                                <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank">{{$client_file->name}}</a>
                                             </li>
                                             <li>
-                                                <a href="{{asset('files/'.$client_file->path)}}" download>Download</a>
+                                                <a href="{{ $client_file->generatePresignedUrl() }}" download>Download</a>
                                             </li>
                                         </ul>
                                         @endforeach

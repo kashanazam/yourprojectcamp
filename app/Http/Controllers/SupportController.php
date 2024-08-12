@@ -508,7 +508,7 @@ class SupportController extends Controller
         foreach ($adminusers as $adminuser) {
             Notification::send($adminuser, new MessageNotification($messageData));
         }
-        dd(env('PUSHER_APP_CLUSTER'));
+        
         $pusher = new Pusher(
             env('PUSHER_APP_KEY'),
             env('PUSHER_APP_SECRET'),

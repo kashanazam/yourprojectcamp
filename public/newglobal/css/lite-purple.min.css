@@ -26812,3 +26812,22 @@ div#auto-charge {
     box-shadow: 0 8px 25px -8px #24a0ed;
     border-color: #24a0ed;
 }
+
+.file-upload .input-field{
+  position: sticky;
+  top: 100px;
+}
+
+.support-message-box-wrapper .card.left-card, .support-message-box-wrapper .card.right-card{
+    max-width: 85%;
+}
+
+.support-message-box-wrapper .card.left-card{
+  margin-right: 15px;
+}
+.support-message-box-wrapper .card.right-card{
+  margin-left: 15px;
+}
+.fileinput-remove-button, .fileinput-cancel-button, .btn.fileinput-upload-button {
+  border: 1px solid #ced4da !important;
+}

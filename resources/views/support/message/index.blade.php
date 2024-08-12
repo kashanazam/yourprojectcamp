@@ -1,6 +1,8 @@
 @extends('layouts.app-support')
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" type="text/css" href="{{ asset('newglobal/css/image-uploader.min.css') }}">
+<link rel="stylesheet" href="{{ asset('global/css/fileinput.css') }}">
 <style>
     .ul-widget2__username {
        font-size: 0.8rem;
@@ -42,9 +44,9 @@
         </div>
     </div>
 </section>
-<section id="basic-form-layouts">
+<section id="basic-form-layouts" class="support-message-box-wrapper">
     <div class="row">
-        <div class="col-md-12 message-box-wrapper message-box-wrapper-{{ $user->id }}" id="message-box-wrapper">
+        <div class="col-md-8 message-box-wrapper message-box-wrapper-{{ $user->id }}" id="message-box-wrapper">
         @foreach($messages as $message)
             <div class="card mb-3 {{ $message->role_id == Auth()->user()->is_employee ? 'left-card' : 'right-card' }}">
                 <div class="card-body">
@@ -103,9 +105,15 @@
                 </div>
             </div>
         @endforeach
+        </div>
+        <div class="col-md-4 file-upload">
+            <div class="input-field">
+                <div id="kartik-file-errors"></div>
+                <input id="image-file" type="file" name="images[]" multiple data-browse-on-zone-click="true">
+            </div>
+        </div>
         <div class="col-md-12 text-right">
             <button class="btn btn-primary ml-auto write-message mb-0">Write A Message</button>
-        </div>
         </div>
     </div>
 </section>
@@ -113,7 +121,7 @@
     <div class="left-message-box">
         <form class="form" action="{{ route('support.message.send') }}" enctype="multipart/form-data" method="post" id="message-post">
             @csrf
-            <input type="hidden" name="client_id" value="{{ $user->id }}">
+            <input type="hidden" name="client_id" id="client_id" value="{{ $user->id }}">
             <div class="form-body">
                 <div class="form-group mb-0">
                     <h1>Write A Message <span id="close-message-left"><i class="nav-icon i-Close-Window"></i></span></h1>
@@ -169,6 +177,8 @@
 
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.9.2/ckeditor.js" integrity="sha512-OF6VwfoBrM/wE3gt0I/lTh1ElROdq3etwAquhEm2YI45Um4ird+0ZFX1IwuBDBRufdXBuYoBb0mqXrmUA2VnOA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ asset('global/js/fileinput.js') }}"></script>
+<script src="{{ asset('global/js/fileinput-theme.js') }}"></script>
 <script src="{{ asset('newglobal/js/image-uploader.min.js') }}"></script>
 <script>
     $(document).ready(function(){
@@ -188,7 +198,6 @@
                     CKEDITOR.instances['editmessage'].setData(data.data.message);
                     $('#exampleModalMessageEdit').find('#message_id').val(data.data.id);
                     $('#exampleModalMessageEdit').modal('toggle');
-                    console.log();
                 }
             }
         });
@@ -253,6 +262,27 @@ function Clicked_h_btnAddFileUploadControl() {
     $('#message-post').submit(function(){
         $(this).find('.loader').show();
         $(this).find('.btn-primary').hide();
-    })
+    });
+
+    $("#image-file").fileinput({
+        showUpload: true,
+        elErrorContainer: '#kartik-file-errors',
+        theme: 'fa',
+        dropZoneEnabled : true,
+        uploadUrl: "{{ route('support.message.send') }}",
+        overwriteInitial: false,
+        maxFileSize:20000000,
+        maxFilesNum: 20,
+        uploadExtraData: function() {
+            return {
+                client_id: $('#client_id').val(),
+                message: 'Attachments'
+            };
+        }
+    });
+    $("#image-file").on('fileuploaded', function(event, data, previewId, index, fileId) {
+        var response = data.response;
+        console.log(response)
+    });
 </script>
 @endpush

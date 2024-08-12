@@ -529,7 +529,12 @@ class SupportController extends Controller
             'link' => route('client.message', ['notify' => $last_notify->id]),
             'files' => $get_files
         ]);
-        return redirect()->back()->with('success', 'Message Send Successfully.')->with('data', 'message');;
+
+        if($request->message == 'Attachments'){
+            return response()->json(['uploaded' => 'success', 'files' => $get_files]);
+        }else{
+            return redirect()->back()->with('success', 'Message Send Successfully.')->with('data', 'message');;
+        }
     }
 
     public function sendMessageClient(Request $request)

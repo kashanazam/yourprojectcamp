@@ -460,7 +460,7 @@ class SupportController extends Controller
         $fileName = $this->createFilename($file);
         $file_actual_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $disk = Storage::disk('wasabi');
-        $data = $disk->put('messages/'.$email, $file);
+        $data = $disk->putFileAs('messages/'.$email, $file, $fileName);
         $disk->setVisibility($data, 'public');
         $mime = str_replace('/', '-', $file->getMimeType());
         unlink($file->getPathname());
@@ -477,7 +477,9 @@ class SupportController extends Controller
     protected function createFilename(UploadedFile $file){
         $extension = $file->getClientOriginalExtension();
         $filename = str_replace(".".$extension, "", $file->getClientOriginalName());
-        $filename .= "_" . md5(time()) . "." . $extension;
+        $mytime = Carbon::now();
+        $set_time = str_replace(' ', '-', $mytime->toDateTimeString());
+        $filename .= "_" . $set_time . "." . $extension;
         return $filename;
     }
 

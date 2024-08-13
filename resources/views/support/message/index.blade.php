@@ -94,7 +94,7 @@
                                                 <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank">{{$client_file->name}}</a>
                                             </li>
                                             <li>
-                                                <a href="{{ $client_file->generatePresignedUrl() }}" download>Download</a>
+                                                <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank" download>Download</a>
                                             </li>
                                         </ul>
                                         @endforeach

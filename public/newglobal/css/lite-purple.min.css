@@ -26889,6 +26889,7 @@ ul.show-image li a {
 ul.show-image li a img {
   width: 100%;
   object-fit: cover;
+  height: 100%;
 }
 
 .sticky-wrapper form {
@@ -26912,15 +26913,16 @@ ul.show-image li a span {
     background-color: #e5e5e5;
     font-size: 12px;
     line-height: 15px;
-    top: -50%;
+    top: -100%;
     padding: 10px;
     border: #979797;
     transition: all 0.4s ease;
+    word-wrap: break-word;
 }
 
 ul.show-image li a:hover span{
   opacity: 1;
-  top: 33%;
+  top: 0%;
 }
 
 ul.show-image li a p {

@@ -3,6 +3,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" type="text/css" href="{{ asset('newglobal/css/image-uploader.min.css') }}">
 <link rel="stylesheet" href="{{ asset('global/css/fileinput.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" integrity="sha512-jU/7UFiaW5UBGODEopEqnbIAHOI8fO6T99m7Tsmqs2gkdujByJfkCbbfPSN4Wlqlb9TGnsuC0YgUgWkRBK7B9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <style>
     .ul-widget2__username {
        font-size: 0.8rem;
@@ -107,9 +109,16 @@
         @endforeach
         </div>
         <div class="col-md-4 file-upload">
-            <div class="input-field">
-                <div id="kartik-file-errors"></div>
-                <input id="image-file" type="file" name="images[]" multiple data-browse-on-zone-click="true">
+            <div class="sticky-wrapper">
+                <form action="{{ route('support.message.send.chunks') }}" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data" method="post">
+                    @csrf
+                    <input type="hidden" name="message" value="Attachments">
+                    <input type="hidden" name="client_id" value="{{ $user->id }}">
+                    <input type="file" name="file"  style="display: none;">
+                </form>
+                <ul id="file-upload-list" class="list-unstyled">
+
+                </ul>
             </div>
         </div>
         <div class="col-md-12 text-right">
@@ -129,15 +138,6 @@
                     <div class="input-field">
                         <div class="input-images" style="padding-top: .5rem;"></div>
                     </div>
-                    <!-- <table>
-                        <tr>
-                            <td colspan="3" style="vertical-align:middle; text-align:left;">
-                                <div id="h_ItemAttachments"></div>
-                                <input type="button" id="h_btnAddFileUploadControl" value="Add Attachment" onclick="Clicked_h_btnAddFileUploadControl()" class="btn btn-info btn_Standard" />
-                                <div id="h_ItemAttachmentControls"></div>
-                            </td>
-                        </tr>
-                    </table> -->
                     <div class="form-actions pb-0">
                         <button type="submit" class="btn btn-primary w-100">
                         <i class="la la-check-square-o"></i> Send Message
@@ -180,6 +180,7 @@
 <script src="{{ asset('global/js/fileinput.js') }}"></script>
 <script src="{{ asset('global/js/fileinput-theme.js') }}"></script>
 <script src="{{ asset('newglobal/js/image-uploader.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js" integrity="sha512-U2WE1ktpMTuRBPoCFDzomoIorbOyUv0sP8B+INA3EzNAhehbzED1rOJg6bCqPf/Tuposxb5ja/MAUnC8THSbLQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function(){
         $('.input-images').imageUploader();
@@ -272,7 +273,12 @@ function Clicked_h_btnAddFileUploadControl() {
         uploadUrl: "{{ route('support.message.send') }}",
         overwriteInitial: false,
         maxFileSize:20000000,
+        enableResumableUpload: true,
         maxFilesNum: 20,
+        resumableUploadOptions: {
+            testUrl: "{{ route('support.message.send.chunks') }}",
+            chunkSize: 1024, // 1 MB chunk size
+        },
         uploadExtraData: function() {
             return {
                 client_id: $('#client_id').val(),
@@ -284,5 +290,53 @@ function Clicked_h_btnAddFileUploadControl() {
         var response = data.response;
         console.log(response)
     });
+</script>
+<script>
+    // Dropzone
+    var $ = window.$; // use the global jQuery instance
+
+if ($("#my-awesome-dropzone").length > 0) {
+    var token = $('input[name=_token]').val();
+
+    // A quick way setup
+    var myDropzone = new Dropzone("#my-awesome-dropzone", {
+        // Setup chunking
+        chunking: true,
+        method: "POST",
+        maxFilesize: 1000000000,
+        chunkSize: 5000000,
+        // If true, the individual chunks of a file are being uploaded simultaneously.
+        parallelChunkUploads: true
+    });
+
+    var $list = $('#file-upload-list');
+
+    myDropzone.on('sending', function (file, xhr, formData) {
+        formData.append("_token", token);
+        formData.append("client_id", $('#client_id').val());
+        formData.append("message", $("input[name='message']").val());
+        var dropzoneOnLoad = xhr.onload;
+        xhr.onload = function (e) {
+            dropzoneOnLoad(e)
+            var uploadResponse = JSON.parse(xhr.responseText)
+            if (typeof uploadResponse.name === 'string') {
+                $list.append('<li>Uploaded: ' + uploadResponse.path + uploadResponse.name + '</li>')
+            }
+        }
+    })
+
+    // THIS IS FOR INTEGRATION TESTS - DO NOT USE
+
+    // Process the query when file is added to the input
+    $('input[name=file]').on('change', function () {
+        if (typeof this.files[0] === 'object') {
+            myDropzone.addFile(this.files[0]);
+        }
+    });
+
+    myDropzone.on('addedfile', function () {
+        $list.append('<li>Uploading</li>')
+    })
+}
 </script>
 @endpush

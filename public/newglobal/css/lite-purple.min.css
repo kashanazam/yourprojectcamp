@@ -22602,8 +22602,7 @@ ngb-rating .half {
   background-color: #47404f !important; }
 
 .dropzone {
-  min-height: 150px;
-  border: 2px dashed #673ab75e !important;
+  min-height: 250px !important;
   background: #F5F5F5 !important;
   padding: 20px 20px; }
 
@@ -26813,7 +26812,7 @@ div#auto-charge {
     border-color: #24a0ed;
 }
 
-.file-upload .input-field{
+.sticky-wrapper{
   position: sticky;
   top: 100px;
 }
@@ -26830,4 +26829,16 @@ div#auto-charge {
 }
 .fileinput-remove-button, .fileinput-cancel-button, .btn.fileinput-upload-button {
   border: 1px solid #ced4da !important;
+}
+
+.dropzone.dz-clickable {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #c1c1c1 !important;
+}
+
+.dropzone.dz-clickable button.dz-button {
+    font-size: 16px;
+    color: #aaa;
 }

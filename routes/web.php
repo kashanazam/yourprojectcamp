@@ -169,6 +169,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('support/{form_id}/projects/{check}/form/{id}', [SupportController::class, 'getForm'])->name('support.form');
         Route::get('support/message/{id}/show', [SupportController::class, 'showMessage'])->name('support.message.show');
         Route::post('support/message/', [SupportController::class, 'sendMessage'])->name('support.message.send');
+        Route::post('support/message/chunks', [SupportController::class, 'sendMessageChunks'])->name('support.message.send.chunks');
         Route::get('create/task/{id}/{name}/{notify?}', [TaskController::class, 'createTaskByProjectId'])->name('create.task.by.project.id');
         Route::post('support/task/store', [TaskController::class, 'storeTaskBySupport'])->name('store.task.by.support');
         Route::post('support/task/notes', [TaskController::class, 'storeoNotesBySupport'])->name('store.notes.by.support');

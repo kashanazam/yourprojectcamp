@@ -35,6 +35,12 @@ use Pusher\Pusher;
 use \Carbon\Carbon;
 use DateTimeZone;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+use Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException;
+use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
+use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
+use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
+use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 
 class SupportController extends Controller
 {
@@ -404,6 +410,75 @@ class SupportController extends Controller
             Notification::send($adminuser, new MessageNotification($messageData));
         }
         return redirect()->back()->with('success', 'Message Send Successfully.')->with('data', 'message');;
+    }
+
+    public function sendMessageChunks(Request $request){
+        $receiver = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
+        // check if the upload is success, throw exception or return response you need
+        if ($receiver->isUploaded() === false) {
+            throw new UploadMissingFileException();
+        }
+        $save = $receiver->receive();
+        if ($save->isFinished()) {
+            $get_client_id = $request->client_id;
+            $get_message = $request->message;
+            $client = User::find($get_client_id);
+            $set_email = strtolower($client->email);
+            $return_response = $this->saveFileToS3($save->getFile(), $set_email);
+            $carbon = Carbon::now(new DateTimeZone('America/Los_Angeles'))->toDateTimeString();
+            $message = new Message();
+            $message->user_id = Auth::user()->id;
+            $message->message = $get_message;
+            $message->sender_id = $get_client_id;
+            $message->client_id = $get_client_id;
+            $message->role_id = 4;
+            $message->created_at = $carbon;
+            $message->save();
+
+            $client_file = new ClientFile();
+            $client_file->name = $return_response->getData()->actual_name;
+            $client_file->path = $return_response->getData()->file;
+            $client_file->task_id = $request->task_id;
+            $client_file->user_id = Auth()->user()->id;
+            $client_file->user_check = Auth()->user()->is_employee;
+            $client_file->production_check = 2;
+            $client_file->message_id = $message->id;
+            $client_file->created_at = $carbon;
+            $client_file->save();
+            return $return_response;
+        }
+        $handler = $save->handler();
+
+        return response()->json([
+            "done" => $handler->getPercentageDone(),
+            'status' => true
+        ]);
+    }
+
+    protected function saveFileToS3($file, $email){
+
+        $fileName = $this->createFilename($file);
+        $file_actual_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $disk = Storage::disk('wasabi');
+        $data = $disk->put('messages/'.$email, $file);
+        $disk->setVisibility($data, 'public');
+        $mime = str_replace('/', '-', $file->getMimeType());
+        unlink($file->getPathname());
+        
+        return response()->json([
+            'path' => $disk,
+            'name' => $fileName,
+            'mime_type' =>$mime,
+            'file' => $data,
+            'actual_name' => $file_actual_name
+        ]);
+    }
+
+    protected function createFilename(UploadedFile $file){
+        $extension = $file->getClientOriginalExtension();
+        $filename = str_replace(".".$extension, "", $file->getClientOriginalName());
+        $filename .= "_" . md5(time()) . "." . $extension;
+        return $filename;
     }
 
     public function sendMessage(Request $request)

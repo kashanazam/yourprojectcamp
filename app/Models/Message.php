@@ -25,5 +25,9 @@ class Message extends Model
     {
         return $this->hasMany(ClientFile::class, 'message_id', 'id');
     }
+
+    public function client_files(){
+        return $this->hasMany(ClientFile::class, 'message_id', 'id');
+    }
     
 }

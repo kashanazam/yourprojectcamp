@@ -722,7 +722,7 @@ class SupportController extends Controller
             }
         }
         $user = User::find($id);
-        $messages = Message::where('client_id', $id)->orderBy('id', 'asc')->get();
+        $messages = Message::where('client_id', $id)->get();
         return view('support.message.index', compact('messages', 'user'));
     }
 

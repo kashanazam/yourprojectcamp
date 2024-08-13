@@ -49,7 +49,7 @@
 <section id="basic-form-layouts" class="support-message-box-wrapper">
     <div class="row">
         <div class="col-md-8 message-box-wrapper message-box-wrapper-{{ $user->id }}" id="message-box-wrapper">
-        @foreach($messages as $message)
+        @foreach($messages->sortBy('id') as $message)
             <div class="card mb-3 {{ $message->role_id == Auth()->user()->is_employee ? 'left-card' : 'right-card' }}">
                 <div class="card-body">
                     <div class="card-content collapse show">
@@ -118,6 +118,24 @@
                 </form>
                 <ul id="file-upload-list" class="list-unstyled">
 
+                </ul>
+                <ul class="show-image">
+                @foreach ($messages->sortByDesc('id') as $key => $value)
+                    @foreach ($value->client_files as $file_key => $file_value)
+                    <li>
+                        <div class="image">
+                            <a href="{{ $file_value->generatePresignedUrl() }}" target="_blank">
+                                <span>{{$file_value->name}}.{{$file_value->get_extension()}}</span>
+                            @if(($file_value->get_extension() == 'jpg') || ($file_value->get_extension() == 'png') || (($file_value->get_extension() == 'jpeg')))
+                                <img src="{{ $file_value->generatePresignedUrl() }}" alt="{{$file_value->name}}" width="40">
+                            @else
+                                <p>{{ $file_value->get_extension() }}</p>
+                            @endif
+                            </a>
+                        </div>
+                    </li>
+                    @endforeach
+                @endforeach
                 </ul>
             </div>
         </div>

@@ -26891,6 +26891,7 @@ ul.show-image li a img {
   object-fit: cover;
   height: 100%;
   object-position: top;
+  transition: all 0.4s ease;
 }
 
 .sticky-wrapper form {
@@ -26920,9 +26921,8 @@ ul.show-image li a span {
     text-wrap: nowrap;
 }
 
-ul.show-image li a:hover span{
-  opacity: 1;
-  top: 0%;
+ul.show-image li a:hover p, ul.show-image li a:hover img{
+  transform: scale(1.1);
 }
 
 ul.show-image li a p {
@@ -26938,4 +26938,29 @@ ul.show-image li a p {
   font-weight: bold;
   color: black;
   z-index: -1;
+  transition: all 0.4s ease;
+}
+
+.card-body.not-seen-card-body {
+    background-color: #dbdbdb;
+}
+
+.card-content {
+  position: relative;
+}
+
+.card-content > i {
+  position: absolute;
+  left: -50px;
+  bottom: 0;
+  color: #919191;
+  font-size: 15px;
+}
+
+.right-card .card-content > i{
+  display: none;
+}
+
+.card-content > i.fa-seen {
+  color: #08ad0f;
 }

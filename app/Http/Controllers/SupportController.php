@@ -445,7 +445,11 @@ class SupportController extends Controller
             $client_file->message_id = $message->id;
             $client_file->created_at = $carbon;
             $client_file->save();
-            return $return_response;
+            return [
+                'data' => $return_response,
+                'url' => $client_file->generatePresignedUrl(),
+                'extension' => $client_file->get_extension()
+            ];
         }
         $handler = $save->handler();
 
@@ -723,6 +727,12 @@ class SupportController extends Controller
         }
         $user = User::find($id);
         $messages = Message::where('client_id', $id)->get();
+        DB::table('messages')
+            ->where('client_id', $id)
+            ->where('sender_seen', 0)
+            ->update([
+                'sender_seen' => 1,
+            ]);
         return view('support.message.index', compact('messages', 'user'));
     }
 
@@ -759,6 +769,9 @@ class SupportController extends Controller
                 $message_array[$data->client->id]['message'] = $message->message;
                 $message_array[$data->client->id]['image'] = $data->client->image;
                 $message_array[$data->client->id]['task_id'] = $task_id;
+                $sender_seen = DB::table('messages')->where('user_id', $data->client->id)->orWhere('sender_id', $data->client->id)->get();
+                $sender_seen = $sender_seen->where('sender_seen', 0)->count();
+                $message_array[$data->client->id]['sender_seen'] = $sender_seen;
             }
         }
 

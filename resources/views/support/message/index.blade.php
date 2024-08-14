@@ -103,6 +103,7 @@
                                 </div>
                             </div>
                         </div>
+                        <i class="fa-solid fa-check {{ $message->receiver_seen == 0 ? 'fa-not-seen' : 'fa-seen' }}"></i>
                     </div>
                 </div>
             </div>
@@ -124,8 +125,7 @@
                     @foreach ($value->client_files as $file_key => $file_value)
                     <li>
                         <div class="image">
-                            <a href="{{ $file_value->generatePresignedUrl() }}" target="_blank">
-                                <span>{{$file_value->name}}.{{$file_value->get_extension()}}</span>
+                            <a href="{{ $file_value->generatePresignedUrl() }}" target="_blank" title="{{$file_value->name}}.{{$file_value->get_extension()}}">
                             @if(($file_value->get_extension() == 'jpg') || ($file_value->get_extension() == 'png') || (($file_value->get_extension() == 'jpeg')))
                                 <img src="{{ $file_value->generatePresignedUrl() }}" alt="{{$file_value->name}}" width="40">
                             @else
@@ -337,8 +337,20 @@ if ($("#my-awesome-dropzone").length > 0) {
         xhr.onload = function (e) {
             dropzoneOnLoad(e)
             var uploadResponse = JSON.parse(xhr.responseText)
-            if (typeof uploadResponse.name === 'string') {
-                $list.append('<li>Uploaded: ' + uploadResponse.path + uploadResponse.name + '</li>')
+            if (typeof uploadResponse.data.original.name === 'string') {
+                var inner_html = '';
+                if((uploadResponse.extension == 'jpg') || (uploadResponse.extension == 'png') || ((uploadResponse.extension == 'jpeg'))){
+                    inner_html = '<img src="'+uploadResponse.url+'" alt="'+uploadResponse.data.original.actual_name+'" width="40">';
+                }else{
+                    inner_html = '<p>'+ uploadResponse.extension +'</p>';
+                }
+                $('.show-image').prepend('<li>\
+                        <div class="image">\
+                            <a href="'+uploadResponse.url+'" target="_blank" title="'+ uploadResponse.data.original.actual_name + '.' + uploadResponse.extension+'">'+inner_html+'</a>\
+                        </div>\
+                    </li>');
+                $list.html('<li>Uploaded Successfully</li>')
+                myDropzone.removeAllFiles();
             }
         }
     })

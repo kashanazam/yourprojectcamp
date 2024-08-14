@@ -23,6 +23,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\Currency;
+use DB;
 
 class ClientController extends Controller
 {
@@ -362,6 +363,14 @@ class ClientController extends Controller
             }   
         }
         $messages = Message::where('user_id', Auth::user()->id)->orWhere('sender_id', Auth::user()->id)->get();
+        DB::table('messages')
+            ->where('user_id', Auth::user()->id)
+            ->orWhere('sender_id', Auth::user()->id)
+            ->where('receiver_seen', 0)
+            ->update([
+                'receiver_seen' => 1,
+            ]);
+
         return view('client.task-show', compact('messages'));
     }
 

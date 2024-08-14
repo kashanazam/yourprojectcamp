@@ -19,7 +19,7 @@
         <div class="col-xl-12">
             @foreach($message_array as $key => $message)
             <div class="card mb-4">
-                <div class="card-body">
+                <div class="card-body {{ $message['sender_seen'] != 0 ? 'not-seen-card-body' : 'seen-card-body' }}">
                     <div class="ul-widget__body">
                         <div class="tab-content pt-0 pb-0">
                             <div class="tab-pane active show">

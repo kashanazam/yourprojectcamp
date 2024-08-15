@@ -103,7 +103,11 @@
                                 </div>
                             </div>
                         </div>
-                        <i class="fa-solid fa-check {{ $message->receiver_seen == 0 ? 'fa-not-seen' : 'fa-seen' }}"></i>
+                        @if ($message->receiver_seen == 0)
+                        <i class="fa-solid fa-check fa-not-seen"></i>
+                        @else
+                        <i class="fa-solid fa-check-double fa-seen"></i>
+                        @endif
                     </div>
                 </div>
             </div>

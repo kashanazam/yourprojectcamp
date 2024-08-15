@@ -100,6 +100,19 @@
     <script src="{{ asset('newglobal/js/select2.min.js') }}"></script>
     <script src="{{ asset('newglobal/js/Chart.min.js') }}"></script>
     <script src="{{ asset('newglobal/js/sweetalert2.min.js') }}"></script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script>
+        Pusher.logToConsole = true;
+        var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+            cluster: 'ap2',
+            authEndpoint: '/broadcasting/auth',
+            auth: {
+                headers: {
+                    'X-CSRF-Token': '{{ csrf_token() }}',
+                },
+            }
+        });
+    </script>
     @yield('script')
 
     @stack('scripts')
@@ -157,18 +170,7 @@
             });
         }, 1200000)
     </script>
-    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
-        Pusher.logToConsole = true;
-        var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
-            cluster: 'ap2',
-            authEndpoint: '/broadcasting/auth',
-            auth: {
-                headers: {
-                    'X-CSRF-Token': '{{ csrf_token() }}',
-                },
-            }
-        });
         var channel = pusher.subscribe('private.{{ Auth::user()->id }}');
         channel.bind('send-task-notifiction', function(data) {
             if (!window.Notification) {
@@ -214,7 +216,6 @@
             }
         });
         var channel = pusher.subscribe('private.{{ Auth::user()->id }}');
-
 
         channel.bind('receivemessage', function(data) {
             $('#dropdownNotification span').text(parseInt($('#dropdownNotification span').text()) + 1);

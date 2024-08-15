@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Models\Currency;
 use DB;
+use Pusher\Pusher;
 
 class ClientController extends Controller
 {
@@ -363,6 +364,7 @@ class ClientController extends Controller
             }   
         }
         $messages = Message::where('user_id', Auth::user()->id)->orWhere('sender_id', Auth::user()->id)->get();
+        
         DB::table('messages')
             ->where('user_id', Auth::user()->id)
             ->orWhere('sender_id', Auth::user()->id)
@@ -370,6 +372,26 @@ class ClientController extends Controller
             ->update([
                 'receiver_seen' => 1,
             ]);
+        
+        $pusher = new Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            [
+                'cluster' => env('PUSHER_APP_CLUSTER'),
+                'useTLS' => true,
+            ]
+        );
+
+        $get_data = DB::table('messages')
+                        ->where('user_id', Auth::user()->id)
+                        ->where('role_id', '!=', 3)
+                        ->orWhere('sender_id', Auth::user()->id)
+                        ->first();
+
+        $pusher->trigger('private.' .  $get_data->user_id . '-' . Auth::user()->id, 'seenmessage', [
+            'user_id' => Auth::user()->id
+        ]);
 
         return view('client.task-show', compact('messages'));
     }

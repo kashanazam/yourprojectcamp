@@ -112,6 +112,22 @@
                 </div>
             </div>
         @endforeach
+            <div class="pt-3 pb-3 chat-input-area d-none">
+                <form class="inputForm">
+                    <div class="form-group">
+                        <textarea class="form-control form-control-rounded" placeholder="Type your message" cols="30" rows="3"></textarea>
+                    </div>
+                    <div class="d-flex">
+                        <div class="flex-grow-1"></div>
+                        <button class="btn btn-icon btn-rounded btn-primary me-2">
+                        <i class="i-Paper-Plane"></i>
+                        </button>
+                        <button class="btn btn-icon btn-rounded btn-outline-primary" type="button">
+                        <i class="i-Add-File"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
         <div class="col-md-4 file-upload">
             <div class="sticky-wrapper">
@@ -372,5 +388,10 @@ if ($("#my-awesome-dropzone").length > 0) {
         $list.append('<li>Uploading</li>')
     })
 }
+var message_channel = pusher.subscribe('private.{{ Auth::user()->id }}-{{ $user->id }}');
+message_channel.bind('seenmessage', function(data) {
+    $('.card-content > i.fa-check').removeClass('fa-check fa-not-seen').addClass('fa-check-double fa-seen');
+    console.log(data);
+});
 </script>
 @endpush

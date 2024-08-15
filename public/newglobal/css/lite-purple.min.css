@@ -26964,3 +26964,9 @@ ul.show-image li a p {
 .card-content > i.fa-seen {
   color: #08ad0f;
 }
+
+.chat-input-area {
+  border-top: 3px solid #e5e5e5;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+}

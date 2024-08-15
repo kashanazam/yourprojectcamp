@@ -209,7 +209,6 @@
                     file_wrapper += '`<ul>`';
                 }
             }
-            console.log(file_wrapper);
 
             if($('#mCSB_1_container').length != 0){
                 $('#mCSB_1_container').append(`<div class="card mb-3 right-card">

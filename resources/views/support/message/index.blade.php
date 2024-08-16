@@ -389,6 +389,7 @@ if ($("#my-awesome-dropzone").length > 0) {
     })
 }
 var message_channel = pusher.subscribe('private.{{ Auth::user()->id }}-{{ $user->id }}');
+console.log(message_channel);
 message_channel.bind('seenmessage', function(data) {
     $('.card-content > i.fa-check').removeClass('fa-check fa-not-seen').addClass('fa-check-double fa-seen');
     console.log(data);

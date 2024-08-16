@@ -38,51 +38,53 @@ class ClientController extends Controller
         $data = new Client;
         $data = $data->where('user_id', Auth()->user()->id);
         $data = $data->orderBy('id', 'desc');
-        if($request->name != ''){
+        if ($request->name != '') {
             $data = $data->whereRaw(
                 "TRIM(CONCAT(name, ' ', last_name)) like '%{$request->name}%'"
             );
         }
-        if($request->email != ''){
+        if ($request->email != '') {
             $data = $data->where('email', 'LIKE', "%$request->email%");
         }
-        if($request->contact != ''){
+        if ($request->contact != '') {
             $data = $data->where('contact', 'LIKE', "%$request->contact%");
         }
-        if($request->status != ''){
+        if ($request->status != '') {
             $data = $data->where('status', $request->status);
         }
         $data = $data->paginate(10);
         return view('sale.client.index', compact('data'));
     }
 
-    public function managerClient(Request $request){
+    public function managerClient(Request $request)
+    {
         $data = new Client;
         $data = $data->whereIn('brand_id', Auth()->user()->brand_list());
         $data = $data->orderBy('id', 'desc');
-        if($request->name != ''){
+        if ($request->name != '') {
             $data = $data->whereRaw(
                 "TRIM(CONCAT(name, ' ', last_name)) like '%{$request->name}%'"
             );
         }
-        if($request->email != ''){
+        if ($request->email != '') {
             $data = $data->where('email', 'LIKE', "%$request->email%");
         }
-        if($request->contact != ''){
+        if ($request->contact != '') {
             $data = $data->where('contact', 'LIKE', "%$request->contact%");
         }
-        if($request->status != ''){
+        if ($request->status != '') {
             $data = $data->where('status', $request->status);
         }
-        if($request->brand != ''){
+        if ($request->brand != '') {
             $data = $data->where('brand_id', $request->brand);
         }
-        
+
         $data = $data->paginate(20);
         return view('manager.client.index', compact('data'));
     }
 
-    public function markAsRead(){
+    public function markAsRead()
+    {
         $user = User::find(Auth()->user()->id);
         $user->notifications->markAsRead();
         return back();
@@ -98,7 +100,8 @@ class ClientController extends Controller
         return view('sale.client.create');
     }
 
-    public function managerClientCreate(){
+    public function managerClientCreate()
+    {
         return view('manager.client.create');
     }
 
@@ -155,18 +158,19 @@ class ClientController extends Controller
     public function edit($id)
     {
         $data = Client::where('id', $id)->where('user_id', Auth::user()->id)->first();
-        if($data == null){
+        if ($data == null) {
             return redirect()->back();
-        }else{
+        } else {
             return view('sale.client.edit', compact('data'));
         }
     }
 
-    public function managerClientEdit($id){
+    public function managerClientEdit($id)
+    {
         $data = Client::where('id', $id)->whereIn('brand_id', Auth::user()->brand_list())->first();
-        if($data == null){
+        if ($data == null) {
             return redirect()->back();
-        }else{
+        } else {
             return view('manager.client.edit', compact('data'));
         }
     }
@@ -194,7 +198,7 @@ class ClientController extends Controller
         $client->contact = $request->contact;
         $client->save();
         $user = User::where('client_id', $id)->first();
-        if($user != null){
+        if ($user != null) {
             $user->name = $request->name;
             $user->last_name = $request->last_name;
             $user->email = $request->email;
@@ -226,7 +230,8 @@ class ClientController extends Controller
         //
     }
 
-    public function paymentLink($id){
+    public function paymentLink($id)
+    {
         $user = Client::find($id);
         $brand = Brand::whereIn('id', Auth()->user()->brand_list())->get();;
         $services = Service::all();
@@ -235,7 +240,8 @@ class ClientController extends Controller
         return view('sale.payment.create', compact('user', 'brand', 'currencies', 'services', 'merchant'));
     }
 
-    public function managerPaymentLink($id){
+    public function managerPaymentLink($id)
+    {
         $user = Client::find($id);
         $brand = Brand::whereIn('id', Auth()->user()->brand_list())->get();;
         $services = Service::all();
@@ -244,10 +250,11 @@ class ClientController extends Controller
         return view('manager.payment.create', compact('user', 'brand', 'currencies', 'services', 'merchant'));
     }
 
-    public function getClientBrief(){
+    public function getClientBrief()
+    {
         $data = array();
-        if(count(Auth()->user()->logoForm) != 0){
-            foreach(Auth()->user()->logoForm as $logoForm){
+        if (count(Auth()->user()->logoForm) != 0) {
+            foreach (Auth()->user()->logoForm as $logoForm) {
                 $logo_form = LogoForm::find($logoForm->id);
                 $logo_form->option = $logo_form->logo_name;
                 $logo_form->form_type = 1;
@@ -255,8 +262,8 @@ class ClientController extends Controller
                 array_push($data, $logo_form);
             }
         }
-        if(count(Auth()->user()->webForm) != 0){
-            foreach(Auth()->user()->webForm as $webForm){
+        if (count(Auth()->user()->webForm) != 0) {
+            foreach (Auth()->user()->webForm as $webForm) {
                 $web_form = WebForm::find($webForm->id);
                 $web_form->option = $web_form->business_name;
                 $web_form->form_type = 2;
@@ -264,8 +271,8 @@ class ClientController extends Controller
                 array_push($data, $web_form);
             }
         }
-        if(count(Auth()->user()->smmForm) != 0){
-            foreach(Auth()->user()->smmForm as $smmForm){
+        if (count(Auth()->user()->smmForm) != 0) {
+            foreach (Auth()->user()->smmForm as $smmForm) {
                 $smm_form = SmmForm::find($smmForm->id);
                 $smm_form->option = $smm_form->business_name;
                 $smm_form->form_type = 3;
@@ -273,8 +280,8 @@ class ClientController extends Controller
                 array_push($data, $smm_form);
             }
         }
-        if(count(Auth()->user()->contentWritingForm) != 0){
-            foreach(Auth()->user()->contentWritingForm as $contentWritingForm){
+        if (count(Auth()->user()->contentWritingForm) != 0) {
+            foreach (Auth()->user()->contentWritingForm as $contentWritingForm) {
                 $content_form = ContentWritingForm::find($contentWritingForm->id);
                 $content_form->option = $content_form->company_name;
                 $content_form->form_type = 4;
@@ -282,8 +289,8 @@ class ClientController extends Controller
                 array_push($data, $content_form);
             }
         }
-        if(count(Auth()->user()->soeForm) != 0){
-            foreach(Auth()->user()->soeForm as $soeForm){
+        if (count(Auth()->user()->soeForm) != 0) {
+            foreach (Auth()->user()->soeForm as $soeForm) {
                 $seo_form = SeoForm::find($soeForm->id);
                 $seo_form->option = $seo_form->company_name;
                 $seo_form->form_type = 5;
@@ -291,8 +298,8 @@ class ClientController extends Controller
                 array_push($data, $seo_form);
             }
         }
-        if(count(Auth()->user()->bookFormattingForm) != 0){
-            foreach(Auth()->user()->bookFormattingForm as $bookFormatting){
+        if (count(Auth()->user()->bookFormattingForm) != 0) {
+            foreach (Auth()->user()->bookFormattingForm as $bookFormatting) {
                 $bookFormattingForm = BookFormatting::find($bookFormatting->id);
                 $bookFormattingForm->option = $bookFormatting->book_title;
                 $bookFormattingForm->form_type = 6;
@@ -300,8 +307,8 @@ class ClientController extends Controller
                 array_push($data, $bookFormattingForm);
             }
         }
-        if(count(Auth()->user()->bookWritingForm) != 0){
-            foreach(Auth()->user()->bookWritingForm as $bookWriting){
+        if (count(Auth()->user()->bookWritingForm) != 0) {
+            foreach (Auth()->user()->bookWritingForm as $bookWriting) {
                 $bookWritingForm = BookWriting::find($bookWriting->id);
                 $bookWritingForm->option = $bookWriting->book_title;
                 $bookWritingForm->form_type = 7;
@@ -310,8 +317,8 @@ class ClientController extends Controller
             }
         }
 
-        if(count(Auth()->user()->authorWesbiteForm) != 0){
-            foreach(Auth()->user()->authorWesbiteForm as $authorWesbiteForm){
+        if (count(Auth()->user()->authorWesbiteForm) != 0) {
+            foreach (Auth()->user()->authorWesbiteForm as $authorWesbiteForm) {
                 $authorWebsiteForm = AuthorWebsite::find($authorWesbiteForm->id);
                 $authorWebsiteForm->option = $authorWesbiteForm->author_name;
                 $authorWebsiteForm->form_type = 8;
@@ -320,8 +327,8 @@ class ClientController extends Controller
             }
         }
 
-        if(count(Auth()->user()->proofreading) != 0){
-            foreach(Auth()->user()->proofreading as $proofreading){
+        if (count(Auth()->user()->proofreading) != 0) {
+            foreach (Auth()->user()->proofreading as $proofreading) {
                 $proofreadingForm = Proofreading::find($proofreading->id);
                 $proofreadingForm->option = $proofreading->author_name;
                 $proofreadingForm->form_type = 9;
@@ -330,8 +337,8 @@ class ClientController extends Controller
             }
         }
 
-        if(count(Auth()->user()->bookcover) != 0){
-            foreach(Auth()->user()->bookcover as $bookcover){
+        if (count(Auth()->user()->bookcover) != 0) {
+            foreach (Auth()->user()->bookcover as $bookcover) {
                 $bookcover = BookCover::find($bookcover->id);
                 $bookcover->option = $bookcover->author_name;
                 $bookcover->form_type = 10;
@@ -339,32 +346,35 @@ class ClientController extends Controller
                 array_push($data, $bookcover);
             }
         }
-        
+
         return view('client.brief', compact('data'));
     }
-    
-    public function getAssignedClient(){
+
+    public function getAssignedClient()
+    {
         $data = Client::where('assign_id', Auth()->user()->id)->get();
         return view('sale.client.assigned', compact('data'));
     }
 
-    public function clientProject(){
+    public function clientProject()
+    {
         $data = Task::whereHas('projects', function ($query) {
-                    return $query->whereNotNull('user_id')->where('client_id', Auth::user()->id);
-                })->get();
+            return $query->whereNotNull('user_id')->where('client_id', Auth::user()->id);
+        })->get();
         return view('client.project', compact('data'));
     }
 
-    public function clientTaskshow($id, $notify = null){
+    public function clientTaskshow($id, $notify = null)
+    {
         // $notifications = Auth::user()->Notifications->markAsRead();
-        if($id != null){
+        if ($id != null) {
             $Notification = Auth::user()->Notifications->find($id);
-            if($Notification){
+            if ($Notification) {
                 $Notification->markAsRead();
-            }   
+            }
         }
         $messages = Message::where('user_id', Auth::user()->id)->orWhere('sender_id', Auth::user()->id)->get();
-        
+
         DB::table('messages')
             ->where('user_id', Auth::user()->id)
             ->orWhere('sender_id', Auth::user()->id)
@@ -372,7 +382,7 @@ class ClientController extends Controller
             ->update([
                 'receiver_seen' => 1,
             ]);
-        
+
         $pusher = new Pusher(
             env('PUSHER_APP_KEY'),
             env('PUSHER_APP_SECRET'),
@@ -384,29 +394,34 @@ class ClientController extends Controller
         );
 
         $get_data = DB::table('messages')
-                        ->where('user_id', Auth::user()->id)
-                        ->where('role_id', '!=', 3)
-                        ->orWhere('sender_id', Auth::user()->id)
-                        ->first();
+            ->where('user_id', Auth::user()->id)
+            ->where('role_id', '!=', 3)
+            ->orWhere('sender_id', Auth::user()->id)
+            ->first();
 
-        $pusher->trigger('private.' .  $get_data->user_id . '-' . Auth::user()->id, 'seenmessage', [
-            'user_id' => Auth::user()->id
-        ]);
+
+        if ($get_data) {
+            $pusher->trigger('private.' .  $get_data->user_id . '-' . Auth::user()->id, 'seenmessage', [
+                'user_id' => Auth::user()->id
+            ]);
+        }
 
         return view('client.task-show', compact('messages'));
     }
 
-    public function managerClientById($id, $name){
+    public function managerClientById($id, $name)
+    {
         $user = User::find($id);
-        if(in_array($user->client->brand->id, Auth()->user()->brand_list())){
+        if (in_array($user->client->brand->id, Auth()->user()->brand_list())) {
             $messages = Message::where('client_id', $id)->orderBy('id', 'desc')->limit(3)->get();
             return view('manager.client.show', compact('user', 'messages'));
-        }else{
+        } else {
             return redirect()->back();
         }
     }
 
-    public function clientDashboard(){
+    public function clientDashboard()
+    {
         return view('client.dashboard');
     }
 }

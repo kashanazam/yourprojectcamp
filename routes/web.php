@@ -97,6 +97,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('client/message/', [SupportController::class, 'sendMessageClient'])->name('client.message.send');
         Route::get('client/brief', [ClientController::class, 'getClientBrief'])->name('client.brief');
         Route::get('client/read/notification', [ClientController::class, 'markAsRead'])->name('client.read.notification');
+        Route::post('client/message/seen', [ClientController::class, 'messageSeen'])->name('message.seen');
     });
 });
 Route::group(['middleware' => 'auth'], function () {

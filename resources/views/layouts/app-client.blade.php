@@ -177,6 +177,7 @@
             }
         });
         var channel = pusher.subscribe('private.{{ Auth::user()->id }}');
+
         channel.bind('receivemessage', function(data) {
             $('#dropdownNotification span').text(parseInt($('#dropdownNotification span').text()) + 1);
             $('.notification-dropdown').prepend(`<a href="${data.link}" class="dropdown-item d-flex">
@@ -240,7 +241,24 @@
                     </div>
                 </div>`);
                 $(".message-box-wrapper").mCustomScrollbar("scrollTo", "bottom");
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                    }
+                });
 
+                $.ajax({
+                    type:'POST',
+                    url:'{{ route("message.seen") }}',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: {
+                        'id' : data.id
+                    },
+                    success:function(data) {
+                        console.log(data);
+                    }
+                });
             }
             if (!window.Notification) {
                 console.log('Browser does not support notifications.');

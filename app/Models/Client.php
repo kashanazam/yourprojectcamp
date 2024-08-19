@@ -39,5 +39,9 @@ class Client extends Model
     public function invoice_unpaid(){
         return $this->hasMany(Invoice::class)->where('payment_status', 1)->sum('amount');
     }
+
+    public function last_invoice_paid(){
+        return $this->hasOne(Invoice::class)->where('payment_status', 2)->orderBy('id', 'desc');
+    }
     
 }

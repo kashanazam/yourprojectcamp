@@ -1,4 +1,4 @@
-@extends('layouts.app-sale')
+@extends('layouts.app-support')
 @section('content')
 <div class="breadcrumb">
     <h1>Change Password</h1>

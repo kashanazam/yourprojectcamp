@@ -161,7 +161,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'is_support'], function(){
-        Route::get('support/change-password', [SupportController::class, 'changePassword'])->name('support.change.password');
+        Route::post('support/assign/form', [SupportController::class, 'assignServices'])->name('support.assign.form');
+        Route::get('support/serives', [SupportController::class, 'getServices'])->name('support.get.services');
+        Route::get('profile', [SupportController::class, 'editProfile'])->name('support.edit.profile');
+        Route::patch('support/update-profile/{id}', [SupportController::class, 'updateProfile'])->name('support.update.profile');
+        Route::get('password', [SupportController::class, 'changePassword'])->name('support.change.password');
         Route::post('support/change-password', [SupportController::class, 'updatePassword'])->name('support.update.password');
         Route::get('support/home', [SupportController::class, 'index'])->name('support.home');
         Route::get('support/projects', [SupportController::class, 'projects'])->name('support.project');
@@ -191,7 +195,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/projects', [HomeController::class, 'getProjectBySale'])->name('sale.project');
         Route::get('task/show/{id}', [TaskController::class, 'saleTaskShow'])->name('sale.task.show');
         Route::get('/home', [HomeController::class, 'index'])->name('sale.home');
-        Route::get('/edit-profile', [HomeController::class, 'editProfile'])->name('sale.edit.profile');
+        Route::get('sale/edit-profile', [HomeController::class, 'editProfile'])->name('sale.edit.profile');
         Route::patch('/update-profile/{id}', [HomeController::class, 'updateProfile'])->name('sale.update.profile');
         Route::get('/change-password', [HomeController::class, 'changePassword'])->name('sale.change.password');
         Route::post('/change-password', [HomeController::class, 'updatePassword'])->name('sale.update.password');

@@ -210,7 +210,7 @@
                     file_wrapper += '`<ul>`';
                 }
             }
-
+            console.log(data);
             if($('#mCSB_1_container').length != 0){
                 $('#mCSB_1_container').append(`<div class="card mb-3 right-card">
                     <div class="card-body">
@@ -246,19 +246,21 @@
                         'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
                     }
                 });
-
-                $.ajax({
-                    type:'POST',
-                    url:'{{ route("message.seen") }}',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: {
-                        'id' : data.id
-                    },
-                    success:function(data) {
-                        console.log(data);
-                    }
-                });
+                setTimeout(() => {
+                    $.ajax({
+                        type:'POST',
+                        url:'{{ route("message.seen") }}',
+                        dataType: 'json',
+                        data: {
+                            'id' : data.user.id,
+                        },
+                        success:function(data) {
+                            console.log(data);
+                        }
+                        
+                    });    
+                }, 20000);
+                
             }
             if (!window.Notification) {
                 console.log('Browser does not support notifications.');

@@ -21,6 +21,8 @@
     </div>
     <div style="margin: auto"></div>
     <div class="header-part-right">
+
+        <i class="i-Cloud-Sun header-icon d-none d-sm-inline-block" onclick="changeMode()"></i>
         <!-- Full screen toggle -->
         <i class="i-Full-Screen header-icon d-none d-sm-inline-block" data-fullscreen></i>
         <!-- Grid menu Dropdown -->
@@ -93,7 +95,7 @@
                     <div class="dropdown-header">
                         <i class="i-Lock-User mr-1"></i> {{ Auth::user()->name }} {{ Auth::user()->last_name}}
                     </div>
-                    <a class="dropdown-item" href="">Edit Profile</a>
+                    <a class="dropdown-item" href="{{ route('support.edit.profile') }}">Edit Profile</a>
                     <a class="dropdown-item" href="{{ route('support.change.password') }}">Change Password</a>
                     <a class="dropdown-item" href="{{ route('logout') }}"
                         onclick="event.preventDefault();
@@ -143,6 +145,12 @@
                     <span class="counter">{{ count($notifications) }}</span>
                 </a>
                 <div class="triangle"></div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-item-hold scroll-to-bottom" href="javascript:;">
+                    <i class="nav-icon i-Down"></i>
+                    <span>Scroll Bottom</span>
+                </a>
             </li>
         </ul>
     </div>

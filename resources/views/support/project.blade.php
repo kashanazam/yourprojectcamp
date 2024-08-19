@@ -79,6 +79,9 @@
                                     @endif
                                 </td>
                                 <td>
+                                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="assignForms({{$datas->client->id}})">
+                                        Assign Forms
+                                    </a>
                                     <a href="{{ route('support.message.show.id', ['id' => $datas->client->id ,'name' => $datas->client->name]) }}" class="btn btn-secondary btn-sm">
                                         Message
                                     </a>
@@ -112,9 +115,52 @@
         </div>
     </div>
 </div>
+<!--  Assign Form -->
+<div class="modal fade" id="assignModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle-2" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle-2">Assign Agent</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <form action="{{ route('support.assign.form') }}" method="post">
+            @csrf
+                <div class="modal-body">
+                    <input type="hidden" name="client_id" id="client_id">
+                    <div class="form-group">
+                        <label class="col-form-label" for="agent-name-wrapper">Name:</label>
+                        <select name="service_id" id="agent-name-wrapper" class="form-control">
 
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary ml-2" type="submit">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
-    
+    <script>
+        function assignForms(id){
+            $('#agent-name-wrapper').html('');
+            var url = "{{ route('support.get.services') }}";
+            $.ajax({
+                type:'GET',
+                url: url,
+                success:function(data) {
+                    var getData = data.data;
+                    for (var i = 0; i < getData.length; i++) {
+                        $('#agent-name-wrapper').append('<option value="'+getData[i].id+'">'+getData[i].name+'</option>');
+                    }
+                }
+            });
+            $('#assignModel').find('#client_id').val(id);
+            $('#assignModel').modal('show');
+        }
+    </script>
 @endpush

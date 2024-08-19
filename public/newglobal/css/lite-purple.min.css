@@ -85,7 +85,8 @@ body {
   line-height: 1.5;
   color: #47404f;
   text-align: left;
-  background-color: #fff; }
+  background-color: #fff;
+  }
 
 [tabindex="-1"]:focus {
   outline: 0 !important; }
@@ -161,7 +162,7 @@ sup {
   top: -.5em; }
 
 a {
-  color: #663399;
+  color: #df3c3f;
   text-decoration: none;
   background-color: transparent;
   -webkit-text-decoration-skip: objects; }
@@ -1759,9 +1760,12 @@ fieldset:disabled a.btn {
   .btn-primary:focus, .btn-primary.focus {
     box-shadow: 0 0 0 0.2rem rgba(102, 51, 153, 0.5); }
   .btn-primary.disabled, .btn-primary:disabled {
-    color: #fff;
-    background-color: #663399;
-    border-color: #663399; }
+    /* color: #fff; */
+    /* background-color: #663399; */
+    /* border-color: #663399; */
+    opacity: 0.6;
+    cursor: not-allowed;
+    }
   .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
   .show > .btn-primary.dropdown-toggle {
     color: #fff;
@@ -18801,7 +18805,8 @@ table.dataTable-collapse {
   outline: initial !important;
   background: #f8f9fa;
   border: 1px solid #ced4da;
-  color: #47404f; }
+  color: #47404f;
+  }
   .form-control::placeholder {
     color: #bbb; }
   .form-control.rounded, .form-control.form-control-rounded {
@@ -22602,10 +22607,12 @@ ngb-rating .half {
   background-color: #47404f !important; }
 
 .dropzone {
-  min-height: 250px !important;
-  background: #F5F5F5 !important;
-  padding: 20px 20px; }
-
+    min-height: 15px !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin-bottom: 0;
+    border: 0px !important;
+}
 .nav-tabs {
   border-bottom: 1px solid #0076c2; }
 
@@ -25829,7 +25836,8 @@ body {
   line-height: 1.6;
   background: #fff;
   overflow-x: hidden;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+  }
 
 [tabindex="-1"]:focus {
   outline: none; }
@@ -26850,23 +26858,11 @@ div#auto-charge {
   border: 1px solid #ced4da !important;
 }
 
-.dropzone.dz-clickable {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px dashed #c1c1c1 !important;
-}
-
-.dropzone.dz-clickable button.dz-button {
-    font-size: 16px;
-    color: #aaa;
-}
-
 ul.show-image {
   padding: 0;
   margin: 0;
   display: flex;
-  gap: 8px;
+  gap: 1.8%;
   flex-wrap: wrap;
 }
 
@@ -26877,6 +26873,7 @@ ul.show-image li {
   border: 1px solid #e5e5e5;
   height: 120px;
   overflow: hidden;
+  margin-bottom: 1.6%;
 }
 
 ul.show-image li a {
@@ -26966,7 +26963,160 @@ ul.show-image li a p {
 }
 
 .chat-input-area {
-  border-top: 3px solid #e5e5e5;
-  border-top-right-radius: 15px;
-  border-top-left-radius: 15px;
+  padding: 20px !important;
+  box-shadow: 0 4px 20px 1px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+}
+
+.dz-default.dz-message {
+  margin: 0 !important;
+  width: 100%;
+  display: none;
+}
+
+.dropzone .dz-preview .dz-image {
+  width: 60px !important;
+  height: 60px !important;
+  /* border: 1px solid #ced4da; */
+  border-radius: 10px !important;
+}
+.dropzone .dz-preview{
+  min-height: 60px !important;
+}
+
+.dropzone .dz-preview {
+  margin: 10px 8px !important;
+  border-radius: 10px;
+  border: 1px solid #ced4da;
+}
+
+.chatbox textarea {
+  padding: 12px 15px;
+  min-height: 80px;
+  border-top: 0;
+  border-top-left-radius: 0px !important;
+  border-top-right-radius: 0px !important;
+  border: 0px;
+  padding-top: 0px;
+}
+
+.chatbox button {
+  height: 45px;
+  font-size: 15px;
+  position: relative;
+}
+
+.chat-wrapper {
+  flex: 0 0 88%;
+  margin-right: 1.5%;
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 20px;
+}
+
+.dropzone .dz-preview .dz-details {
+  padding: 19px 0px 0px !important;
+}
+
+.chatbox textarea:focus{
+  box-shadow: none;
+  background-color: transparent;
+}
+.dropzone.dz-clickable.dz-started{
+  border-bottom: 1px solid #ced4da !important;
+  margin-bottom: 12px;
+  padding: 4px 6px !important;
+}
+
+.dropzone .dz-preview .dz-error-mark svg, .dropzone .dz-preview .dz-success-mark svg{
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.dropzone .dz-preview .dz-error-mark svg g, .dropzone .dz-preview .dz-success-mark svg g{
+  stroke: #df3c3f;
+  fill: #df3c3f;
+}
+
+.dropzone .dz-preview .dz-details .dz-size{
+  font-size: 10px !important;
+}
+
+.dropzone .dz-preview .dz-error-mark, .dropzone .dz-preview .dz-success-mark{
+  top: 45%;
+  left: 40%;
+}
+
+.dropzone .dz-preview .dz-details{
+  font-size: 10px !important;
+}
+
+.loader-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 6px;
+  display: none;
+}
+
+a.brands-list{
+  color: #df3c3f;
+}
+
+/* Dark Mode */
+.dark-mode {
+  background-color: black;
+}
+.dark-mode .layout-sidebar-large .main-header{
+  background-color: black;
+  box-shadow: 0px 0px 4px 0px white;
+}
+.dark-mode .layout-sidebar-large .sidebar-left-secondary, .dark-mode .layout-sidebar-large .sidebar-left{
+  background-color: black;
+  box-shadow: 0px 0px 4px 0px white;
+}
+.dark-mode .layout-sidebar-large .main-header .header-icon{
+  color: white !important;
+}
+.dark-mode span.auth-name{
+  color: white;
+}
+.dark-mode .layout-sidebar-large .main-header .header-part-right .user img{
+  background-color: white;
+}
+.dark-mode a.brands-list span{
+  color: white;
+}
+.dark-mode .layout-sidebar-large .main-header .menu-toggle div{
+  background: white;
+}
+.dark-mode .layout-sidebar-large .sidebar-left .navigation-left .nav-item .nav-item-hold .nav-icon, .dark-mode .layout-sidebar-large .sidebar-left .navigation-left .nav-item .nav-item-hold .feather{
+  color:white
+}
+.dark-mode .layout-sidebar-large .sidebar-left .navigation-left .nav-item .nav-item-hold{
+  color: white;
+}
+.dark-mode .main-content-wrap{
+  background-color: black;
+}
+.dark-mode .breadcrumb h1, .dark-mode .content-header-left h3, .dark-mode .breadcrumb{
+  color: white;
+}
+.dark-mode .app-footer{
+  background-color: black;
+}
+.dark-mode .app-footer .footer-bottom {
+  color: white;
+}
+.dark-mode ul.show-image li a p{
+  color: white
+}
+.dark-mode .card {
+    background-color: black;
+    box-shadow: 0px 0px 4px 0px white;
+}
+
+.dark-mode .text-muted {
+  color: white !important;
 }

@@ -409,6 +409,26 @@ class ClientController extends Controller
         return view('client.task-show', compact('messages'));
     }
 
+    public function messageSeen(Request $request){
+        
+        $pusher = new Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            [
+                'cluster' => env('PUSHER_APP_CLUSTER'),
+                'useTLS' => true,
+            ]
+        );
+
+        $pusher->trigger('private.' .  $request->id . '-' . Auth::user()->id, 'seenmessage', [
+            'user_id' => Auth::user()->id
+        ]);
+
+        return response()->json(['pusher' => $pusher]);
+
+    }
+
     public function managerClientById($id, $name)
     {
         $user = User::find($id);

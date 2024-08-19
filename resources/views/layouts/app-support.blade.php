@@ -55,7 +55,6 @@
         a.brands-list {
             font-size: 18px;
             font-weight: bold;
-            color: #0076c2;
         }
 
         a.brands-list span {
@@ -74,7 +73,7 @@
                 @yield('content')
             </div>
             <div class="flex-grow-1"></div>
-            <div class="app-footer">
+            <div class="app-footer" id="app-footer">
                 <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
                     <span class="flex-grow-1"></span>
                     <div class="d-flex align-items-center">
@@ -313,6 +312,14 @@
                         });
                     }
                 }
+            });
+
+            function changeMode(){
+                $('body').toggleClass('dark-mode');
+            }
+
+            $('.scroll-to-bottom').click(function(){
+                document.getElementById('app-footer').scrollIntoView({ behavior: 'smooth', block: 'end' });
             });
     </script>
 </body>

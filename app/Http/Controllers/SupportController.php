@@ -14,7 +14,9 @@ use App\Models\BookWriting;
 use App\Models\AuthorWebsite;
 use App\Models\Proofreading;
 use App\Models\BookCover;
+use App\Models\NoForm;
 use App\Models\Brand;
+use App\Models\Service;
 use App\Models\ClientFile;
 use App\Models\Task;
 use App\Models\SubTask;
@@ -57,10 +59,68 @@ class SupportController extends Controller
         return view('support.home', compact('project_count', 'task_count'));
     }
 
+    public function getServices(){
+        $data = DB::table('services')->get();
+        return response()->json(['data' => $data]);
+    }
+
     public function markAsRead(){
         $user = User::find(Auth()->user()->id);
         $user->notifications->markAsRead();
         return back();
+    }
+
+    public function assignServices(Request $request){
+        $service = $request->service_id;
+        $user_id = $request->client_id;
+        $user = User::find($user_id);
+        $client_id = $user->client->id;
+        $invoice_id = $user->client->last_invoice_paid->id;
+        $service = Service::find($service);
+
+        $form = null;
+
+        if($service->form == 0){
+            // No Form
+            $form = new NoForm();
+            $form->name = 'No Form';
+        }elseif($service->form == 1){
+            // Logo Form
+            $form = new LogoForm();
+        }elseif($service->form == 2){
+            // Website Form
+            $form = new WebForm();
+        }elseif($service->form == 3){
+            // Smm Form
+            $form = new SmmForm();
+        }elseif($service->form == 4){
+            // Content Writing Form
+            $form = new ContentWritingForm();
+        }elseif($service->form == 5){
+            // Search Engine Optimization Form
+            $form = new SeoForm();
+        }elseif($service->form == 6){
+            // Book Formatting & Publishing
+            $form = new BookFormatting();
+        }elseif($service->form == 7){
+            // Book Formatting & Publishing
+            $form = new BookWriting();
+        }elseif($service->form == 8){
+            // Author Website
+            $form = new AuthorWebsite();
+        }elseif($service->form == 9){
+            // Proofreading
+            $form = new Proofreading();
+        }elseif($service->form == 10){
+            // Book Cover
+            $form = new BookCover();
+        }
+        $form->invoice_id = $invoice_id;
+        $form->user_id = $user_id;
+        $form->client_id = $client_id;
+        $form->agent_id = Auth::user()->id;
+        $form->save();
+        return redirect()->back()->with('success', 'Form Assign Successfully to .' . $user->name . ' ' . $user->last_name);
     }
 
     public function projects(Request $request)
@@ -297,6 +357,38 @@ class SupportController extends Controller
         // }
     }
 
+    public function editProfile(){
+        return view('support.edit-profile');
+    }
+
+    public function updateProfile($id, Request $request){
+        $request->validate([
+            'name' => 'required',
+            'last_name' => 'required',
+        ]);
+        $user = User::find($id);
+        if($request->has('file')){
+            $file = $request->file('file');
+            $name = $file->getClientOriginalName();
+            $file->move('uploads/users', $name);
+            $path = 'uploads/users/'.$name;
+            if($user->image != ''  && $user->image != null){
+                $file_old = $user->image;
+                unlink($file_old);
+           } 
+           $user->image = $path;   
+        }
+        $user->name = $request->name;
+        $user->last_name = $request->last_name;
+        $contact = $request->contact;
+        if($contact == null){
+            $contact = '#';
+        }
+        $user->contact = $contact;
+        $user->update();
+        return redirect()->back()->with('success', 'Profile Updated Successfully.');
+    }
+
     public function changePassword()
     {
         return view('support.change-password');
@@ -420,37 +512,14 @@ class SupportController extends Controller
         }
         $save = $receiver->receive();
         if ($save->isFinished()) {
+
             $get_client_id = $request->client_id;
             $get_message = $request->message;
             $client = User::find($get_client_id);
             $set_email = strtolower($client->email);
-            $return_response = $this->saveFileToS3($save->getFile(), $set_email);
-            $carbon = Carbon::now(new DateTimeZone('America/Los_Angeles'))->toDateTimeString();
-            $message = new Message();
-            $message->user_id = Auth::user()->id;
-            $message->message = $get_message;
-            $message->sender_id = $get_client_id;
-            $message->client_id = $get_client_id;
-            $message->role_id = 4;
-            $message->created_at = $carbon;
-            $message->save();
-
-            $client_file = new ClientFile();
-            $client_file->name = $return_response->getData()->actual_name;
-            $client_file->path = $return_response->getData()->file;
-            $client_file->task_id = $request->task_id;
-            $client_file->user_id = Auth()->user()->id;
-            $client_file->user_check = Auth()->user()->is_employee;
-            $client_file->production_check = 2;
-            $client_file->message_id = $message->id;
-            $client_file->created_at = $carbon;
-            $client_file->save();
-            return [
-                'data' => $return_response,
-                'url' => $client_file->generatePresignedUrl(),
-                'extension' => $client_file->get_extension()
-            ];
+            return $this->saveFileToS3($save->getFile(), $set_email);
         }
+
         $handler = $save->handler();
 
         return response()->json([
@@ -512,31 +581,24 @@ class SupportController extends Controller
         $set_email = strtolower($client->email);
         $get_files = [];
 
-        if ($request->hasfile('images')) {
-            $i = 0;
-            foreach ($request->file('images') as $file) {
-                $disk = Storage::disk('wasabi');
-                $data = $disk->put('messages/'.$set_email, $file);
-                $disk->setVisibility($data, 'public');
-                $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $file_actual_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $file_name = str_replace(" ", "-", $file_name);
-                $name = $file_name . '-' . $i . time() . '.' . $file->extension();
-                // $file->move(public_path() . '/files/', $name);
-                $client_file = new ClientFile();
-                $client_file->name = $file_actual_name;
-                $client_file->path = $data;
-                $client_file->task_id = $request->task_id;
-                $client_file->user_id = Auth()->user()->id;
-                $client_file->user_check = Auth()->user()->is_employee;
-                $client_file->production_check = 2;
-                $client_file->message_id = $message->id;
-                $client_file->created_at = $carbon;
-                $client_file->save();
-                $get_files[$i]['path'] = $client_file->generatePresignedUrl();
-                $get_files[$i]['name'] = $file_actual_name;
-                $get_files[$i]['extension'] = $file->extension();
-                $i++;
+        if($request->sender_files){
+            $files = $request->sender_files;
+            if(count($files) != 0){
+                for($i = 0; $i < count($files); $i++){
+                    $client_file = new ClientFile();
+                    $client_file->name = $files[$i]['name'];
+                    $client_file->path = $files[$i]['file'];
+                    $client_file->task_id = $request->task_id;
+                    $client_file->user_id = Auth()->user()->id;
+                    $client_file->user_check = Auth()->user()->is_employee;
+                    $client_file->production_check = 2;
+                    $client_file->message_id = $message->id;
+                    $client_file->created_at = $carbon;
+                    $client_file->save();
+                    $get_files[$i]['path'] = $client_file->generatePresignedUrl();
+                    $get_files[$i]['name'] = $files[$i]['name'];
+                    $get_files[$i]['extension'] = $client_file->get_extension();
+                }
             }
         }
 
@@ -611,11 +673,7 @@ class SupportController extends Controller
             'files' => $get_files
         ]);
 
-        if($request->message == 'Attachments'){
-            return response()->json(['uploaded' => 'success', 'files' => $get_files]);
-        }else{
-            return redirect()->back()->with('success', 'Message Send Successfully.')->with('data', 'message');;
-        }
+        return response()->json(['status' => true, 'files' => $get_files, 'message' => nl2br($message->message), 'user_name' => Auth::user()->name . ' ' . Auth::user()->last_name]);
     }
 
     public function sendMessageClient(Request $request)
@@ -771,10 +829,18 @@ class SupportController extends Controller
                 $message_array[$data->client->id]['task_id'] = $task_id;
                 $sender_seen = DB::table('messages')->where('user_id', $data->client->id)->orWhere('sender_id', $data->client->id)->get();
                 $sender_seen = $sender_seen->where('sender_seen', 0)->count();
+                if($sender_seen != 0){
+                    $sender_seen = 1;
+                }
                 $message_array[$data->client->id]['sender_seen'] = $sender_seen;
+                $message_array[$data->client->id]['created_at'] = $message->created_at->timestamp;
             }
         }
-
+        if(count($message_array) != 0){
+            usort($message_array, function($a, $b) {
+                return $b['sender_seen'] <=> $a['sender_seen'];
+            });
+        }
         return view('support.messageshow', compact('message_array'));
     }
 

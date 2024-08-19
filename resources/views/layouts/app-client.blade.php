@@ -201,8 +201,6 @@
                     var file_wrapper_image = '';
                     if((data.files[i]['extension'] == 'jpg') || (data.files[i]['extension'] == 'png') || ((data.files[i]['extension'] == 'jpeg'))){
                         file_wrapper_image = '<img src="'+ data.files[i]['path'] + '" alt="' + data.files[i]['name'] +'" width="40">';
-                    }else{
-                        file_wrapper_image = data.files[i]['name'] + '.' + data.files[i]['path'];
                     }
                     file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+file_wrapper_image+'</a></li>';
                     file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+data.files[i]['name']+'</a></li>';
@@ -246,20 +244,17 @@
                         'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                setTimeout(() => {
-                    $.ajax({
-                        type:'POST',
-                        url:'{{ route("message.seen") }}',
-                        dataType: 'json',
-                        data: {
-                            'id' : data.user.id,
-                        },
-                        success:function(data) {
-                            console.log(data);
-                        }
-                        
-                    });    
-                }, 20000);
+                $.ajax({
+                    type:'POST',
+                    url:'{{ route("message.seen") }}',
+                    dataType: 'json',
+                    data: {
+                        'id' : data.user.id,
+                    },
+                    success:function(data) {
+                        console.log(data);
+                    } 
+                });
                 
             }
             if (!window.Notification) {

@@ -41,7 +41,7 @@
     <!-- begin::users-->
     <div class="row">
         <div class="col-md-12 text-right">
-            <button class="btn btn-primary ml-auto write-message">Write A Message</button>
+            {{-- <button class="btn btn-primary ml-auto write-message">Write A Message</button> --}}
         </div>
     </div>
 </section>
@@ -164,7 +164,7 @@
             </div>
         </div>
         <div class="col-md-12 text-right">
-            <button class="btn btn-primary ml-auto write-message mb-0">Write A Message</button>
+            {{-- <button class="btn btn-primary ml-auto write-message mb-0">Write A Message</button> --}}
         </div>
     </div>
 </section>

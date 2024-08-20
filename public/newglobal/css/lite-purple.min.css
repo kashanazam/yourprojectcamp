@@ -27120,3 +27120,10 @@ a.brands-list{
 .dark-mode .text-muted {
   color: white !important;
 }
+.dark-mode .ul-widget3-body {
+    color: white;
+}
+
+.dark-mode .file-wrapper ul{
+  border-color: white;
+}

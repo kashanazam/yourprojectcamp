@@ -444,4 +444,36 @@ class ClientController extends Controller
     {
         return view('client.dashboard');
     }
+
+    public function clientProfile(){
+        return view('client.profile');
+    }
+
+    public function updateProfile($id, Request $request){
+        $request->validate([
+            'name' => 'required',
+            'last_name' => 'required',
+        ]);
+        $user = User::find($id);
+        if($request->has('file')){
+            $file = $request->file('file');
+            $name = $file->getClientOriginalName();
+            $file->move('uploads/users', $name);
+            $path = 'uploads/users/'.$name;
+            if($user->image != ''  && $user->image != null){
+                $file_old = $user->image;
+                unlink($file_old);
+           } 
+           $user->image = $path;   
+        }
+        $user->name = $request->name;
+        $user->last_name = $request->last_name;
+        $contact = $request->contact;
+        if($contact == null){
+            $contact = '#';
+        }
+        $user->contact = $contact;
+        $user->update();
+        return redirect()->back()->with('success', 'Profile Updated Successfully.');
+    }
 }

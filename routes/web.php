@@ -70,6 +70,8 @@ Route::get('/send-notification/{task_id}/{role}', [TaskController::class, 'sendT
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'is_client'], function(){
+        Route::get('client/profile', [ClientController::class, 'clientProfile'])->name('client.profile');
+        Route::patch('client/update-profile/{id}', [ClientController::class, 'updateProfile'])->name('client.update.profile');
         Route::get('client/home', [ClientController::class, 'clientDashboard'])->name('client.home');
         Route::get('client/message/{notify?}', [ClientController::class, 'clientTaskshow'])->name('client.message');
         Route::get('client/chat', [ClientChatController::class, 'clientChat'])->name('client.chat');

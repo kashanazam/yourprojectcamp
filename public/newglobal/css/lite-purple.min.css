@@ -27064,6 +27064,13 @@ a.brands-list{
   color: #df3c3f;
 }
 
+.extension {
+  text-transform: uppercase;
+  min-width: 40px;
+  width: 100%;
+  display: block;
+}
+
 /* Dark Mode */
 .dark-mode {
   background-color: black;
@@ -27126,4 +27133,58 @@ a.brands-list{
 
 .dark-mode .file-wrapper ul{
   border-color: white;
+}
+
+.dark-mode .dropdown-item{
+  background-color: black;
+  color: white;
+}
+
+.dark-mode .layout-sidebar-large .main-header .notification-dropdown .dropdown-item .notification-icon{
+  background-color: black;
+  border-right: 1px solid white;
+}
+
+.dark-mode .layout-sidebar-large .main-header .notification-dropdown .dropdown-item .notification-icon i{
+  color: white !important;
+}
+
+.dark-mode .layout-sidebar-large .main-header .notification-dropdown{
+  border: 1px solid white;
+}
+
+.dark-mode .ul-widget2__title{
+  color: white;
+}
+
+.dark-mode .ul-widget2__username{
+  color: white;
+}
+
+.dark-mode .card-body.not-seen-card-body{
+  background-color: #3c3c3c;
+}
+
+.dark-mode .chatbox button{
+  color: white;
+}
+
+.dark-mode .breadcrumb ul li a{
+  color: white;
+}
+
+.dark-mode .extension {
+  color: white;
+}
+
+.dark-mode .layout-sidebar-large .main-header .header-icon:hover{
+  color: black !important;
+}
+
+.dark-mode .dropdown-menu{
+  background-color: black;
+}
+
+.dark-mode .dropdown-header{
+  color: white;
 }

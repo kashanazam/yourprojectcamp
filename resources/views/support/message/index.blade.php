@@ -84,6 +84,8 @@
                                                     <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank">
                                                         <img src="{{ $client_file->generatePresignedUrl() }}" alt="{{$client_file->name}}" width="40">
                                                     </a>
+                                                    @else
+                                                    <span class="extension">{{ $client_file->get_extension() }}</span>
                                                     @endif
                                                 </li>
                                                 <li>

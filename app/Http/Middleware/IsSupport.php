@@ -20,6 +20,12 @@ class IsSupport
      */
     public function handle(Request $request, Closure $next)
     {
+        if(Session::has('darkMode')){
+
+        }else{
+            Session::put('darkMode', 0);
+        }
+        
         if(auth()->user()->is_employee == 4){
             $ip_address = $request->ip();
             $current_ip = Session::get('login_ip');

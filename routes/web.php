@@ -53,6 +53,17 @@ Route::any('thank-you/{id}', [InvoiceController::class, 'thankYou'])->name('than
 Route::any('failed/{id}', [InvoiceController::class, 'failed'])->name('failed');
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::post('change/mode', function(){
+        if(Session::has('darkMode')){
+            $get_dark = Session::get('darkMode');
+            if($get_dark == 0){
+                Session::put('darkMode', 1);
+            }else{
+                Session::put('darkMode', 0);
+            }
+        }
+        return response()->json(['ok' => $get_dark]);
+    });
     Route::post('/keep-alive', function () {
         if(auth()->user()->status == 0){
             return response()->json(['ok' => false]);

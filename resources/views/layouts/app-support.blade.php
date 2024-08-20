@@ -65,7 +65,7 @@
     </style>
 </head>
 
-<body class="text-left">
+<body class="text-left {{ Session::has('darkMode') ? Session::get('darkMode') != 0 ? 'dark-mode' : ' ' : '' }}">
     <div class="app-admin-wrap layout-sidebar-large">
         @include('inc.support-nav')
         <div class="main-content-wrap sidenav-open d-flex flex-column">
@@ -315,6 +315,19 @@
             });
 
             function changeMode(){
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type:'POST',
+                    url:'{{ url("change/mode") }}',
+                    dataType: 'json',
+                    success:function(data) {
+                        console.log(data);
+                    } 
+                });
                 $('body').toggleClass('dark-mode');
             }
 

@@ -2,12 +2,13 @@
 @section('title', 'Book Formatting & Publishing Form')
 
 @section('content')
-<div class="breadcrumb">
+<div class="breadcrumb d-flex justify-content-between">
     <h1 class="mr-2">Book Formatting & Publishing Brief INV#{{$data->invoice->invoice_number}}</h1>
+    {{-- <button class="btn btn-primary" id="download-form">Download Form</button> --}}
 </div>
 <div class="separator-breadcrumb border-top"></div>
 <div class="row">
-    <form class="col-md-12 brief-form" method="post" route="{{ route('client.logo.form.update', $data->id) }}" enctype="multipart/form-data">
+    <form class="col-md-12 brief-form" method="post" route="{{ route('client.logo.form.update', $data->id) }}" enctype="multipart/form-data" id="brief-form">
         @csrf
         <div class="card mb-4">
             <div class="card-body">
@@ -202,6 +203,7 @@
         </div>
     </form>
 </div>
+<div id="output"></div>
 @endsection
 
 @push('scripts')

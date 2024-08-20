@@ -27188,3 +27188,28 @@ a.brands-list{
 .dark-mode .dropdown-header{
   color: white;
 }
+
+.dark-mode .form-group label{
+  color: white;
+}
+
+.dark-mode .card-title{
+  color: white;
+}
+
+.dark-mode .table thead th{
+  color: white;
+}
+
+.dark-mode .table-bordered th, .dark-mode .table-bordered td{
+  color: white;
+}
+
+.dark-mode .page-link{
+  background-color: black;
+  color: white;
+}
+
+.dark-mode .card-body{
+  color: white;
+}

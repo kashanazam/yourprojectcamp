@@ -170,7 +170,7 @@
         </div>
     </div>
 </section>
-<div class="left-message-box-wrapper">
+{{-- <div class="left-message-box-wrapper">
     <div class="left-message-box">
         <form class="form" action="{{ route('support.message.send') }}" enctype="multipart/form-data" method="post" id="message-post">
             @csrf
@@ -194,7 +194,7 @@
             </div>
         </form>
     </div>        
-</div>
+</div> --}}
 <!--  Modal -->
 <div class="modal fade" id="exampleModalMessageEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle-2" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -326,7 +326,7 @@
         $('.loader-img').fadeIn();
         $('.btn-send-message').attr('disabled','disabled');
         var client_id = $(this).find('[name="client_id"]').val();
-        var message = $(this).find('[name="message"]').val();
+        var message = CKEDITOR.instances.message.getData();
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -375,7 +375,7 @@
                                         <div class="ul-widget3-body">
                                             ${data.message}
                                             <span class="ul-widget3-status text-success t-font-bolder text-right">
-                                            06:08 pm - 16 Aug, 2024
+                                                ${data.created_at}
                                             </span>
                                         </div>
                                         <div class="file-wrapper">
@@ -388,7 +388,7 @@
                         </div>
                     </div>
                 </div>`);
-                $('#form-send-message').find('[name="message"]').val('');
+                CKEDITOR.instances.message.setData('');
                 document.getElementById('basic-form-layouts').scrollIntoView({ behavior: 'smooth', block: 'end' });
                 myDropzone.removeAllFiles();
                 $('.loader-img').fadeOut();

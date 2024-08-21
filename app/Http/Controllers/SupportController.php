@@ -673,7 +673,13 @@ class SupportController extends Controller
             'files' => $get_files
         ]);
 
-        return response()->json(['status' => true, 'files' => $get_files, 'message' => nl2br($message->message), 'user_name' => Auth::user()->name . ' ' . Auth::user()->last_name]);
+        return response()->json([
+            'status' => true,
+            'files' => $get_files,
+            'message' => nl2br($message->message),
+            'user_name' => Auth::user()->name . ' ' . Auth::user()->last_name,
+            'created_at' => date('h:m a - d M, Y', strtotime($message->created_at))
+        ]);
     }
 
     public function sendMessageClient(Request $request)

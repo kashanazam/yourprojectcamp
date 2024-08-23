@@ -2,8 +2,11 @@
 @section('title', 'Editing & Proofreading Form')
 
 @section('content')
-<div class="breadcrumb">
+<div class="breadcrumb d-flex justify-content-between">
     <h1 class="mr-2">Cover Design INV#{{$data->invoice->invoice_number}}</h1>
+    <form action="{{ route('support.form.download', ['form_id' => $data->id, 'check' => 10]) }}">
+        <button class="btn btn-primary" type="submit">Download Form</button>
+    </form>
 </div>
 <div class="separator-breadcrumb border-top"></div>
 <div class="row">

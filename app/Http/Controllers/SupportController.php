@@ -310,7 +310,28 @@ class SupportController extends Controller
             ];
             $pdf = PDF::loadView('pdf.form_pdf', compact('data'));
             return $pdf->download('book_formatting_'. strtolower($form_data->client->name) . '_' . strtolower($form_data->client->last_name) .'.pdf');
+        }elseif($check == 10){
+            $form_data = BookCover::find($id);
+            $data = [
+                'Form_Name' => 'Cover Design',
+                'Client_name' => $form_data->client->name . ' ' . $form_data->client->last_name,
+                'Title_of_the_book_(Exact_Wording)' => $form_data->title,
+                'Subtitle/Tagline_if_any_(Optional)' => $form_data->subtitle,
+                'Name_of_the_Author' => $form_data->author,
+                'What_is_the_Genre_of_the_book?' => $form_data->genre,
+                'Do_you_have_an_ISBN_Number?_Or_do_you_need_one?*' => $form_data->isbn,
+                'Book_Trim_Size*' => $form_data->trim_size,
+                'Explain_your_book_cover_concept_that_you_would_like_us_to_follow?*' => $form_data->explain,
+                'Provide_the_information_for_Back_Cover._This_information_will_be_added_to_the_back_cover.*' => $form_data->information,
+                'What_is_your_book_about?*' => $form_data->about,
+                'Keywords_that_define_your_book.*' => $form_data->keywords,
+                'Any_images_you_would_like_us_to_use_or_provide_for_reference?*' => $form_data->images_provide,
+                'Select_one_of_the_style_category_that_you_want_us_to_follow_for_your_book_cover*' => $form_data->category,
+            ];
+            $pdf = PDF::loadView('pdf.form_pdf', compact('data'));
+            return $pdf->download('cover_design_'. strtolower($form_data->client->name) . '_' . strtolower($form_data->client->last_name) .'.pdf');
         }
+
     }
 
     public function getFormManager($form_id, $check, $id)

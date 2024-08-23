@@ -292,6 +292,27 @@ class SupportController extends Controller
         // }
     }
 
+    public function downloadForm($id, $check){
+        if($check == 6){
+            $form_data = BookFormatting::find($id);
+            $data = [
+                'Form_Name' => 'Book Formatting',
+                'Client_name' => $form_data->client->name . ' ' . $form_data->client->last_name,
+                'What_is_the_title_of_the_book?' => $form_data->book_title,
+                'What_is_the_subtitle_of_the_book?' => $form_data->book_subtitle,
+                'What_is_the_name_of_the_author?' => $form_data->author_name,
+                'Any_additional_contributors_you_would_like_to_acknowledge?_(e.g._Book_Illustrator,_Editor,_etc.)' => $form_data->contributors,
+                'Where_do_you_want_to?' => $form_data->publish_your_book,
+                'Which_formats_do_you_want_your_book_to_be_formatted_on?' => $form_data->book_formatted,
+                'Which_trim_size_do_you_want_your_book_to_be_formatted_on?' => $form_data->trim_size,
+                'If_you_have_selected_Other_please_specify_the_trim_size_you_want_your_book_to_be_formatted_on.' => $form_data->other_trim_size,
+                'Any_Additional_Instructions_that_you_would_like_us_to_follow?' => $form_data->additional_instructions,
+            ];
+            $pdf = PDF::loadView('pdf.form_pdf', compact('data'));
+            return $pdf->download('book_formatting_'. strtolower($form_data->client->name) . '_' . strtolower($form_data->client->last_name) .'.pdf');
+        }
+    }
+
     public function getFormManager($form_id, $check, $id)
     {
         $project = Project::find($id);

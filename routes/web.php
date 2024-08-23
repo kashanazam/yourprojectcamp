@@ -185,6 +185,7 @@ Route::group(['middleware' => 'auth'], function () {
         // Route::get('support/all-projects', [SupportController::class, 'allProjects'])->name('support.all-projects');
         Route::get('support/message/', [SupportController::class, 'getMessageBySupport'])->name('support.message.get.by.support');
         Route::get('support/{form_id}/projects/{check}/form/{id}', [SupportController::class, 'getForm'])->name('support.form');
+        Route::get('support/{form_id}/form/douwnload/{check}', [SupportController::class, 'downloadForm'])->name('support.form.download');
         Route::get('support/message/{id}/show', [SupportController::class, 'showMessage'])->name('support.message.show');
         Route::post('support/message/', [SupportController::class, 'sendMessage'])->name('support.message.send');
         Route::post('support/message/chunks', [SupportController::class, 'sendMessageChunks'])->name('support.message.send.chunks');

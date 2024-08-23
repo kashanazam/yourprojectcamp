@@ -27213,3 +27213,32 @@ a.brands-list{
 .dark-mode .card-body{
   color: white;
 }
+
+.dark-mode .cke_top, .dark-mode .cke_contents, .dark-mode .cke_bottom{
+  background-color: black !important;
+}
+
+.dark-mode a.cke_button {
+  background-color: white !important;
+}
+
+.dark-mode a.cke_combo_button{
+  background-color: white !important;
+}
+
+.dark-mode .cke_wysiwyg_frame, .dark-mode .cke_wysiwyg_div{
+  background-color: black;
+}
+
+.dark-mode a.cke_path_item, .dark-mode span.cke_path_empty{
+  color: white;
+}
+
+.dark-mode .card.left-card:before {
+  border-left-color: black;
+  opacity: 0;
+}
+
+.dark-mode .card.right-card:before{
+  opacity: 0;
+}

@@ -4,7 +4,9 @@
 @section('content')
 <div class="breadcrumb d-flex justify-content-between">
     <h1 class="mr-2">Book Formatting & Publishing Brief INV#{{$data->invoice->invoice_number}}</h1>
-    {{-- <button class="btn btn-primary" id="download-form">Download Form</button> --}}
+    <form action="{{ route('support.form.download', ['form_id' => $data->id, 'check' => 6]) }}">
+        <button class="btn btn-primary" type="submit">Download Form</button>
+    </form>
 </div>
 <div class="separator-breadcrumb border-top"></div>
 <div class="row">
@@ -203,7 +205,6 @@
         </div>
     </form>
 </div>
-<div id="output"></div>
 @endsection
 
 @push('scripts')

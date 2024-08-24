@@ -27,6 +27,7 @@ use DB;
 use App\Notifications\AssignProjectNotification;
 use Mail;
 use App\Mail\WelcomeEmail;
+use App\Models\BookMarketing;
 use Carbon\Carbon;
 
 class AdminClientController extends Controller
@@ -405,6 +406,17 @@ class AdminClientController extends Controller
             $client_id = $bookcover_form->user->id;
             $brand_id = $bookcover_form->invoice->brand;
             $description = $bookcover_form->information;
+        }elseif($form_checker == 11){
+            // Cover Design Form
+            $bookmarketing_form = BookMarketing::find($form_id);
+            if($bookmarketing_form->title != null){
+                $name = $bookmarketing_form->title . ' - Book Marketing';
+            }else{
+                $name = $bookmarketing_form->user->name . ' - Book Marketing';
+            }
+            $client_id = $bookmarketing_form->user->id;
+            $brand_id = $bookmarketing_form->invoice->brand;
+            $description = $bookmarketing_form->information;
         }
 
         $project = new Project();

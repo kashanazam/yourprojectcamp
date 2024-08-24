@@ -22,6 +22,7 @@ use App\Models\BookWriting;
 use App\Models\AuthorWebsite;
 use App\Models\Proofreading;
 use App\Models\BookCover;
+use App\Models\BookMarketing;
 use App\Models\Currency;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -1928,6 +1929,18 @@ class InvoiceController extends Controller
                     $bookcover_form->client_id = $user->id;
                     $bookcover_form->agent_id = $get_invoice->sales_agent_id;
                     $bookcover_form->save();
+                }
+            }elseif($service->form == 11){
+                // Book Cover
+                if($get_invoice->createform == 1){
+                    $bookmarketing_form = new BookMarketing();
+                    $bookmarketing_form->invoice_id = $get_invoice->id;
+                    if($user_client != null){
+                        $bookmarketing_form->user_id = $user_client->id;
+                    }
+                    $bookmarketing_form->client_id = $user->id;
+                    $bookmarketing_form->agent_id = $get_invoice->sales_agent_id;
+                    $bookmarketing_form->save();
                 }
             }
         }

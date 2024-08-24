@@ -18,6 +18,7 @@ use App\Models\BookFormatting;
 use App\Models\BookCover;
 use App\Models\BookWriting;
 use App\Models\AuthorWebsite;
+use App\Models\BookMarketing;
 use App\Models\Proofreading;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -344,6 +345,16 @@ class ClientController extends Controller
                 $bookcover->form_type = 10;
                 $bookcover->form_name = 'Book Cover Design Form';
                 array_push($data, $bookcover);
+            }
+        }
+
+        if (count(Auth()->user()->bookmarketing) != 0) {
+            foreach (Auth()->user()->bookmarketing as $bookmarket) {
+                $bookmarket = BookMarketing::find($bookmarket->id);
+                $bookmarket->option = $bookmarket->author_name;
+                $bookmarket->form_type = 11;
+                $bookmarket->form_name = 'Book Marketing Form';
+                array_push($data, $bookmarket);
             }
         }
 

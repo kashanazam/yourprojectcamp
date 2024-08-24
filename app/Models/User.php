@@ -126,6 +126,10 @@ class User extends Authenticatable
         return $this->hasMany(BookCover::class, 'user_id', 'id');
     }
 
+    public function bookmarketing(){
+        return $this->hasMany(BookMarketing::class, 'user_id', 'id');
+    }
+
     public function webForm(){
         return $this->hasMany(WebForm::class, 'user_id', 'id');
     }
@@ -218,6 +222,14 @@ class User extends Authenticatable
                 $count++;
             }
         }
+
+        $bookmarketing = Auth()->user()->bookmarketing;
+        foreach($bookmarketing as $bookmarket){
+            if(($bookmarket->title == null) || ($bookmarket->title == '')){
+                $count++;
+            }
+        }
+        
 
        return $count;
     }

@@ -43,6 +43,7 @@
                                     <option value="8">Author Website Form</option>
                                     <option value="9">Editing & Proofreading Form</option>
                                     <option value="10">Book Cover Design</option>
+                                    <option value="11">Book Marketing</option>
                                 </select>
                             </div>
                             <div class="col-md-12">
@@ -99,6 +100,8 @@
                                     <span class="btn btn-light btn-sm">Editing & Proofreading</span>
                                     @elseif($datas->form == 10)
                                     <span class="btn btn-dark btn-sm">Book Cover Design</span>
+                                    @elseif($datas->form == 11)
+                                    <span class="btn btn-primary btn-sm">Book Marketing</span>
                                     @endif
                                 </td>
                                 <td>

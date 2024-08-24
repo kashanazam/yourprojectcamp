@@ -42,6 +42,7 @@
                                     <option value="8" {{ $data->form == 8 ? 'selected' : '' }}>Author Website Form</option>
                                     <option value="9" {{ $data->form == 9 ? 'selected' : '' }}>Editing & Proofreading Form</option>
                                     <option value="10" {{ $data->form == 10 ? 'selected' : '' }}>Book Cover Design</option>
+                                    <option value="11" {{ $data->form == 11 ? 'selected' : '' }}>Book Marketing</option>
                                 </select>
                             </div>
                             <div class="col-md-12">

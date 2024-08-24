@@ -13,6 +13,7 @@ use App\Models\BookWriting;
 use App\Models\AuthorWebsite;
 use App\Models\Proofreading;
 use App\Models\BookCover;
+use App\Models\BookMarketing;
 use Illuminate\Http\Request;
 use App\Models\FormFiles;
 use Auth;
@@ -207,7 +208,11 @@ class LogoFormController extends Controller
             return $query->where('brand', Auth::user()->brand_list());
         })->get();
 
-        return view('manager.brief.pending', compact('logo_form', 'web_form', 'smm_form', 'content_writing_form', 'seo_form', 'book_formatting_form', 'book_writing_form', 'author_website_form', 'no_form', 'proofreading_form', 'bookcover_form'));
+        $bookmarketing_form = BookMarketing::where('title', null)->whereHas('invoice', function ($query) {
+            return $query->where('brand', Auth::user()->brand_list());
+        })->get();
+
+        return view('manager.brief.pending', compact('logo_form', 'web_form', 'smm_form', 'content_writing_form', 'seo_form', 'book_formatting_form', 'book_writing_form', 'author_website_form', 'no_form', 'proofreading_form', 'bookcover_form', 'bookmarketing_form'));
     }
 
     public function getPendingProject(){
@@ -259,12 +264,16 @@ class LogoFormController extends Controller
         $bookcover_form = BookCover::with('project')->doesntHave('project')->whereHas('invoice', function ($query) {
             return $query->whereIn('brand', Auth::user()->brand_list());
         })->orderBy('id', 'desc')->get();
+
+        $bookmarketing_form = BookMarketing::with('project')->doesntHave('project')->whereHas('invoice', function ($query) {
+            return $query->whereIn('brand', Auth::user()->brand_list());
+        })->orderBy('id', 'desc')->get();
         
         $no_form = NoForm::with('project')->doesntHave('project')->whereHas('invoice', function ($query) {
                         return $query->whereIn('brand', Auth::user()->brand_list());
                     })->orderBy('id', 'desc')->get();
         
-        return view('manager.brief.fill', compact('logo_form', 'web_form', 'smm_form', 'content_writing_form', 'seo_form', 'book_formatting_form', 'book_writing_form', 'author_website_form', 'no_form', 'proofreading_form', 'bookcover_form'));
+        return view('manager.brief.fill', compact('logo_form', 'web_form', 'smm_form', 'content_writing_form', 'seo_form', 'book_formatting_form', 'book_writing_form', 'author_website_form', 'no_form', 'proofreading_form', 'bookcover_form', 'bookmarketing_form'));
     }
 
     public function getPendingProjectbyIdManager($id, $form){

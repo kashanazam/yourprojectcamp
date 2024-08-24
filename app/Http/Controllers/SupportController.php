@@ -14,6 +14,7 @@ use App\Models\BookWriting;
 use App\Models\AuthorWebsite;
 use App\Models\Proofreading;
 use App\Models\BookCover;
+use App\Models\BookMarketing;
 use App\Models\NoForm;
 use App\Models\Brand;
 use App\Models\Service;
@@ -286,6 +287,9 @@ class SupportController extends Controller
         } elseif ($check == 10) {
             $data = BookCover::find($form_id);
             return view('support.bookcover', compact('data'));
+        } elseif ($check == 11) {
+            $data = BookMarketing::find($form_id);
+            return view('support.bookmarketing', compact('data'));
         }
         // }else{
         //     return redirect()->back();
@@ -330,8 +334,43 @@ class SupportController extends Controller
             ];
             $pdf = PDF::loadView('pdf.form_pdf', compact('data'));
             return $pdf->download('cover_design_'. strtolower($form_data->client->name) . '_' . strtolower($form_data->client->last_name) .'.pdf');
+        }elseif($check == 11){
+            $form_data = BookMarketing::find($id);
+            $data = [
+                'Form_Name' => 'Book Marketing',
+                'Client_name' => $form_data->client->name . ' ' . $form_data->client->last_name,
+                'What_is_the_title_of_your_book,_and_which_Genre_does_it_belong_to?_*' => $form_data->title,
+                'What_is_the_meaning_behind_the_title?' => $form_data->behind_title,
+                'What_is_your_key_message?_*' => $form_data->key_message,
+                'Are_you_offering_any_giveaways/products_to_first-time_buyers_of_your_book/store?_What_are_their_top_features_or_benefits?_*' => $form_data->giveaways,
+                'Describe_your_primary_and_secondary_target_audience_(their_ages,_where_they_are_located,_their_pain_points,_concerns,_interests,_etc.)_*' => $form_data->target_audience,
+                'Is_your_book_already_Launched?_If_not_then_what_is_the_expected_launch_date?' => $form_data->launched,
+                'Have_you_published_your_book_online_already_or_do_you_want_us_to_do_it?_If_you_have_published_it_then_what_are_the_platforms_you_have_covered?_*' => $form_data->published_book,
+                'Have_you_sold_any_books_so_far?_If_yes,_then_what_is_the_number_of_books_sold?' => $form_data->sold_book,
+                'What_will_be_the_start_date_of_your_marketing_project?' => $form_data->marketing,
+                'Please_mention_the_name_of_the_author(s)_and_details_about_their_past_writing_experience(if_any)_or_if_they_have_already_written/published_a_book_before?_*' => $form_data->author_name,
+                'Have_you_created_any_social_pages/accounts_for_your_book_already?_If_yes_then_please_share_the_platform_list.' => $form_data->social_pages,
+                'Do_you_know_the_basics_about_how_to_run_Facebook,_Google,_YouTube_ads_and_Amazon_PPC_ads?' => $form_data->basics,
+                'What_is_your_selling_point?_How_your_book_is_different?_What_is_special_in_it_for_the_readers?_*' => $form_data->selling_point,
+                'What_are_the_keywords_that_your_target_audience_might_use_to_search_online_for_a_book_like_yours?_*' => $form_data->keywords,
+                'What_are_the_goals_you_have_in_your_mind_to_achieve_from_this_book?' => $form_data->goals,
+                'Do_you_have_any_book_or_book_stores_in_your_mind_which_you_want_us_to_look_at_and_plan_your_marketing_plan_accordingly?_*' => $form_data->book_stores,
+                'Whats_the_approach_that_you_take_with_your_clients?' => $form_data->approach,
+                'Do_you_have_any_motto,_catchphrases,_or_advertising_messages?' => $form_data->motto,
+                'What_is_your_price_point?_How_does_your_price_point_compare_to_other_relevant_books?_*' => $form_data->price_point,
+                'What_are_the_number_of_pages_in_your_book?_*' => $form_data->number_pages,
+                'Do_you_have_a_paper_back/Hard_cover_option_for_your_buyers?' => $form_data->paper_back,
+                'What_are_the_advantages_to_buy_your_book?_(it_has_Business_tips,_living_tips,_history_info,_selling_skills,_educative_stuff,_etc.)?_*' => $form_data->advantages,
+                'Do_you_have_an_existing_website?_Would_you_like_us_to_re-write/update_it?_Please_share_the_URL_here:_*' => $form_data->existing_website,
+                'Call-to-Action:_if_not_purchase_then_what_do_you_want_your_potential/current_customers_to_do_–_call,_email,_visit_your_office,_or_something_else?_*' => $form_data->call_action,
+                'How_many_web_pages_do_you_need?_Please_provide_the_number,_names,_and_links_(if_available)._For_instance,_you_may_need_four_pages,_titled_Home,_About_Us,_Books,_and_Contact_Us._*' => $form_data->web_pages,
+                'What_do_you_want_to_achieve_from_the_new_site?_(Goals_should_be_SMART:_specific,_measurable,_achievable,_realistic,_and_have_a_timeframe)_*' => $form_data->achieve_goals,
+                'Please_provide_competitors_websites_for_content_reference_and_research_purposes_(three_to_five)._*' => $form_data->competitors,
+                'Is_there_any_other_relevant_information_or_requests_that_you_want_to_share?_Please_use_this_space_to_do_so.' => $form_data->relevant_information,
+            ];
+            $pdf = PDF::loadView('pdf.form_pdf', compact('data'));
+            return $pdf->download('book_marketing_'. strtolower($form_data->client->name) . '_' . strtolower($form_data->client->last_name) .'.pdf');
         }
-
     }
 
     public function getFormManager($form_id, $check, $id)

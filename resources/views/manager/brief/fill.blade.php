@@ -29,6 +29,7 @@
                 <li class="nav-item"><a class="nav-link" id="author_website-brief-tab" data-toggle="tab" href="#author_website-brief" role="tab" aria-controls="author_website-brief" aria-selected="false">Author Website</a></li>
                 <li class="nav-item"><a class="nav-link" id="editing-proofreading-brief-tab" data-toggle="tab" href="#editing-proofreading-brief" role="tab" aria-controls="editing-proofreading-brief" aria-selected="false">Editing & Proofreading</a></li>
                 <li class="nav-item"><a class="nav-link" id="cover-design-brief-tab" data-toggle="tab" href="#cover-design-brief" role="tab" aria-controls="cover-design-brief" aria-selected="false">Cover Design</a></li>
+                <li class="nav-item"><a class="nav-link" id="book-marketing-brief-tab" data-toggle="tab" href="#book-marketing-brief" role="tab" aria-controls="book-marketing-brief" aria-selected="false">Book Marketing</a></li>
                 <li class="nav-item"><a class="nav-link" id="no-brief-tab" data-toggle="tab" href="#no-brief" role="tab" aria-controls="no-brief" aria-selected="false">No Brief</a></li>
             </ul>
             <div class="tab-content pr-0 pl-0" id="myTabContent">
@@ -580,6 +581,66 @@
                         </table>
                     </div>
                 </div>
+
+                <div class="tab-pane fade" id="book-marketing-brief" role="tabpanel" aria-labelledby="book-marketing-brief-tab">
+                    <div class="table-responsive">
+                        <table class="display table table-striped table-bordered datatable-init" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Invoice#</th>
+                                    <th>Title</th>
+                                    <th>User Name</th>
+                                    <th>Agent Name</th>
+                                    <th>Brand</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($bookmarketing_form as $datas)
+                                <tr>
+                                    <td>{{ $datas->id }}</td>
+                                    <td>#{{ $datas->invoice->invoice_number }}</td>
+                                    <td>{{ ( $datas->title == null ? 'Not Given' : $datas->title ) }}</td>
+                                    @if($datas->user != null)
+                                    <td>{{ $datas->user->name }} {{ $datas->user->last_name }} <br>{{ $datas->user->email }} </td>
+                                    @else
+                                    <td>{{ $datas->client->name }} {{ $datas->client->last_name }} <br>{{ $datas->client->email }} </td>
+                                    @endif
+                                    <td>{{ $datas->invoice->sale->name }} {{ $datas->invoice->sale->last_name }}<br>{{ $datas->invoice->sale->email }}</td>
+                                    <td><button class="btn btn-sm btn-primary">{{ $datas->invoice->brands->name }}</button></td>
+                                    <td>{{ $datas->invoice->currency_show->sign }} {{ $datas->invoice->amount }}</td>
+                                    <td>
+                                        <a href="javascript:;" class="btn btn-primary btn-icon btn-sm" onclick="assignAgent({{$datas->id}}, 11, {{ $datas->invoice->brands->id }})">
+                                            <span class="ul-btn__icon"><i class="i-Checked-User"></i></span>
+                                            <span class="ul-btn__text">Assign</span>
+                                        </a>
+                                        <a href="{{ route('manager.pending.project.details', ['id' => $datas->id, 'form' => 11]) }}" class="btn btn-info btn-icon btn-sm">
+                                            <span class="ul-btn__icon"><i class="i-Eye-Visible"></i></span>
+                                            <span class="ul-btn__text">View</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Invoice#</th>
+                                    <th>Description</th>
+                                    <th>User Name</th>
+                                    <th>Agent Name</th>
+                                    <th>Brand</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                
 
                 <div class="tab-pane fade" id="cover-design-brief" role="tabpanel" aria-labelledby="cover-design-brief-tab">
                     <div class="table-responsive">

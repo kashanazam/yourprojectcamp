@@ -33,6 +33,7 @@ use App\Http\Controllers\BookWritingController;
 use App\Http\Controllers\AuthorWebsiteController;
 use App\Http\Controllers\ProofreadingController;
 use App\Http\Controllers\BookCoverController;
+use App\Http\Controllers\BookMarketingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,6 +104,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('client/authorwebsite/{id}', [AuthorWebsiteController::class, 'update'])->name('client.authorwebsite.form.update');
         Route::post('client/proofreading/{id}', [ProofreadingController::class, 'update'])->name('client.proofreading.form.update');
         Route::post('client/bookcover/{id}', [BookCoverController::class, 'update'])->name('client.bookcover.form.update');
+        Route::post('client/bookmarketing/{id}', [BookMarketingController::class, 'update'])->name('client.bookmarketing.form.update');
         Route::post('client/logo', [LogoFormController::class, 'destroy'])->name('client.logo.form.file.delete');
         Route::get('client/projects', [ClientController::class, 'clientProject'])->name('client.project');
         Route::get('client/projects/view/{id}', [ClientController::class, 'clientProjectView'])->name('client.project.view');

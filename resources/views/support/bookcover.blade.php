@@ -1,5 +1,5 @@
 @extends('layouts.app-support')
-@section('title', 'Editing & Proofreading Form')
+@section('title', 'Cover Design')
 
 @section('content')
 <div class="breadcrumb d-flex justify-content-between">

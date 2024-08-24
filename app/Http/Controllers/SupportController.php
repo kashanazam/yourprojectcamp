@@ -78,49 +78,74 @@ class SupportController extends Controller
         $client_id = $user->client->id;
         $invoice_id = $user->client->last_invoice_paid->id;
         $service = Service::find($service);
-
         $form = null;
 
         if($service->form == 0){
             // No Form
             $form = new NoForm();
             $form->name = 'No Form';
+            $name = 'No Form';
         }elseif($service->form == 1){
             // Logo Form
             $form = new LogoForm();
+            $name = 'Logo Form';
         }elseif($service->form == 2){
             // Website Form
             $form = new WebForm();
+            $name = 'Website Form';
         }elseif($service->form == 3){
             // Smm Form
             $form = new SmmForm();
+            $name = 'SMM Form';
         }elseif($service->form == 4){
             // Content Writing Form
             $form = new ContentWritingForm();
+            $name = 'Content Writing Form';
         }elseif($service->form == 5){
             // Search Engine Optimization Form
             $form = new SeoForm();
+            $name = 'Search Engine Optimization Form';
         }elseif($service->form == 6){
             // Book Formatting & Publishing
             $form = new BookFormatting();
+            $name = 'Book Formatting & Publishing';
         }elseif($service->form == 7){
-            // Book Formatting & Publishing
+            // Book Writing Form
             $form = new BookWriting();
+            $name = 'Book Writing Form';
         }elseif($service->form == 8){
             // Author Website
             $form = new AuthorWebsite();
+            $name = 'Author Website';
         }elseif($service->form == 9){
             // Proofreading
             $form = new Proofreading();
+            $name = 'Proofreading';
         }elseif($service->form == 10){
             // Book Cover
             $form = new BookCover();
+            $name = 'Book Cover';
+        }elseif($service->form == 11){
+            // Book Marketing
+            $form = new BookMarketing();
+            $name = 'Book Marketing';
         }
         $form->invoice_id = $invoice_id;
         $form->user_id = $user_id;
         $form->client_id = $client_id;
         $form->agent_id = Auth::user()->id;
         $form->save();
+
+        $project = new Project();
+        $project->name = $user->name . ' ' . $user->last_name . ' - ' . $name;
+        $project->status = 1;
+        $project->user_id = Auth::user()->id;
+        $project->client_id = $user_id;
+        $project->brand_id = $user->client->brand->id;
+        $project->form_id = $form->id;
+        $project->form_checker = $service->form;
+        $project->save();
+
         return redirect()->back()->with('success', 'Form Assign Successfully to .' . $user->name . ' ' . $user->last_name);
     }
 

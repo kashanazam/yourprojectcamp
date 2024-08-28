@@ -1005,36 +1005,61 @@ class SupportController extends Controller
         //     }
         // }
         $filter = 0;
-        $brand_array = [];
         $brands = DB::table('brands')->select('id', 'name')->get();
-        foreach ($brands as $key => $brand) {
-            array_push($brand_array, $brand->id);
-        }
-        $message_array = [];
-        $data = User::where('is_employee', 3)->where('client_id', '!=', 0);
+
+        $data = DB::table('messages')
+        ->select('messages.created_at', 'messages.id as message_id', 'brands.name as brand_name', 'users.client_id', 'messages.user_id', 'users.name', 'users.last_name', 'users.email', 'messages.message')
+        ->join('users', 'users.id', '=', 'messages.user_id')
+        ->join('clients', 'clients.id', '=', 'users.client_id')
+        ->join('brands', 'brands.id', '=', 'clients.brand_id')
+        ->where('messages.role_id', 3)
+        ->whereIn('messages.id', function($query) {
+            $query->select(DB::raw('MAX(messages.id)'))
+                ->from('messages')
+                ->where('messages.role_id', 3)
+                ->groupBy('messages.user_id');
+        })
+        ->orderBy('messages.id', 'desc');
+
         if ($request->brand != null) {
-            $get_brand = $request->brand;
-            $data = $data->whereHas('client', function ($query) use ($get_brand) {
-                return $query->where('brand_id', $get_brand);
-            });
-        } else {
-            $data = $data->whereHas('client', function ($query) use ($brand_array) {
-                return $query->whereIn('brand_id', $brand_array);
-            });
+            $data = $data->where('brands.id', $request->brand);
         }
-        if ($request->message != null) {
-            $message = $request->message;
-            $data = $data->whereHas('messages', function ($query) use ($message) {
-                return $query->where('message', 'like', '%' . $message . '%');
-            });
-        }
+
         if($request->client_name != null){
-            $client_name = $request->client_name;
-            $data = $data->whereHas('client', function ($query) use ($client_name) {
-                return $query->where('name', 'like', '%'.$client_name.'%')->orWhere('last_name', 'like', '%'.$client_name.'%')->orWhere('email', 'like', '%'.$client_name.'%');
-            });
+            $data = $data->where('users.name', 'like', '%'.$request->client_name.'%')->orWhere('users.last_name', 'like', '%'.$request->client_name.'%')->orWhere('users.email', 'like', '%'.$request->client_name.'%');
         }
-        $data = $data->orderBy('id', 'desc')->paginate(20);
-        return view('admin.messageshow', compact('message_array', 'brands', 'filter', 'data'));
+
+        $data = $data->get();
+        // $brand_array = [];
+        // foreach ($brands as $key => $brand) {
+        //     array_push($brand_array, $brand->id);
+        // }
+        // $message_array = [];
+        // $data = User::where('is_employee', 3)->where('client_id', '!=', 0);
+        // if ($request->brand != null) {
+        //     $get_brand = $request->brand;
+        //     $data = $data->whereHas('client', function ($query) use ($get_brand) {
+        //         return $query->where('brand_id', $get_brand);
+        //     });
+        // } else {
+        //     $data = $data->whereHas('client', function ($query) use ($brand_array) {
+        //         return $query->whereIn('brand_id', $brand_array);
+        //     });
+        // }
+        // if ($request->message != null) {
+        //     $message = $request->message;
+        //     $data = $data->whereHas('messages', function ($query) use ($message) {
+        //         return $query->where('message', 'like', '%' . $message . '%');
+        //     });
+        // }
+        // if($request->client_name != null){
+        //     $client_name = $request->client_name;
+        //     $data = $data->whereHas('client', function ($query) use ($client_name) {
+        //         return $query->where('name', 'like', '%'.$client_name.'%')->orWhere('last_name', 'like', '%'.$client_name.'%')->orWhere('email', 'like', '%'.$client_name.'%');
+        //     });
+        // }
+        // $data = $data->orderBy('id', 'desc')->paginate(20);
+        
+        return view('admin.messageshow', compact('brands', 'filter', 'data'));
     }
 }

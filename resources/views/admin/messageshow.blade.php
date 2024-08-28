@@ -66,24 +66,18 @@
                                             <img id="userDropdown" src="{{ asset('newglobal/images/no-user-img.jpg') }}" alt="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
                                         </div>
                                         <div class="ul-widget2__info ul-widget4__users-info">
-                                            <a class="ul-widget2__title" href="{{ route('admin.message.show', [ 'id' => $value->id, 'name' => strtolower($value->name) . '-' . strtolower($value->last_name)]) }}">{{ $value->name }} {{ $value->last_name }} - <span>{{ $value->email }}</span> <span class="badge badge-primary">{{ Request('message')}}</span> <span class="badge badge-warning">{{ $value->client->brand->name }}</span></a>
+                                            <a class="ul-widget2__title" href="">{{ $value->name }} {{ $value->last_name }} - <span>{{ $value->email }}</span> <span class="badge badge-primary">{{ Request('message')}} {{ date('h:i A d, M Y', strtotime($value->created_at)) }}</span></a>
                                             <span class="ul-widget2__username" href="#">
-                                                @if($value->lastmessage != null )
-                                                {!! strip_tags($value->lastmessage->message) !!}
-                                                @endif
+                                                {!! \Illuminate\Support\Str::limit(preg_replace("/<\/?a( [^>]*)?>/i", "", strip_tags($value->message)), 300, $end='...') !!}
                                             </span>
                                         </div>
-                                    </div>
-                                    <div class="view-task-list-button">
-                                        @foreach($value->projects as $key => $projects)
-                                        <ul>
-                                        <li class="project"><a href="javascript:;" class="btn btn-info m-1">{{ $projects->name }}</a></li>
-                                        <li><span><i class="i-Bell text-muted header-icon i-Right"></i></span></li>
-                                        @foreach($projects->tasks as $task_key => $task)
-                                        <li><a href="{{ route('admin.task.show', $task->id) }}" target="_blank" class="btn btn-outline-success m-1">View Details - {{ $task->category->name }}</a></li>
-                                        @endforeach
-                                        </ul>
-                                        @endforeach
+                                        <div class="ul-widget4__actions text-center">
+                                            <div class="d-flex">
+                                                <a href="{{ route('admin.message.show', [ 'id' => $value->user_id, 'name' => strtolower($value->name) . '-' . strtolower($value->last_name)]) }}" class="btn btn-outline-success mr-2">Message Details</a>
+                                                <a href="{{ route('admin.client.show', $value->client_id) }}" class="btn btn-primary">Client Details</a>
+                                            </div>
+                                            <span class="badge badge-info">{{ $value->brand_name }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +86,6 @@
                 </div>
             </div>
             @endforeach
-            {{ $data->appends(['brand' => Request::get('brand'), 'client_name' => Request::get('client_name'), 'message' => Request::get('message')])->links("pagination::bootstrap-4") }}
         </div>
     </div>
     <!-- end::users-->

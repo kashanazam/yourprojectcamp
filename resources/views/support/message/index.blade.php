@@ -119,7 +119,7 @@
                         <div class="d-flex align-items-end">
                             <div class="chat-wrapper">
                                 <div class="dropzone" id="my-awesome-dropzone"></div>
-                                <textarea class="form-control form-control-rounded" placeholder="Type your message" name="message" cols="30" rows="1" height="auto" required></textarea>
+                                <p class="message" contenteditable="true"></p>
                             </div>
                             <button class="btn btn-icon btn-rounded btn-primary me-2 btn-send-message" type="submit">
                                 <i class="i-Paper-Plane"></i>
@@ -143,9 +143,6 @@
                     <input type="hidden" name="client_id" value="{{ $user->id }}">
                     <input type="file" name="file"  style="display: none;">
                 </form> --}}
-                <ul id="file-upload-list" class="list-unstyled">
-
-                </ul>
                 <ul class="show-image">
                 @foreach ($messages->sortByDesc('id') as $key => $value)
                     @foreach ($value->client_files as $file_key => $file_value)
@@ -229,7 +226,6 @@
         document.getElementById('basic-form-layouts').scrollIntoView({ behavior: 'smooth', block: 'end' });
     });
     CKEDITOR.replace('editmessage');
-    CKEDITOR.replace('message');
     function editMessage(message_id){
         var url = "{{ route('support.message.edit', ":message_id") }}";
         url = url.replace(':message_id', message_id);
@@ -326,7 +322,7 @@
         $('.loader-img').fadeIn();
         $('.btn-send-message').attr('disabled','disabled');
         var client_id = $(this).find('[name="client_id"]').val();
-        var message = CKEDITOR.instances.message.getData();
+        var message = '<p>'+$(this).find('.message').html()+'</p>';
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -388,7 +384,7 @@
                         </div>
                     </div>
                 </div>`);
-                CKEDITOR.instances.message.setData('');
+                $('#form-send-message').find('.message').html('');
                 document.getElementById('basic-form-layouts').scrollIntoView({ behavior: 'smooth', block: 'end' });
                 myDropzone.removeAllFiles();
                 $('.loader-img').fadeOut();

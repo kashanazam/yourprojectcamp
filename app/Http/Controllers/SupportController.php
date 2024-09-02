@@ -1013,12 +1013,6 @@ class SupportController extends Controller
         ->join('clients', 'clients.id', '=', 'users.client_id')
         ->join('brands', 'brands.id', '=', 'clients.brand_id')
         ->where('messages.role_id', 3)
-        ->whereIn('messages.id', function($query) {
-            $query->select(DB::raw('MAX(messages.id)'))
-                ->from('messages')
-                ->where('messages.role_id', 3)
-                ->groupBy('messages.user_id');
-        })
         ->orderBy('messages.id', 'desc');
 
         if ($request->brand != null) {
@@ -1028,6 +1022,26 @@ class SupportController extends Controller
         if($request->client_name != null){
             $data = $data->where('users.name', 'like', '%'.$request->client_name.'%')->orWhere('users.last_name', 'like', '%'.$request->client_name.'%')->orWhere('users.email', 'like', '%'.$request->client_name.'%');
         }
+
+        if($request->message != ''){
+            $message = $request->message;
+            $data = $data->whereIn('messages.id', function($query) use ($message) {
+                $query->select(DB::raw('MAX(messages.id)'))
+                    ->from('messages')
+                    ->where('messages.message', 'like', '%'.$message.'%')
+                    ->groupBy('messages.user_id');
+            });
+
+        }else{
+            $data = $data->whereIn('messages.id', function($query) {
+                $query->select(DB::raw('MAX(messages.id)'))
+                    ->from('messages')
+                    ->where('messages.role_id', 3)
+                    ->groupBy('messages.user_id');
+            });
+        }
+
+
 
         $data = $data->get();
         // $brand_array = [];

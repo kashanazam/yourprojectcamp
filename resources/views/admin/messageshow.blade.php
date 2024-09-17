@@ -5,6 +5,10 @@
        font-size: 0.8rem;
     }
     .ul-widget4__actions {flex: 0 0 220px;}
+    .highlight{
+        background: orange;
+        color: black;
+    }
 </style>
 @endpush
 @section('content')
@@ -93,4 +97,5 @@
 @endsection
 
 @push('scripts')
+
 @endpush

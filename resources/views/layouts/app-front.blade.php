@@ -30,5 +30,6 @@
     </head>
     @yield('content')
     @stack('custom-scripts')
+        
     </body>
 </html>

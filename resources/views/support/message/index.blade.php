@@ -288,6 +288,20 @@
         $('.loader-img').fadeIn();
         $('.btn-send-message').attr('disabled','disabled');
         var client_id = $(this).find('[name="client_id"]').val();
+        var messageContent = $(this).find('.message').html().trim(); 
+        
+        if ((messageContent === '' || messageContent === '<br>') && (!file_array || file_array.length === 0)) {
+            swal({
+                type: 'error',
+                title: "Oops...",
+                text: "Please type a message or attach a file."
+            });
+
+            $('.loader-img').fadeOut();
+            $('.btn-send-message').attr('disabled', false);
+            
+            return false;
+        } else {
         var message = '<p>'+$(this).find('.message').html()+'</p>';
         $.ajaxSetup({
             headers: {
@@ -358,6 +372,7 @@
             }
             
         }); 
+        }
     })
 </script>
 @endpush

@@ -277,74 +277,89 @@
         $('.loader-img').fadeIn();
         $('.btn-send-message').attr('disabled','disabled');
         var client_id = $(this).find('[name="client_id"]').val();
-        var message = '<p>'+$(this).find('.message').html()+'</p>';
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type:'POST',
-            url: $(this).attr('action'),
-            dataType: 'json',
-            data: {
-                'message' : message,
-                'sender_files' : file_array
-            },
-            success:function(data) {
-                var file_wrapper = '';
-                if(data.files.length != 0){
-                    for(var i = 0; i < data.files.length; i++){
-                        file_wrapper += '`<ul>`';
-                        file_wrapper += '<li><button class="btn btn-dark btn-sm">'+(i+1)+'</button></li>';
-                        var file_wrapper_image = '';
-                        if((data.files[i]['extension'] == 'jpg') || (data.files[i]['extension'] == 'png') || ((data.files[i]['extension'] == 'jpeg'))){
-                            file_wrapper_image = '<img src="'+ data.files[i]['path'] + '" alt="' + data.files[i]['name'] +'" width="40">';
-                        }
-                        file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+file_wrapper_image+'</a></li>';
-                        file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+data.files[i]['name']+'</a></li>';
-                        file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank" download>Download</a></li>';
-                        file_wrapper += '`<ul>`';
-                    }
+        var messageContent = $(this).find('.message').html().trim(); 
+        
+        if ((messageContent === '' || messageContent === '<br>') && (!file_array || file_array.length === 0)) {
+            swal({
+                type: 'error',
+                title: "Oops...",
+                text: "Please type a message or attach a file."
+            });
+
+            $('.loader-img').fadeOut();
+            $('.btn-send-message').attr('disabled', false);
+            
+            return false;
+        } else {
+            var message = '<p>'+$(this).find('.message').html()+'</p>';
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
                 }
-                
-                $('#message-box-wrapper').append(`<div class="card mb-3 left-card">
-                    <div class="card-body">
-                        <div class="card-content collapse show">
-                            <div class="ul-widget__body mt-0">
-                                <div class="ul-widget3 message_show">
-                                    <div class="ul-widget3-item mt-0 mb-0">
-                                        <div class="ul-widget3-header">
-                                            <div class="ul-widget3-info">
-                                                <a class="__g-widget-username" href="#">
-                                                    <span class="t-font-bolder">${data.user_name}</span>
-                                                </a>
+            });
+            $.ajax({
+                type:'POST',
+                url: $(this).attr('action'),
+                dataType: 'json',
+                data: {
+                    'message' : message,
+                    'sender_files' : file_array
+                },
+                success:function(data) {
+                    var file_wrapper = '';
+                    if(data.files.length != 0){
+                        for(var i = 0; i < data.files.length; i++){
+                            file_wrapper += '`<ul>`';
+                            file_wrapper += '<li><button class="btn btn-dark btn-sm">'+(i+1)+'</button></li>';
+                            var file_wrapper_image = '';
+                            if((data.files[i]['extension'] == 'jpg') || (data.files[i]['extension'] == 'png') || ((data.files[i]['extension'] == 'jpeg'))){
+                                file_wrapper_image = '<img src="'+ data.files[i]['path'] + '" alt="' + data.files[i]['name'] +'" width="40">';
+                            }
+                            file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+file_wrapper_image+'</a></li>';
+                            file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+data.files[i]['name']+'</a></li>';
+                            file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank" download>Download</a></li>';
+                            file_wrapper += '`<ul>`';
+                        }
+                    }
+                    
+                    $('#message-box-wrapper').append(`<div class="card mb-3 left-card">
+                        <div class="card-body">
+                            <div class="card-content collapse show">
+                                <div class="ul-widget__body mt-0">
+                                    <div class="ul-widget3 message_show">
+                                        <div class="ul-widget3-item mt-0 mb-0">
+                                            <div class="ul-widget3-header">
+                                                <div class="ul-widget3-info">
+                                                    <a class="__g-widget-username" href="#">
+                                                        <span class="t-font-bolder">${data.user_name}</span>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="ul-widget3-body">
-                                            ${data.message}
-                                            <span class="ul-widget3-status text-success t-font-bolder text-right">
-                                                ${data.created_at}
-                                            </span>
-                                        </div>
-                                        <div class="file-wrapper">
-                                            ${file_wrapper}
+                                            <div class="ul-widget3-body">
+                                                ${data.message}
+                                                <span class="ul-widget3-status text-success t-font-bolder text-right">
+                                                    ${data.created_at}
+                                                </span>
+                                            </div>
+                                            <div class="file-wrapper">
+                                                ${file_wrapper}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <i class="fa-solid fa-check fa-not-seen"></i>
                             </div>
-                            <i class="fa-solid fa-check fa-not-seen"></i>
                         </div>
-                    </div>
-                </div>`);
-                $('#form-send-message').find('.message').html('');
-                document.getElementById('basic-form-layouts').scrollIntoView({ behavior: 'smooth', block: 'end' });
-                myDropzone.removeAllFiles();
-                $('.loader-img').fadeOut();
-                $('.btn-send-message').removeAttr('disabled','disabled');
-            }
-            
-        }); 
+                    </div>`);
+                    $('#form-send-message').find('.message').html('');
+                    document.getElementById('basic-form-layouts').scrollIntoView({ behavior: 'smooth', block: 'end' });
+                    myDropzone.removeAllFiles();
+                    $('.loader-img').fadeOut();
+                    $('.btn-send-message').removeAttr('disabled','disabled');
+                }
+                
+            }); 
+        }
     })
 </script>
 @endpush

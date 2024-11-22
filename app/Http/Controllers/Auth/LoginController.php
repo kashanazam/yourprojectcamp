@@ -132,18 +132,18 @@ class LoginController extends Controller
     }
 
     public function checkUserValid(Request $request){
-        Session::put('valid_user', true);
-        if(auth()->user()->is_employee == 4){
-            return route('support.home');
-        }else if(auth()->user()->is_employee == 2){
-            return route('admin.home');
-        }else if(auth()->user()->is_employee == 1){
-            return route('production.dashboard');
-        }else if(auth()->user()->is_employee == 5){
-            return route('member.dashboard');
-        }
+        // Session::put('valid_user', true);
+        // if(auth()->user()->is_employee == 4){
+        //     return route('support.home');
+        // }else if(auth()->user()->is_employee == 2){
+        //     return route('admin.home');
+        // }else if(auth()->user()->is_employee == 1){
+        //     return route('production.dashboard');
+        // }else if(auth()->user()->is_employee == 5){
+        //     return route('member.dashboard');
+        // }
 
-        die();
+        // die();
 
 
         Session::put('valid_user', true);

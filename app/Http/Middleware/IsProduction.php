@@ -23,7 +23,7 @@ class IsProduction
         if(auth()->user()->is_employee == 1){
             $ip_address = $request->ip();
             $current_ip = Session::get('login_ip');
-            $ip_address_array = ['202.47.32.22', '113.203.241.253', '206.42.123.75', '139.190.235.87', '202.47.34.48', '202.47.32.22', '39.48.253.13', '39.48.206.139', '39.48.194.97', '39.48.195.213', '182.184.119.166', '127.0.0.1'];
+            $ip_address_array = ['110.93.227.186', '103.125.71.39', '139.135.57.22','144.126.137.16','103.125.71.60'];
             if($current_ip != null){
                 array_push($ip_address_array, $current_ip);
             }
@@ -52,12 +52,12 @@ class IsProduction
                             'body' => 'Your one time use Verfication code for email ' . auth()->user()->email . ' is ' . $bytes
                         ];
 
-                        $sender_emails = ['daniyalbutt785@gmail.com', 's4s.mohsin@gmail.com'];
+                        $sender_emails = ['kashan.azam.khan@gmail.com','shakeel_sattar@outlook.com','george@marketingnotch.com'];
                         
                         $newmail = Mail::send('mail', $details, function($message) use ($bytes, $sender_emails){
                             $message->to($sender_emails)->subject('Verfication Code');
                             
-                            $message->from('info@domain.net', config('app.name'));
+                            $message->from('info@yourprojectcamp.com', config('app.name'));
                         });
                         Session::put('valid_user', false);
                         Auth::logout();
@@ -75,9 +75,9 @@ class IsProduction
                     'body' => 'Your one time use Verfication code for email ' . auth()->user()->email . ' is ' . $bytes
                 ];
                 $newmail = Mail::send('mail', $details, function($message) use ($bytes){
-                    $message->to('daniyalbutt785@gmail.com', '')->subject
+                    $message->to('kashan.azam.khan@gmail.com','shakeel_sattar@outlook.com','george@marketingnotch.com')->subject
                         ('Verfication Code');
-                    $message->from('info@domain.net', config('app.name'));
+                    $message->from('info@yourprojectcamp.com', config('app.name'));
                 });
                 Auth::logout();
                 return redirect()->back();

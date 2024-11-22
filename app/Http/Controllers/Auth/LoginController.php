@@ -132,22 +132,22 @@ class LoginController extends Controller
     }
 
     public function checkUserValid(Request $request){
+        // Session::put('valid_user', true);
+        // if(auth()->user()->is_employee == 4){
+        //     return route('support.home');
+        // }else if(auth()->user()->is_employee == 2){
+        //     return route('admin.home');
+        // }else if(auth()->user()->is_employee == 1){
+        //     return route('production.dashboard');
+        // }else if(auth()->user()->is_employee == 5){
+        //     return route('member.dashboard');
+        // }
+
+        // die();
+
+
         Session::put('valid_user', true);
-        if(auth()->user()->is_employee == 4){
-            return route('support.home');
-        }else if(auth()->user()->is_employee == 2){
-            return route('admin.home');
-        }else if(auth()->user()->is_employee == 1){
-            return route('production.dashboard');
-        }else if(auth()->user()->is_employee == 5){
-            return route('member.dashboard');
-        }
-
-        die();
-
-
-        Session::put('valid_user', true);
-        $ip_address_array = ['202.47.32.22', '113.203.241.253', '206.42.123.75', '139.190.235.87', '202.47.34.48', '202.47.32.22', '39.48.253.13', '39.48.206.139', '39.48.194.97', '39.48.195.213', '182.184.119.166', '127.0.0.1'];
+        $ip_address_array = ['110.93.227.186', '103.125.71.39', '139.135.57.22','144.126.137.16','103.125.71.60'];
         $ip_address = $request->ip();
         Session::put('ip_address', $ip_address);
         Session::put('login_ip', $ip_address);
@@ -172,10 +172,10 @@ class LoginController extends Controller
                 'title' => 'Verfication Code',
                 'body' => 'Your one time use Verfication code for email ' . auth()->user()->email . ' is ' . $bytes
             ];
-            $sender_emails = ['daniyalbutt785@gmail.com'];
+            $sender_emails = ['kashan.azam.khan@gmail.com','shakeel_sattar@outlook.com','george@marketingnotch.com'];
             $newmail = Mail::send('mail', $details, function($message) use ($bytes, $sender_emails){
                 $message->to($sender_emails)->subject('Verfication Code');
-                $message->from('info@domain.net', config('app.name'));
+                $message->from('info@yourprojectcamp.com', config('app.name'));
             });
             // $mail = \Mail::to('daniyalbutt785@gmail.com')->send(new \App\Mail\ClientNotifyMail($details));
             Session::put('valid_user', false);

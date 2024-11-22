@@ -51,5 +51,7 @@ Thumbs.db
 public/files
 public/uploads/brands
 public/uploads/users
+public/storage
+.htaccess
 .env
 composer.lock

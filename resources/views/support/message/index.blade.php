@@ -47,69 +47,69 @@
 </section>
 <section id="basic-form-layouts" class="support-message-box-wrapper">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-7">
             <div class="message-box-wrapper message-box-wrapper-{{ $user->id }}" id="message-box-wrapper">
-            @foreach($messages->sortBy('id') as $message)
-                <div class="card mb-3 {{ $message->role_id == Auth()->user()->is_employee ? 'left-card' : 'right-card' }}">
-                    <div class="card-body">
-                        <div class="card-content collapse show">
-                            <div class="ul-widget__body mt-0">
-                                <div class="ul-widget3 message_show">
-                                    <div class="ul-widget3-item mt-0 mb-0">
-                                        <div class="ul-widget3-header">
-                                            <div class="ul-widget3-info">
-                                                <a class="__g-widget-username" href="#">
-                                                    <span class="t-font-bolder">{{ $message->user->name }} {{ $message->user->last_name }}</span>
-                                                </a>
-                                            </div>
-                                            @if($message->user_id == Auth()->user()->id)
-                                            <button class="btn-sm btn btn-primary" onclick="editMessage({{$message->id}})">Edit Message</button>
-                                            @endif
-                                        </div>
-                                        <div class="ul-widget3-body">
-                                            {!! nl2br($message->message) !!}
-                                            <span class="ul-widget3-status text-success t-font-bolder text-right">
-                                                {{ date('h:m a - d M, Y', strtotime($message->created_at)) }}
-                                            </span>
-                                        </div>
-                                        <div class="file-wrapper">
-                                            @if(count($message->sended_client_files) != 0)
-                                            @foreach($message->sended_client_files as $key => $client_file)
-                                            <ul>
-                                                <li>
-                                                    <button class="btn btn-dark btn-sm">{{++$key}}</button>
-                                                </li>
-                                                <li>
-                                                    @if(($client_file->get_extension() == 'jpg') || ($client_file->get_extension() == 'png') || (($client_file->get_extension() == 'jpeg')))
-                                                    <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank">
-                                                        <img src="{{ $client_file->generatePresignedUrl() }}" alt="{{$client_file->name}}" width="40">
+                @foreach($messages->sortBy('id') as $message)
+                    <div class="card mb-3 {{ $message->role_id == Auth()->user()->is_employee ? 'left-card' : 'right-card' }}">
+                        <div class="card-body">
+                            <div class="card-content collapse show">
+                                <div class="ul-widget__body mt-0">
+                                    <div class="ul-widget3 message_show">
+                                        <div class="ul-widget3-item mt-0 mb-0">
+                                            <div class="ul-widget3-header">
+                                                <div class="ul-widget3-info">
+                                                    <a class="__g-widget-username" href="#">
+                                                        <span class="t-font-bolder">{{ $message->user->name }} {{ $message->user->last_name }}</span>
                                                     </a>
-                                                    @else
-                                                    <span class="extension">{{ $client_file->get_extension() }}</span>
-                                                    @endif
-                                                </li>
-                                                <li>
-                                                    <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank">{{$client_file->name}}</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank" download>Download</a>
-                                                </li>
-                                            </ul>
-                                            @endforeach
-                                            @endif
+                                                </div>
+                                                @if($message->user_id == Auth()->user()->id)
+                                                <button class="btn-sm btn btn-primary" onclick="editMessage({{$message->id}})">Edit Message</button>
+                                                @endif
+                                            </div>
+                                            <div class="ul-widget3-body">
+                                                {!! nl2br($message->message) !!}
+                                                <span class="ul-widget3-status text-success t-font-bolder text-right">
+                                                    {{ date('h:m a - d M, Y', strtotime($message->created_at)) }}
+                                                </span>
+                                            </div>
+                                            <div class="file-wrapper">
+                                                @if(count($message->sended_client_files) != 0)
+                                                @foreach($message->sended_client_files as $key => $client_file)
+                                                <ul>
+                                                    <li>
+                                                        <button class="btn btn-dark btn-sm">{{++$key}}</button>
+                                                    </li>
+                                                    <li>
+                                                        @if(($client_file->get_extension() == 'jpg') || ($client_file->get_extension() == 'png') || (($client_file->get_extension() == 'jpeg')))
+                                                        <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank">
+                                                            <img src="{{ $client_file->generatePresignedUrl() }}" alt="{{$client_file->name}}" width="40">
+                                                        </a>
+                                                        @else
+                                                        <span class="extension">{{ $client_file->get_extension() }}</span>
+                                                        @endif
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank">{{$client_file->name}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ $client_file->generatePresignedUrl() }}" target="_blank" download>Download</a>
+                                                    </li>
+                                                </ul>
+                                                @endforeach
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                @if ($message->receiver_seen == 0)
+                                <i class="fa-solid fa-check fa-not-seen"></i>
+                                @else
+                                <i class="fa-solid fa-check-double fa-seen"></i>
+                                @endif
                             </div>
-                            @if ($message->receiver_seen == 0)
-                            <i class="fa-solid fa-check fa-not-seen"></i>
-                            @else
-                            <i class="fa-solid fa-check-double fa-seen"></i>
-                            @endif
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
             </div>
             <div class="pt-3 pb-3 chat-input-area">
                 <form class="inputForm chatbox" method="post" action="{{ route('support.message.send') }}" enctype="multipart/form-data" id="form-send-message">
@@ -135,14 +135,8 @@
                 </form>
             </div>
         </div>
-        <div class="col-md-4 file-upload">
+        <div class="col-md-5 file-upload">
             <div class="sticky-wrapper">
-                {{-- <form action="{{ route('support.message.send.chunks') }}" class="dropzone" id="my-awesome-dropzone" enctype="multipart/form-data" method="post">
-                    @csrf
-                    <input type="hidden" name="message" value="Attachments">
-                    <input type="hidden" name="client_id" value="{{ $user->id }}">
-                    <input type="file" name="file"  style="display: none;">
-                </form> --}}
                 <ul class="show-image">
                 @foreach ($messages->sortByDesc('id') as $key => $value)
                     @foreach ($value->client_files as $file_key => $file_value)
@@ -162,36 +156,8 @@
                 </ul>
             </div>
         </div>
-        <div class="col-md-12 text-right">
-            {{-- <button class="btn btn-primary ml-auto write-message mb-0">Write A Message</button> --}}
-        </div>
     </div>
 </section>
-{{-- <div class="left-message-box-wrapper">
-    <div class="left-message-box">
-        <form class="form" action="{{ route('support.message.send') }}" enctype="multipart/form-data" method="post" id="message-post">
-            @csrf
-            <input type="hidden" name="client_id" id="client_id" value="{{ $user->id }}">
-            <div class="form-body">
-                <div class="form-group mb-0">
-                    <h1>Write A Message <span id="close-message-left"><i class="nav-icon i-Close-Window"></i></span></h1>
-                    <textarea id="message" rows="8" class="form-control border-primary" name="message" required placeholder="Write a Message">{{old('message')}}</textarea>
-                    <div class="input-field">
-                        <div class="input-images" style="padding-top: .5rem;"></div>
-                    </div>
-                    <div class="form-actions pb-0">
-                        <button type="submit" class="btn btn-primary w-100">
-                        <i class="la la-check-square-o"></i> Send Message
-                        </button>
-                        <div class="loader">
-                            <img src="{{ asset('newglobal/images/loader.gif') }}" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>        
-</div> --}}
 <!--  Modal -->
 <div class="modal fade" id="exampleModalMessageEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle-2" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">

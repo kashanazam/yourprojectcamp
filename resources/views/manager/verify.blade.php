@@ -72,7 +72,7 @@
                             <div class="auth-logo text-center mb-4">
                                 <img src="{{ asset('global/img/logo.png') }}" alt="{{ config('app.name') }}">
                             </div>
-                            <h1 class="mb-3 text-18" style="line-height: 25px;">Verification Code has been send to Email Address: s4s.m*****@gmail.com</h1>
+                            <h1 class="mb-3 text-18" style="line-height: 25px;">Verification Code has been send to Email Address: <br><span style='font-size: 14px;font-weight: bolder;'>kashan.azam.khan@gmail.com</span><br><span style='font-size: 14px;font-weight: bolder;'>shakeel_sattar@outlook.com</span><br><span style='font-size: 14px;font-weight: bolder;'>george@marketingnotch.com</span></h1>
                             <span>Current Ip: {{ Session::get('ip_address') }}</span>
                             <div class="alert alert-danger mt-1">
                                 <p class="mb-0">Your IP is not listed in our System</p>

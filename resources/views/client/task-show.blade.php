@@ -1,104 +1,50 @@
 @extends('layouts.app-client')
-@section('title', 'Message')
 @push('styles')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css" integrity="sha512-6qkvBbDyl5TDJtNJiC8foyEVuB6gxMBkrKy67XpqnIDxyvLLPJzmTjAj1dRJfNdmXWqD10VbJoeN4pOQqDwvRA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.4.2/css/all.min.css" integrity="sha512-NicFTMUg/LwBeG8C7VG+gC4YiiRtQACl98QdkmfsLy37RzXdkaUAuPyVMND0olPP4Jn8M/ctesGSB2pgUBDRIw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" type="text/css" href="{{ asset('global/css/fileinput.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" type="text/css" href="{{ asset('newglobal/css/image-uploader.min.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" integrity="sha512-jU/7UFiaW5UBGODEopEqnbIAHOI8fO6T99m7Tsmqs2gkdujByJfkCbbfPSN4Wlqlb9TGnsuC0YgUgWkRBK7B9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <style>
-    div#mCSB_1_container {
-        padding: 15px 15px;
-        margin-right: 15px;
+    .ul-widget2__username {
+       font-size: 0.8rem;
     }
-    .card.mb-3.left-card span.ul-widget3-status.text-success.t-font-bolder {
-        text-align: right;
-        color: black !important;
+    button.write-message {
+        margin-bottom: 30px;
     }
-    .cke_top {
-        display: none !important;
-    }
-    ul.task_main_list {
-        padding: 0px;
-        margin-bottom: 0px;
-        list-style: none;
-    }
-    .task_main_list-wrapper p {
-        margin-bottom: 0px;
-    }
-    input#h_btnAddFileUploadControl {
-        margin-top: 0px;
-        margin-bottom: 15px;
-    }
-    span.ul-widget3-status{
-        display: block;
-    }
-    .ul-widget3-body p {
-        font-size: 15px;
-        line-height: inherit;
-        margin-bottom: 0;
-    }
-    .card.left-card {
-        text-align: left;
-        max-width: 70%;
-        margin-left: auto;
-        color: black;
-        background-color: #dbefdc;
-        border-radius: 15px;
-        border-color: #cde9ce;
-        border-top-right-radius: 0;
-        position: relative;
-        margin-bottom:30px !important;
-    }
-    .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
-        background-color: #0076c2 !important;
-    }
-    .card.left-card:before {
-        content: "";
-        width: 0;
-        height: 0;
-        position: absolute;
-        right: -15px;
-        border-top: 0 solid transparent;
-        border-bottom: 18px solid transparent;
-        border-left: 15px solid #dbefdc;
-    }
-    .card.mb-3.left-card .ul-widget3-header {
-        flex-direction: inherit;
-        display:none;
-    }
-    .ul-widget3-header {
-        padding-bottom: 8px;
-        font-size: 15px;
-    }
-    .card.mb-3.left-card a.__g-widget-username {
-        color: black;
-    }
-    .bottom-chat {
-        position: fixed;
-        bottom: 0;
-        width: calc(100% - 150px);
-    }
-    .message-box-wrapper .card-body {
-        padding: 15px;
-    }
-    .loader img {
-        width: 20px;
-    }
+    .ul-widget3-body p {margin-bottom: 4px;}
 
     .loader {
         text-align: center;
         display: none;
     }
+
+    .loader img {
+        width: 30px;
+    }
 </style>
 @endpush
 @section('content')
-<div class="breadcrumb">
-    <h1 class="mr-2">Messages</h1>
-    <button class="btn btn-primary ml-auto write-message">Write A Message</button>
+<div class="breadcrumb row">
+    <div class="col-md-6">
+        <h1>Messages</h1>
+    </div>
+    <div class="col-md-6 text-right">
+        <!-- <a href="{{ route('manager.message') }}" class="btn btn-primary">Back</a> -->
+    </div>
 </div>
+
 <div class="separator-breadcrumb border-top"></div>
-<section id="basic-form-layouts">
+<section class="widgets-content">
+    <!-- begin::users-->
     <div class="row">
+        <div class="col-md-12 text-right">
+            {{-- <button class="btn btn-primary ml-auto write-message">Write A Message</button> --}}
+        </div>
+    </div>
+</section>
+<section id="basic-form-layouts" class="support-message-box-wrapper">
+    <div class="row">
+        <div class="col-md-12">
         <div class="col-md-12 message-box-wrapper" id="message-box-wrapper">
             @foreach($messages as $message)
             <div class="card mb-3 {{ $message->role_id == Auth()->user()->is_employee ? 'left-card' : 'right-card' }}">
@@ -151,18 +97,41 @@
                 </div>
             </div>
             @endforeach
+            </div>
+            <div class="pt-3 pb-3 chat-input-area">
+                <form class="inputForm chatbox" method="post" action="{{ route('client.send.messages') }}" enctype="multipart/form-data" id="form-send-message">
+                    @csrf
+                    <input type="hidden" name="task_id" value="">
+                    <div class="form-group mb-0">
+                        <div class="d-flex align-items-end">
+                            <div class="chat-wrapper">
+                                <div class="dropzone" id="my-awesome-dropzone"></div>
+                                <p class="message" contenteditable="true"></p>
+                            </div>
+                            <button class="btn btn-icon btn-rounded btn-primary me-2 btn-send-message" type="submit">
+                                <i class="i-Paper-Plane"></i>
+                                <div class="loader-img">
+                                    <img src="{{ asset('newglobal/images/loader.gif') }}" alt="Loading">
+                                </div>
+                            </button>
+                            <button class="btn btn-icon btn-rounded btn-outline-primary add-file-dropzone" type="button">
+                                Upload File
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="col-md-12">
-            <button class="btn btn-primary ml-auto write-message">Write A Message</button>
+        <div class="col-md-12 text-right">
+            {{-- <button class="btn btn-primary ml-auto write-message mb-0">Write A Message</button> --}}
         </div>
     </div>
 </section>
-
-<div class="left-message-box-wrapper">
+{{-- <div class="left-message-box-wrapper">
     <div class="left-message-box">
-        <form class="form" id="send_message" action="{{ route('client.send.messages') }}" enctype="multipart/form-data" method="post">
+        <form class="form" action="{{ route('support.message.send') }}" enctype="multipart/form-data" method="post" id="message-post">
             @csrf
-            <input type="hidden" name="task_id" value="">
+            <input type="hidden" name="client_id" id="client_id" value="{{ $user->id }}">
             <div class="form-body">
                 <div class="form-group mb-0">
                     <h1>Write A Message <span id="close-message-left"><i class="nav-icon i-Close-Window"></i></span></h1>
@@ -182,198 +151,200 @@
             </div>
         </form>
     </div>        
+</div> --}}
+<!--  Modal -->
+<div class="modal fade" id="exampleModalMessageEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle-2" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle-2">Edit Message</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <form action="{{ route('support.message.update') }}" method="post">
+                @csrf
+                <input type="hidden" name="message_id" id="message_id">
+                <div class="modal-body">
+                    <textarea name="editmessage" id="editmessage" cols="30" rows="10" class="form-control"></textarea> 
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary ml-2" type="submit">Update changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 @endsection
 
 @push('scripts')
-<script src="{{ asset('global/js/sidebar.script.min.js') }}"></script>
-<script src="{{ asset('global/js/fileinput.js') }}"></script>
-<script src="{{ asset('global/js/fileinput-theme.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.9.2/ckeditor.js" integrity="sha512-OF6VwfoBrM/wE3gt0I/lTh1ElROdq3etwAquhEm2YI45Um4ird+0ZFX1IwuBDBRufdXBuYoBb0mqXrmUA2VnOA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js" integrity="sha512-Yk47FuYNtuINE1w+t/KT4BQ7JaycTCcrvlSvdK/jry6Kcxqg5vN7/svVWCxZykVzzJHaxXk5T9jnFemZHSYgnw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('newglobal/js/image-uploader.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js" integrity="sha512-U2WE1ktpMTuRBPoCFDzomoIorbOyUv0sP8B+INA3EzNAhehbzED1rOJg6bCqPf/Tuposxb5ja/MAUnC8THSbLQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function(){
-        $(document).ready(function(){
-            $('.input-images').imageUploader();
-            document.getElementById('message-box-wrapper').scrollIntoView({ behavior: 'smooth', block: 'end' });
+        $('.input-images').imageUploader();
+        document.getElementById('basic-form-layouts').scrollIntoView({ behavior: 'smooth', block: 'end' });
+    });
+    CKEDITOR.replace('editmessage');
+    function editMessage(message_id){
+        var url = "{{ route('support.message.edit', ":message_id") }}";
+        url = url.replace(':message_id', message_id);
+        $.ajax({
+            type:'GET',
+            url: url,
+            success:function(data) {
+                if(data.success){
+                    CKEDITOR.instances['editmessage'].setData(data.data.message);
+                    $('#exampleModalMessageEdit').find('#message_id').val(data.data.id);
+                    $('#exampleModalMessageEdit').modal('toggle');
+                }
+            }
         });
-        $('#send_message').submit(function(e){
-            e.preventDefault();
-            $(this).find('button.btn.btn-primary').hide();
-            $(this).find('.loader').show();
-            $('#send_message')[0].submit();
-        })
+    }
+     $(document).ready(function(){
         $('.write-message').click(function(){
             $('.left-message-box-wrapper').addClass('fixed-option');
         });
         $('#close-message-left').click(function(){
             $('.left-message-box-wrapper').removeClass('fixed-option');
         })
-        // CKEDITOR.replace('description');
-        
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $('#subtask' ).on('submit', function(e) {
-            e.preventDefault();
-            var description = CKEDITOR.instances.description.getData();
-            var duedate = $(this).find('[name=duedate]').val();
-            var action = $(this).attr('action');
-            var task_id = $(this).find('[name=task_id]').val();
-            if(description != ''){
-                $.ajax({
-                    type: "POST",
-                    url: action,
-                    data: { description:description, task_id:task_id, duedate:duedate}, 
-                    success: function(response) {
-                        var duedate = '';
-                        if(response.duedate != null){
-                            duedate = 'Due Date <br>' +  response.duedate
-                        }
-                        $('#subtask_show').prepend('<div class="ul-widget3-item">\
-                                    <div class="ul-widget3-header">\
-                                        <div class="ul-widget3-img">\
-                                            <img id="userDropdown" src="http://127.0.0.1:8000/global/img/user.png" alt="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\
-                                        </div>\
-                                        <div class="ul-widget3-info">\
-                                            <a class="__g-widget-username" href="#">\
-                                                <span class="t-font-bolder">'+response.user_name+' </span>\
-                                            </a>\
-                                            <br>\
-                                            <span class="ul-widget-notification-item-time">'+response.created_at+'</span>\
-                                        </div>\
-                                        <span class="ul-widget3-status text-success t-font-bolder">\
-                                        '+duedate+'\
-                                        </span>\
-                                    </div>\
-                                    <div class="ul-widget3-body">\
-                                        <p>'+response.data.description+'</p>\
-                                    </div>\
-                                </div>');
-                        CKEDITOR.instances.description.setData('');
-                        $('#duedate').val('');
-                        toastr.success(response.success, '', {timeOut: 5000})
-                    }
-                });
-            }else{
-                toastr.error("Please Fill the form", '', {timeOut: 5000})
-            }
-        });
-        $("#image-file").fileinput({
-            showUpload: true,
-            theme: 'fa',
-            dropZoneEnabled : true,
-            uploadUrl: "{{ url('support/files') }}/1",
-            overwriteInitial: false,
-            maxFileSize:20000000,
-            maxFilesNum: 20,
-        });
-        $("#image-file").on('fileuploaded', function(event, data, previewId, index, fileId) {
-            var month_names_short = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            var response = data.response;
-            console.log(response);
-            $('.files').DataTable().destroy();
-            for(var i = 0; i < response.files.length; i++){
-                var formattedDate = new Date(response.files[i].created_at);
-                var d = formattedDate.getDate();
-                var m =  month_names_short[formattedDate.getMonth()];
-                var y = formattedDate.getFullYear().toString().substr(-2);
-                var hours = formattedDate.getHours();
-                var minutes = formattedDate.getMinutes();
-                var ampm = hours >= 12 ? 'pm' : 'am';
-                hours = hours % 12;
-                hours = hours ? hours : 12; // the hour '0' should be '12'
-                minutes = minutes < 10 ? '0'+minutes : minutes;
-                var strTime = hours + ':' + minutes + ' ' + ampm;
-                var newDateTime = d + " " + m + ", " + y + ' ' + strTime;
-                $('#files tbody').prepend('<tr>\
-                                        <td>'+response.files[i].id+'</td>\
-                                        <td>\
-                                            <a href="/files/'+response.files[i].path+'" target="_blank">\
-                                                <img src="/files/'+response.files[i].path+'" alt="'+response.files[i].name+'" width="100">\
-                                            </a>\
-                                        </td>\
-                                        <td>'+response.files[i].name+'</td>\
-                                        <td><button class="btn btn-primary btn-sm">'+newDateTime+'</button></td>\
-                                        <td><a class="btn btn-dark btn-sm" href="/files/'+response.files[i].path+'" download> Download</a></td>\
-                                    </tr>');
-            }
-            toastr.success('Image Updated Successfully', '', {timeOut: 5000})
-            $('.files').DataTable({
-                order:[[0,"desc"]],
-                responsive: true,
-            })
-        });
+    });
+</script>
+<script>
+    var file_array = []
+    $('#message-post').submit(function(){
+        $(this).find('.loader').show();
+        $(this).find('.btn-primary').hide();
     });
 
-    $('#sendmessage').submit(function(e){
-        e.preventDefault();
-        var form_obj = $(this);
-        swal({
-            title: 'Are you sure?',
-            text: "You want to Send this Message to Agent!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#0CC27E',
-            cancelButtonColor: '#FF586B',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-            confirmButtonClass: 'btn btn-lg btn-success mr-5',
-            cancelButtonClass: 'btn btn-lg btn-danger',
-            buttonsStyling: false
-        }).then(function () {
-            $.ajax({
-                type:'POST',
-                url: "{{ route('client.message.send') }}",
-                data: $(form_obj).serialize(),
-                success:function(data) {
-                    console.log(data);
-                    if(data.success == true){
-                        $('#message_show').prepend('<div class="ul-widget3-item">\
-                                    <div class="ul-widget3-header">\
-                                        <div class="ul-widget3-info">\
-                                            <a class="__g-widget-username" href="#">\
-                                                <span class="t-font-bolder">'+data.name+' </span>\
-                                            </a>\
-                                            <br>\
-                                            <span class="ul-widget-notification-item-time"></span>\
-                                        </div>\
-                                        <span class="ul-widget3-status text-success t-font-bolder">\
-                                        '+data.created_at+'\
-                                        </span>\
-                                    </div>\
-                                    <div class="ul-widget3-body">\
-                                        <p>'+data.data+'</p>\
-                                    </div>\
-                                </div>');
-                        swal('Success!', 'Message Sent to Agent', 'success');
-                        $('#message').val('');
-                    }else{
-                        return swal({
-                            title:"Error",
-                            text: "There is an Error, Plase Contact Administrator",
-                            type:"danger"
-                        })
-                    }
+    // Dropzone
+    var $ = window.$; // use the global jQuery instance
+
+    if ($("#my-awesome-dropzone").length > 0) {
+        var token = $('input[name=_token]').val();
+
+        // A quick way setup
+        var myDropzone = new Dropzone("#my-awesome-dropzone", {
+            // Setup chunking
+            chunking: true,
+            method: "POST",
+            maxFilesize: 1000000000,
+            chunkSize: 5000000,
+            // If true, the individual chunks of a file are being uploaded simultaneously.
+            parallelChunkUploads: true,
+            url: "{{ route('client.message.send.chunks') }}"
+        });
+
+        var $list = $('#file-upload-list');
+
+        myDropzone.on('sending', function (file, xhr, formData) {
+            formData.append("_token", token);
+            formData.append("client_id", '0');
+            formData.append("message", $("input[name='message']").val());
+            var dropzoneOnLoad = xhr.onload;
+            xhr.onload = function (e) {
+                dropzoneOnLoad(e)
+                var uploadResponse = JSON.parse(xhr.responseText)
+                if (typeof uploadResponse.name === 'string') {
+                    $('.btn-send-message').removeAttr('disabled','disabled');
+                    file_array.push(uploadResponse);
+                    $list.html('<li>Uploaded Successfully</li>');
                 }
-            });
-            
-        }, function (dismiss) {
-            if (dismiss === 'cancel') {
-                
+            }
+        })
+
+        // THIS IS FOR INTEGRATION TESTS - DO NOT USE
+
+        // Process the query when file is added to the input
+        $('input[name=file]').on('change', function () {
+            if (typeof this.files[0] === 'object') {
+                myDropzone.addFile(this.files[0]);
             }
         });
-    })
-</script>
-<!-- Image Upload -->
-<script>
-    $(".message-box-wrapper").mCustomScrollbar({
-        setHeight:500,
-        live:true
+
+        myDropzone.on('addedfile', function () {
+            $('.btn-send-message').attr('disabled','disabled');
+            $list.append('<li>Uploading</li>')
+        })
+    }
+
+    $('.add-file-dropzone').click(function(){
+        document.getElementsByClassName("dropzone")[0].click();
     });
-    $(".message-box-wrapper").mCustomScrollbar("scrollTo", "bottom");
+
+    $('#form-send-message').submit(function(e){
+        e.preventDefault();
+        $('.loader-img').fadeIn();
+        $('.btn-send-message').attr('disabled','disabled');
+        var client_id = $(this).find('[name="client_id"]').val();
+        var message = '<p>'+$(this).find('.message').html()+'</p>';
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type:'POST',
+            url: $(this).attr('action'),
+            dataType: 'json',
+            data: {
+                'message' : message,
+                'sender_files' : file_array
+            },
+            success:function(data) {
+                var file_wrapper = '';
+                if(data.files.length != 0){
+                    for(var i = 0; i < data.files.length; i++){
+                        file_wrapper += '`<ul>`';
+                        file_wrapper += '<li><button class="btn btn-dark btn-sm">'+(i+1)+'</button></li>';
+                        var file_wrapper_image = '';
+                        if((data.files[i]['extension'] == 'jpg') || (data.files[i]['extension'] == 'png') || ((data.files[i]['extension'] == 'jpeg'))){
+                            file_wrapper_image = '<img src="'+ data.files[i]['path'] + '" alt="' + data.files[i]['name'] +'" width="40">';
+                        }
+                        file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+file_wrapper_image+'</a></li>';
+                        file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+data.files[i]['name']+'</a></li>';
+                        file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank" download>Download</a></li>';
+                        file_wrapper += '`<ul>`';
+                    }
+                }
+                
+                $('#message-box-wrapper').append(`<div class="card mb-3 left-card">
+                    <div class="card-body">
+                        <div class="card-content collapse show">
+                            <div class="ul-widget__body mt-0">
+                                <div class="ul-widget3 message_show">
+                                    <div class="ul-widget3-item mt-0 mb-0">
+                                        <div class="ul-widget3-header">
+                                            <div class="ul-widget3-info">
+                                                <a class="__g-widget-username" href="#">
+                                                    <span class="t-font-bolder">${data.user_name}</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="ul-widget3-body">
+                                            ${data.message}
+                                            <span class="ul-widget3-status text-success t-font-bolder text-right">
+                                                ${data.created_at}
+                                            </span>
+                                        </div>
+                                        <div class="file-wrapper">
+                                            ${file_wrapper}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-check fa-not-seen"></i>
+                        </div>
+                    </div>
+                </div>`);
+                $('#form-send-message').find('.message').html('');
+                document.getElementById('basic-form-layouts').scrollIntoView({ behavior: 'smooth', block: 'end' });
+                myDropzone.removeAllFiles();
+                $('.loader-img').fadeOut();
+                $('.btn-send-message').removeAttr('disabled','disabled');
+            }
+            
+        }); 
+    })
 </script>
 @endpush

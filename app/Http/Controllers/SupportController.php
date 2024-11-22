@@ -24,8 +24,10 @@ use App\Models\SubTask;
 use App\Models\SubtasKDueDate;
 use App\Models\User;
 use App\Models\Message;
+use App\Models\ProjectObjection;
 use Illuminate\Http\Request;
 use App\Notifications\MessageNotification;
+use App\Notifications\ObjectionNotification;
 use Illuminate\Support\Str;
 use App\Rules\MatchOldPassword;
 use Illuminate\Support\Facades\Hash;
@@ -610,7 +612,8 @@ class SupportController extends Controller
         return redirect()->back()->with('success', 'Message Send Successfully.')->with('data', 'message');;
     }
 
-    public function sendMessageChunks(Request $request){
+    public function sendMessageChunks(Request $request)
+    {
         $receiver = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
         // check if the upload is success, throw exception or return response you need
         if ($receiver->isUploaded() === false) {
@@ -618,12 +621,18 @@ class SupportController extends Controller
         }
         $save = $receiver->receive();
         if ($save->isFinished()) {
-
-            $get_client_id = $request->client_id;
-            $get_message = $request->message;
-            $client = User::find($get_client_id);
-            $set_email = strtolower($client->email);
-            return $this->saveFileToS3($save->getFile(), $set_email);
+            if($request->client_id == 0){
+                $get_client_id = Auth::user()->id;
+                $get_message = $request->message;
+                $set_email = strtolower(Auth::user()->email);
+                return $this->saveFileToS3($save->getFile(), $set_email);
+            }else{
+                $get_client_id = $request->client_id;
+                $get_message = $request->message;
+                $client = User::find($get_client_id);
+                $set_email = strtolower($client->email);
+                return $this->saveFileToS3($save->getFile(), $set_email);
+            }
         }
 
         $handler = $save->handler();
@@ -939,6 +948,8 @@ class SupportController extends Controller
                 $message_array[$data->client->id]['message'] = $message->message;
                 $message_array[$data->client->id]['image'] = $data->client->image;
                 $message_array[$data->client->id]['task_id'] = $task_id;
+                $message_array[$data->client->id]['project_id'] = $data->id;
+                $message_array[$data->client->id]['support_id'] = $data->user_id;
                 $sender_seen = DB::table('messages')->where('user_id', $data->client->id)->orWhere('sender_id', $data->client->id)->get();
                 $sender_seen = $sender_seen->where('sender_seen', 0)->count();
                 if($sender_seen != 0){
@@ -953,7 +964,12 @@ class SupportController extends Controller
                 return $b['sender_seen'] <=> $a['sender_seen'];
             });
         }
-        return view('support.messageshow', compact('message_array'));
+        
+        $objection_count = ProjectObjection::where('support_id','=',Auth::user()->id)
+        ->where('status', '=',0)
+        ->get()->count();
+        
+        return view('support.messageshow', compact('message_array','objection_count'));
     }
 
     public function getMessageByAdmin(Request $request)
@@ -1008,12 +1024,25 @@ class SupportController extends Controller
         $brands = DB::table('brands')->select('id', 'name')->get();
 
         $data = DB::table('messages')
-        ->select('messages.created_at', 'messages.id as message_id', 'brands.name as brand_name', 'users.client_id', 'messages.user_id', 'users.name', 'users.last_name', 'users.email', 'messages.message')
-        ->join('users', 'users.id', '=', 'messages.user_id')
-        ->join('clients', 'clients.id', '=', 'users.client_id')
-        ->join('brands', 'brands.id', '=', 'clients.brand_id')
-        ->where('messages.role_id', 3)
-        ->orderBy('messages.id', 'desc');
+            ->select(
+                'messages.created_at',
+                'messages.id as message_id',
+                'brands.name as brand_name',
+                'users.client_id',
+                'messages.user_id',
+                'users.name',
+                'users.last_name',
+                'users.email',
+                'messages.message',
+                'projects.user_id as support_id',
+                'projects.id as project_id'
+            )
+            ->join('users', 'users.id', '=', 'messages.user_id')
+            ->join('clients', 'clients.id', '=', 'users.client_id')
+            ->join('brands', 'brands.id', '=', 'clients.brand_id')
+            ->join('projects', 'projects.client_id', '=', 'messages.user_id')
+            ->where('messages.role_id', 3)
+            ->orderBy('messages.id', 'desc');
 
         if ($request->brand != null) {
             $data = $data->where('brands.id', $request->brand);
@@ -1075,5 +1104,113 @@ class SupportController extends Controller
         // $data = $data->orderBy('id', 'desc')->paginate(20);
         
         return view('admin.messageshow', compact('brands', 'filter', 'data'));
+    }
+    
+    public function ObjectionData(Request $request)
+    {
+
+        $objections = ProjectObjection::where('support_id', '=', $request->support_id)
+            ->where('project_id', '=', $request->project_id)->get();
+        // dd($objections);
+        foreach ($objections as $obj) {
+            $support = User::select('name')->where('id', '=', $obj->support_id)->first();
+            $obj->support_name = $support->name;
+            $user = User::select('name')->where('id', '=', $obj->user_id)->first();
+            $obj->user_name = $user->name;
+            if ($obj->resolved_by != null) {
+                $resolved = User::select('name')->where('id', '=', $obj->resolved_by)->first();
+                $obj->resolved = $resolved->name;
+            } else {
+                $obj->resolved = '';
+            }
+        }
+
+        return response()->json(['success' => true, 'data' => $objections]);
+    }
+    public function CreateObjectionData(Request $request)
+    {
+
+        $objections = new ProjectObjection();
+        $objections->message = $request->message;
+        $objections->user_id = $request->user_id;
+        $objections->support_id = $request->support_id;
+        $objections->project_id = $request->project_id;
+        $objections->status = 0;
+        $objections->save();
+
+        // Fetch the support name
+        $support = User::select('name')->where('id', '=', $request->support_id)->first();
+        $objections->support_name = $support ? $support->name : '';
+
+        // Fetch the user name
+        $user = User::select('name')->where('id', '=', $request->user_id)->first();
+        $objections->user_name = $user ? $user->name : '';
+
+        // Check if the objection was resolved and get the name of the user who resolved it
+        if ($objections->resolved_by != null) {
+            $resolved = User::select('name')->where('id', '=', $objections->resolved_by)->first();
+            $objections->resolved = $resolved ? $resolved->name : '';
+        } else {
+            $objections->resolved = '';
+        }
+
+        $messageData = [
+            'id' => Auth()->user()->id,
+            'task_id' => '',
+            'project_id' => $request->project_id,
+            'name' => Auth()->user()->name . ' ' . Auth()->user()->last_name,
+            'text' => Auth()->user()->name . ' ' . Auth()->user()->last_name . ' has raised an objection on a project',
+            'details' => Str::limit(filter_var($request->message, FILTER_SANITIZE_STRING), 40),
+            'url' => '#',
+        ];
+
+        $support = User::find($request->support_id);
+        $support->notify(new ObjectionNotification($messageData));
+
+        return response()->json(['success' => true, 'data' => $objections]);
+    }
+
+    public function updateObjectionStatus(Request $request){
+        $objections = ProjectObjection::find($request->id);
+
+        if($objections->status == 0){
+            $objections->status = 1;
+            $objections->resolved_by = Auth::user()->id;
+            $objections->save();
+        }else if($objections->status == 1){
+            $objections->status = 0;
+            $objections->resolved_by = Auth::user()->id;
+            $objections->save();
+        }
+
+        return response()->json(['success' => true, 'resolved_by' => Auth::user()->name, 'status' => $objections->status]);
+    }
+
+    public function getObjectionDetails(Request $request){
+        $objections = ProjectObjection::find($request->id);
+
+        $support = User::select('name')->where('id', '=', $objections->support_id)->first();
+        $objections->support_name = $support ? $support->name : '';
+
+        // Fetch the user name
+        $user = User::select('name')->where('id', '=', $objections->user_id)->first();
+        $objections->user_name = $user ? $user->name : '';
+
+        // Check if the objection was resolved and get the name of the user who resolved it
+        if ($objections->resolved_by != null) {
+            $resolved = User::select('name')->where('id', '=', $objections->resolved_by)->first();
+            $objections->resolved = $resolved ? $resolved->name : '';
+        } else {
+            $objections->resolved = '';
+        }
+        return response()->json(['success' => true, 'data' => $objections]);
+    }
+    public function supportReplyObjection(Request $request){
+        
+        $objections = ProjectObjection::find($request->objection_id);
+        $objections->support_reply = $request->message;
+        $objections->save();
+        
+        return response()->json(['success' => true, 'data' => $objections]);
     }
 }

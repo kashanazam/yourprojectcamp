@@ -66,29 +66,24 @@ class ClientChatController extends Controller
         $message->save();
         $email = Auth()->user()->email;
         $get_files = [];
-        if ($request->hasfile('images')) {
-            $i = 0;
-            foreach ($request->file('images') as $file) {
-                $disk = Storage::disk('wasabi');
-                $data = $disk->put('messages/'.$email, $file);
-                $disk->setVisibility($data, 'public');
-                $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $name = $file_name . '_' . $i . '_]' .time().'.'.$file->extension();
-                // $file->move(public_path().'/files/', $name);
-                $client_file = new ClientFile();
-                $client_file->name = $file_name;
-                $client_file->path = $data;
-                $client_file->task_id = -1;
-                $client_file->user_id = Auth()->user()->id;
-                $client_file->user_check = Auth()->user()->is_employee;
-                $client_file->production_check = 2;
-                $client_file->message_id = $message->id;
-                $client_file->created_at = $carbon;
-                $client_file->save();
-                $get_files[$i]['path'] = $client_file->generatePresignedUrl();
-                $get_files[$i]['name'] = $file_name;
-                $get_files[$i]['extension'] = $file->extension();
-                $i++;
+            if ($request->sender_files) {
+                $files = $request->sender_files;
+                if (count($files) != 0) {
+                    for ($i = 0; $i < count($files); $i++) {                    
+                    $client_file = new ClientFile();
+                    $client_file->name = $files[$i]['name'];
+                    $client_file->path = $files[$i]['file'];
+                    $client_file->task_id = -1;
+                    $client_file->user_id = Auth()->user()->id;
+                    $client_file->user_check = Auth()->user()->is_employee;
+                    $client_file->production_check = 2;
+                    $client_file->message_id = $message->id;
+                    $client_file->created_at = $carbon;
+                    $client_file->save();
+                    $get_files[$i]['path'] = $client_file->generatePresignedUrl();
+                    $get_files[$i]['name'] = $files[$i]['name'];
+                    $get_files[$i]['extension'] = $client_file->get_extension();
+                }
             }
         }
 
@@ -149,7 +144,14 @@ class ClientChatController extends Controller
             Notification::send($adminuser, new MessageNotification($messageData));
         }
 
-        return redirect()->back()->with('success', 'Message Send Successfully.');
+        return response()->json([
+                    'status' => true,
+                    'files' => $get_files,
+                    'message' => nl2br($message->message),
+                    'user_name' => Auth::user()->name . ' ' . Auth::user()->last_name,
+                    'created_at' => date('h:m a - d M, Y', strtotime($message->created_at))
+                ]);
+        // return redirect()->back()->with('success', 'Message Send Successfully.');
     }
 
 }

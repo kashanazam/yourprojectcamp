@@ -122,6 +122,25 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+            @php
+                $client_detail = \App\Models\Client::where('id', '=', Auth()->user()->client_id)->first();
+                
+                $affiliate_apply = preg_match('/https:\/\/www\./', $client_detail->brand->url) 
+                                    ? preg_replace('/https:\/\/www\./', '', $client_detail->brand->url) 
+                                    : preg_replace('/https:\/\//', '', $client_detail->brand->url);
+                
+                
+            @endphp
+            @if($client_detail->brand->name == "American Book Services" || $client_detail->brand->name == "Authors time" || $client_detail->brand->name == "The Native Publishers" || $client_detail->brand->name == "Amazon Publisher Hub")
+            <li class="nav-item">
+                <a class="nav-item-hold" href="https://www.{{ $affiliate_apply }}/affiliate_apply/" target="_blank">
+                    <i class="nav-icon i-Stamp-2"></i>
+                    <span class="nav-text">Apply Affiliate</span>
+                    <span class="number" style="width: 40px;">NEW!</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+            @endif
             <li class="nav-item">
                 <a class="nav-item-hold" href="{{ route('logout') }}"
                     onclick="event.preventDefault();

@@ -113,6 +113,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('client/brief', [ClientController::class, 'getClientBrief'])->name('client.brief');
         Route::get('client/read/notification', [ClientController::class, 'markAsRead'])->name('client.read.notification');
         Route::post('client/message/seen', [ClientController::class, 'messageSeen'])->name('message.seen');
+        Route::post('client/message/chunks', [SupportController::class, 'sendMessageChunks'])->name('client.message.send.chunks');
+        
     });
 });
 Route::group(['middleware' => 'auth'], function () {
@@ -171,6 +173,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('message/update', [SupportController::class, 'updateAdminMessage'])->name('admin.message.update');
         Route::get('message', [SupportController::class, 'getMessageByAdmin'])->name('admin.message');
         Route::get('message/{id}/{name}/show', [SupportController::class, 'getMessageByAdminClientId'])->name('admin.message.show');
+        // OBJECTION ROUTES
+        Route::post('get-objection-data',[SupportController::class, 'ObjectionData'])->name('admin.objections');
+        Route::post('post-objection-data',[SupportController::class, 'CreateObjectionData'])->name('admin.objections.create');
+        Route::post('update-objection-status',[SupportController::class, 'updateObjectionStatus'])->name('admin.objections.status');
+        Route::post('get-objection-details', [SupportController::class, 'getObjectionDetails'])->name('admin.objections.details');
     });
 });
 
@@ -203,6 +210,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/support/message/edit/{id}', [SupportController::class, 'editMessageBySupportClientId'])->name('support.message.edit');
         Route::post('/support/message/update', [SupportController::class, 'updateSupportMessage'])->name('support.message.update');
         Route::get('support/read/notification', [SupportController::class, 'markAsRead'])->name('support.read.notification');
+         // OBJECTION ROUTES
+        Route::post('get-objection-data',[SupportController::class, 'ObjectionData'])->name('support.objections');
+        Route::post('update-objection-status',[SupportController::class, 'updateObjectionStatus'])->name('support.objections.status');
+        Route::post('get-objection-details', [SupportController::class, 'getObjectionDetails'])->name('support.objections.details');
+        Route::post('reply-objection', [SupportController::class, 'supportReplyObjection'])->name('support.objections.reply');
     });
 });
 

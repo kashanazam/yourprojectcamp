@@ -41,6 +41,8 @@
                 <a href="{{ route('support.task.show', ['id' => $notifications->data['task_id'], 'notify' => $notifications->id]) }}" class="dropdown-item d-flex">
                 @elseif($notifications->type == 'App\Notifications\MessageNotification')
                 <a href="{{ route('support.message.show.id', ['id' => $notifications->data['id'], 'name' => $notifications->data['name'], 'notify' => $notifications->id]) }}" class="dropdown-item d-flex">
+                @elseif($notifications->type == 'App\Notifications\ObjectionNotification')
+                <a href="javascript:;" class="dropdown-item d-flex">
                 @else
                 @php
                 $task_id = 0;

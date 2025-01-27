@@ -234,7 +234,7 @@
                 var file_wrapper = '';
                 if(data.files.length != 0){
                     for(var i = 0; i < data.files.length; i++){
-                        file_wrapper += '`<ul>`';
+                        file_wrapper += '<ul>';
                         file_wrapper += '<li><button class="btn btn-dark btn-sm">'+(i+1)+'</button></li>';
                         var file_wrapper_image = '';
                         if((data.files[i]['extension'] == 'jpg') || (data.files[i]['extension'] == 'png') || ((data.files[i]['extension'] == 'jpeg'))){
@@ -245,7 +245,7 @@
                         file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+file_wrapper_image+'</a></li>';
                         file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+data.files[i]['name']+'</a></li>';
                         file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank" download>Download</a></li>';
-                        file_wrapper += '`<ul>`';
+                        file_wrapper += '<ul>';
                     }
                 }
                 var get_sender_id = data.sender_id;

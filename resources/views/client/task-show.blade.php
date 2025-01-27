@@ -62,7 +62,7 @@
                                     </div>
                                     <div class="ul-widget3-body">
                                         <p>{!! nl2br($message->message) !!}</p>
-                                        <span class="ul-widget3-status text-success t-font-bolder">
+                                        <span class="ul-widget3-status text-success t-font-bolder text-right">
                                             {{ date('d M, y', strtotime($message->created_at)) }}
                                         </span>
                                     </div>
@@ -186,21 +186,6 @@
         document.getElementById('basic-form-layouts').scrollIntoView({ behavior: 'smooth', block: 'end' });
     });
     CKEDITOR.replace('editmessage');
-    function editMessage(message_id){
-        var url = "{{ route('support.message.edit', ":message_id") }}";
-        url = url.replace(':message_id', message_id);
-        $.ajax({
-            type:'GET',
-            url: url,
-            success:function(data) {
-                if(data.success){
-                    CKEDITOR.instances['editmessage'].setData(data.data.message);
-                    $('#exampleModalMessageEdit').find('#message_id').val(data.data.id);
-                    $('#exampleModalMessageEdit').modal('toggle');
-                }
-            }
-        });
-    }
      $(document).ready(function(){
         $('.write-message').click(function(){
             $('.left-message-box-wrapper').addClass('fixed-option');
@@ -309,7 +294,7 @@
                     var file_wrapper = '';
                     if(data.files.length != 0){
                         for(var i = 0; i < data.files.length; i++){
-                            file_wrapper += '`<ul>`';
+                            file_wrapper += '<ul>';
                             file_wrapper += '<li><button class="btn btn-dark btn-sm">'+(i+1)+'</button></li>';
                             var file_wrapper_image = '';
                             if((data.files[i]['extension'] == 'jpg') || (data.files[i]['extension'] == 'png') || ((data.files[i]['extension'] == 'jpeg'))){
@@ -318,7 +303,7 @@
                             file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+file_wrapper_image+'</a></li>';
                             file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+data.files[i]['name']+'</a></li>';
                             file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank" download>Download</a></li>';
-                            file_wrapper += '`<ul>`';
+                            file_wrapper += '<ul>';
                         }
                     }
                     
@@ -331,12 +316,12 @@
                                             <div class="ul-widget3-header">
                                                 <div class="ul-widget3-info">
                                                     <a class="__g-widget-username" href="#">
-                                                        <span class="t-font-bolder">${data.user_name}</span>
+                                                        <span class="t-font-bolder">${data.user_name} ${data.last_name}</span>
                                                     </a>
                                                 </div>
                                             </div>
                                             <div class="ul-widget3-body">
-                                                ${data.message}
+                                                <p>${data.message}</p>
                                                 <span class="ul-widget3-status text-success t-font-bolder text-right">
                                                     ${data.created_at}
                                                 </span>

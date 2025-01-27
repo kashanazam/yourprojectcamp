@@ -196,7 +196,7 @@
             var file_wrapper = '';
             if(data.files.length != 0){
                 for(var i = 0; i < data.files.length; i++){
-                    file_wrapper += '`<ul>`';
+                    file_wrapper += '<ul>';
                     file_wrapper += '<li><button class="btn btn-dark btn-sm">'+(i+1)+'</button></li>';
                     var file_wrapper_image = '';
                     if((data.files[i]['extension'] == 'jpg') || (data.files[i]['extension'] == 'png') || ((data.files[i]['extension'] == 'jpeg'))){
@@ -205,12 +205,11 @@
                     file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+file_wrapper_image+'</a></li>';
                     file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+data.files[i]['name']+'</a></li>';
                     file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank" download>Download</a></li>';
-                    file_wrapper += '`<ul>`';
+                    file_wrapper += '<ul>';
                 }
             }
-            console.log(data);
-            if($('#mCSB_1_container').length != 0){
-                $('#mCSB_1_container').append(`<div class="card mb-3 right-card">
+            // console.log(data);
+                $('#message-box-wrapper').append(`<div class="card mb-3 right-card">
                     <div class="card-body">
                         <div class="card-content collapse show">
                             <div class="ul-widget__body mt-0">
@@ -219,13 +218,13 @@
                                         <div class="ul-widget3-header">
                                             <div class="ul-widget3-info">
                                                 <a class="__g-widget-username" href="#">
-                                                    <span class="t-font-bolder">${data.user.name} ${data.user.last_name}</span>
+                                                    <span class="t-font-bolder">${data.user.name}</span>
                                                 </a>
                                             </div>
                                         </div>
                                         <div class="ul-widget3-body">
-                                            <p></p><p>${data.full_message}</p><p></p>
-                                            <span class="ul-widget3-status text-success t-font-bolder">
+                                            <p>${data.full_message}</p>
+                                            <span class="ul-widget3-status text-success t-font-bolder text-right">
                                                 ${data.date}
                                             </span>
                                         </div>
@@ -235,10 +234,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <i class="fa-solid fa-check fa-not-seen"></i>
                         </div>
                     </div>
                 </div>`);
-                $(".message-box-wrapper").mCustomScrollbar("scrollTo", "bottom");
+                // $(".message-box-wrapper").mCustomScrollbar("scrollTo", "bottom");
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -255,8 +255,6 @@
                         console.log(data);
                     } 
                 });
-                
-            }
             if (!window.Notification) {
                 console.log('Browser does not support notifications.');
             } else {

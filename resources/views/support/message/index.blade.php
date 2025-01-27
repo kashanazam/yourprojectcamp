@@ -250,8 +250,7 @@
             var dropzoneOnLoad = xhr.onload;
             xhr.onload = function (e) {
                 dropzoneOnLoad(e)
-                var uploadResponse = JSON.parse(xhr.responseText)
-                console.log(uploadResponse.name);
+                var uploadResponse = JSON.parse(xhr.responseText);
                 if (typeof uploadResponse.name === 'string') {
                     $('.btn-send-message').removeAttr('disabled','disabled');
                     file_array.push(uploadResponse);
@@ -322,7 +321,7 @@
                 var file_wrapper = '';
                 if(data.files.length != 0){
                     for(var i = 0; i < data.files.length; i++){
-                        file_wrapper += '`<ul>`';
+                        file_wrapper += '<ul>';
                         file_wrapper += '<li><button class="btn btn-dark btn-sm">'+(i+1)+'</button></li>';
                         var file_wrapper_image = '';
                         if((data.files[i]['extension'] == 'jpg') || (data.files[i]['extension'] == 'png') || ((data.files[i]['extension'] == 'jpeg'))){
@@ -331,7 +330,7 @@
                         file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+file_wrapper_image+'</a></li>';
                         file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank">'+data.files[i]['name']+'</a></li>';
                         file_wrapper += '<li><a href="'+data.files[i]['path']+'" target="_blank" download>Download</a></li>';
-                        file_wrapper += '`<ul>`';
+                        file_wrapper += '<ul>';
                     }
                 }
                 
@@ -368,6 +367,7 @@
                 $('#form-send-message').find('.message').html('');
                 document.getElementById('basic-form-layouts').scrollIntoView({ behavior: 'smooth', block: 'end' });
                 myDropzone.removeAllFiles();
+                file_array = [];
                 $('.loader-img').fadeOut();
                 $('.btn-send-message').removeAttr('disabled','disabled');
             }

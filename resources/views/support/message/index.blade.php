@@ -251,6 +251,7 @@
             xhr.onload = function (e) {
                 dropzoneOnLoad(e)
                 var uploadResponse = JSON.parse(xhr.responseText)
+                console.log(uploadResponse.name);
                 if (typeof uploadResponse.name === 'string') {
                     $('.btn-send-message').removeAttr('disabled','disabled');
                     file_array.push(uploadResponse);

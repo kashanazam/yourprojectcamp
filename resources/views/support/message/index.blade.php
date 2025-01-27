@@ -368,6 +368,7 @@
                 $('#form-send-message').find('.message').html('');
                 document.getElementById('basic-form-layouts').scrollIntoView({ behavior: 'smooth', block: 'end' });
                 myDropzone.removeAllFiles();
+                file_array = [];
                 $('.loader-img').fadeOut();
                 $('.btn-send-message').removeAttr('disabled','disabled');
             }

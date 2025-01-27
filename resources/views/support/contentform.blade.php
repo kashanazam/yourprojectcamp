@@ -4,9 +4,7 @@
 @section('content')
 <div class="breadcrumb">
     <h1 class="mr-2">Content Writing Brief INV#{{$content_form->invoice->invoice_number}}</h1>
-    <form action="{{ route('support.form.download', ['form_id' => $data->id, 'check' => 12]) }}">
-        <button class="btn btn-primary" type="submit">Download Form</button>
-    </form>
+    
 </div>
 <div class="separator-breadcrumb border-top"></div>
 <div class="row">

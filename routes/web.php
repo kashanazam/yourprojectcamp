@@ -34,6 +34,7 @@ use App\Http\Controllers\AuthorWebsiteController;
 use App\Http\Controllers\ProofreadingController;
 use App\Http\Controllers\BookCoverController;
 use App\Http\Controllers\BookMarketingController;
+use App\Http\Controllers\InvoiceAPIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -123,6 +124,7 @@ Route::group(['middleware' => 'auth'], function () {
 // Admin Routes
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'admin',  'middleware' => 'is_admin'], function(){
+        Route::any('/autoStoreAPI', [InvoiceAPIController::class, 'managerStoreAPI'])->name('auto.store.api');
         Route::get('home', [AdminController::class, 'dashboard'])->name('admin.home');
         Route::get('edit-profile', [AdminController::class, 'editProfile'])->name('admin.edit.profile');
         Route::patch('update-profile/{id}', [AdminController::class, 'updateProfile'])->name('admin.update.profile');
@@ -158,6 +160,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('admin/subtask/store', [AdminTaskController::class, 'adminSubtaskStore'])->name('admin.subtask.store');
         Route::get('client/{client}/{id}', [AdminClientController::class, 'showNotification'])->name('admin.client.shownotification');
         Route::get('create-invoice/{id}', [InvoiceController::class, 'index'])->name('admin.invoice.index');
+        // Route::post('invoice', [InvoiceAPIController::class, 'managerStore'])->name('admin.invoice.create');
         Route::post('invoice', [InvoiceController::class, 'store'])->name('admin.invoice.create');
         Route::post('update/invoice/{id}', [InvoiceController::class, 'updateInvoice'])->name('admin.invoice.update');
         Route::delete('invoice/{id}', [InvoiceController::class, 'destroy'])->name('admin.invoice.delete');

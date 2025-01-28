@@ -614,6 +614,10 @@ class SupportController extends Controller
 
     public function sendMessageChunks(Request $request)
     {
+        $this->validate($request, [
+            'file' => 'required|mimes:doc,docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,pdf,txt,jpg,jpeg,png,gif,svg,mp4,mp3,avi,flv,wmv,mov,webm,ogg,qt,wmv,mpg,mpeg,3gp,3g2,zip,rar|max:102400', // 102400 KB = 100 MB
+        ]);
+
         $receiver = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
         // check if the upload is success, throw exception or return response you need
         if ($receiver->isUploaded() === false) {

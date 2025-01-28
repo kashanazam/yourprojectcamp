@@ -239,7 +239,8 @@
             chunkSize: 5000000,
             // If true, the individual chunks of a file are being uploaded simultaneously.
             parallelChunkUploads: true,
-            url: "{{ route('support.message.send.chunks') }}"
+            url: "{{ route('support.message.send.chunks') }}",
+            retryChunks: false,
         });
 
         var $list = $('#file-upload-list');

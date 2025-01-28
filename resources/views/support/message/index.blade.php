@@ -233,14 +233,12 @@
         var myDropzone = new Dropzone("#my-awesome-dropzone", {
             // Setup chunking
             chunking: true,
-            forceChunking: true,
             method: "POST",
             maxFilesize: 1000000000,
             chunkSize: 5000000,
             // If true, the individual chunks of a file are being uploaded simultaneously.
             parallelChunkUploads: true,
-            url: "{{ route('support.message.send.chunks') }}",
-            retryChunks: false,
+            url: "{{ route('support.message.send.chunks') }}"
         });
 
         var $list = $('#file-upload-list');

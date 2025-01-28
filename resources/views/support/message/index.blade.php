@@ -233,6 +233,7 @@
         var myDropzone = new Dropzone("#my-awesome-dropzone", {
             // Setup chunking
             chunking: true,
+            forceChunking: true,
             method: "POST",
             maxFilesize: 1000000000,
             chunkSize: 5000000,

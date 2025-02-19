@@ -270,4 +270,8 @@ class User extends Authenticatable
         return $this->hasMany(ProductionMemberAssign::class, 'assigned_to', 'id')->where('status', 2)->count();
     }
 
+    public function issueCounts(){
+        return Issue::whereJsonContains('user_id', (string) auth()->id())->where('status','open')->count();
+    }
+
 }

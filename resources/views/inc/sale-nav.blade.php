@@ -108,6 +108,14 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+            <li class="nav-item {{ request()->routeIs('sale.tickets') || request()->routeIs('sale.issue.show') ? 'active' : '' }}">
+                <a class="nav-item-hold" href="{{ route('sale.tickets') }}">
+                    <i class="nav-icon i-Thread"></i>
+                    <span class="nav-text">QA Reports</span>
+                    <span class="counter">{{ Auth()->user()->issueCounts() }}</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
             <li class="nav-item {{ ( request()->routeIs('client.index') || request()->routeIs('client.edit') || request()->routeIs('client.generate.payment') || request()->routeIs('client.create')) ? 'active' : '' }}">
                 <a class="nav-item-hold" href="{{ route('client.index') }}">
                     <i class="nav-icon i-Add-User"></i>

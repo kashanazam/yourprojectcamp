@@ -123,6 +123,14 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+            <li class="nav-item {{ request()->routeIs('manager.tickets') || request()->routeIs('manager.issue.show') ? 'active' : '' }}">
+                <a class="nav-item-hold" href="{{ route('manager.tickets') }}">
+                    <i class="nav-icon i-Thread"></i>
+                    <span class="nav-text">QA Reports</span>
+                    <span class="counter">{{ Auth()->user()->issueCounts() }}</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
             <li class="nav-item {{ ( request()->routeIs('salemanager.client.index') || request()->routeIs('salemanager.client.create') || request()->routeIs('manager.generate.payment') || request()->routeIs('manager.client.edit')) ? 'active' : '' }}">
                 <a class="nav-item-hold" href="{{ route('salemanager.client.index') }}">
                     <i class="nav-icon i-Add-User"></i>

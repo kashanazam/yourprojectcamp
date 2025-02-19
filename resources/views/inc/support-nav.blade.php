@@ -148,6 +148,14 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+            <li class="nav-item {{ request()->routeIs('support.tickets') || request()->routeIs('support.issue.show') ? 'active' : '' }}">
+                <a class="nav-item-hold" href="{{ route('support.tickets') }}">
+                    <i class="nav-icon i-Thread"></i>
+                    <span class="nav-text">QA Reports</span>
+                    <span class="counter">{{ Auth()->user()->issueCounts() }}</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
             <li class="nav-item">
                 <a class="nav-item-hold scroll-to-bottom" href="javascript:;">
                     <i class="nav-icon i-Down"></i>

@@ -111,6 +111,13 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+            <li class="nav-item {{ request()->routeIs('admin.tickets') || request()->routeIs('admin.issue.edit') || request()->routeIs('admin.issue.show') ? 'active' : '' }}">
+                <a class="nav-item-hold" href="{{ route('admin.tickets') }}">
+                    <i class="nav-icon i-Thread"></i>
+                    <span class="nav-text">QA Reports</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
             <li class="nav-item {{ request()->routeIs('admin.message') || request()->routeIs('admin.message.show') ? 'active' : '' }}">
                 <a class="nav-item-hold" href="{{ route('admin.message') }}">
                     <i class="nav-icon i-Speach-Bubble-3"></i>

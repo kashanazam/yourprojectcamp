@@ -35,6 +35,7 @@ use App\Http\Controllers\ProofreadingController;
 use App\Http\Controllers\BookCoverController;
 use App\Http\Controllers\BookMarketingController;
 use App\Http\Controllers\InvoiceAPIController;
+use App\Http\Controllers\IssueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -181,11 +182,27 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('post-objection-data',[SupportController::class, 'CreateObjectionData'])->name('admin.objections.create');
         Route::post('update-objection-status',[SupportController::class, 'updateObjectionStatus'])->name('admin.objections.status');
         Route::post('get-objection-details', [SupportController::class, 'getObjectionDetails'])->name('admin.objections.details');
+
+        Route::get('/tickets', [IssueController::class, 'getTickets'])->name('admin.tickets');
+        Route::post('/generate/ticket', [IssueController::class, 'generateTicket'])->name('admin.ticket.generate');
+        Route::get('/issue/{id}/edit', [IssueController::class, 'edit'])->name('admin.issue.edit');
+        Route::post('/update/ticket/{id}', [IssueController::class, 'update'])->name('admin.issue.update');
+        Route::get('/issue/{id}', [IssueController::class, 'show'])->name('admin.issue.show');
+        Route::delete('/issue/{id}', [IssueController::class, 'destroy'])->name('admin.issue.destroy');
+        
+        Route::get('/get/brand/users', [IssueController::class, 'getUserBrands'])->name('admin.user.brand');
+        Route::post('/ticket/chunks', [IssueController::class, 'sendTicketChunks'])->name('admin.send.chunks');
     });
 });
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'is_support'], function(){
+        // TICKET ROUTES
+        Route::get('support/tickets', [IssueController::class, 'getTicketsSupport'])->name('support.tickets');
+        Route::get('support/issue/{id}', [IssueController::class, 'showTicketSupport'])->name('support.issue.show');
+        Route::post('support/issue/status', [IssueController::class, 'updateTicketStatus'])->name('support.issue.status.update');
+        // TICKET ROUTES
+
         Route::post('support/assign/form', [SupportController::class, 'assignServices'])->name('support.assign.form');
         Route::get('support/serives', [SupportController::class, 'getServices'])->name('support.get.services');
         Route::get('profile', [SupportController::class, 'editProfile'])->name('support.edit.profile');
@@ -223,6 +240,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'is_sale'], function(){
+        // TICKET ROUTES
+        Route::get('/tickets', [IssueController::class, 'getTicketsSale'])->name('sale.tickets');
+        Route::get('/issue/{id}', [IssueController::class, 'showTicketSale'])->name('sale.issue.show');
+        // TICKET ROUTES
+
         Route::get('/projects', [HomeController::class, 'getProjectBySale'])->name('sale.project');
         Route::get('task/show/{id}', [TaskController::class, 'saleTaskShow'])->name('sale.task.show');
         Route::get('/home', [HomeController::class, 'index'])->name('sale.home');
@@ -297,6 +319,11 @@ Route::get('/verify', [VerifyController::class, 'index'])->name('salemanager.ver
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'is_sale_manager'], function(){
+        // TICKET ROUTES
+        Route::get('/manager/tickets', [IssueController::class, 'getTicketsManager'])->name('manager.tickets');
+        Route::get('/manager/issue/{id}', [IssueController::class, 'showTicketManager'])->name('manager.issue.show');
+        // TICKET ROUTES
+
         Route::get('/manager/dashboard', [HomeController::class, 'managerDashboard'])->name('salemanager.dashboard');
         Route::get('/manager/clients', [ClientController::class, 'managerClient'])->name('salemanager.client.index');
         Route::get('/manager/clients/create', [ClientController::class, 'managerClientCreate'])->name('salemanager.client.create');

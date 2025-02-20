@@ -213,13 +213,17 @@
                             </div>
                             <div class="col-md-4 text-left">
                                 <h3>Attachment/Action</h3>
+                                @if($issue->file_path == null)
+                                    <span class="btn btn-secondary">No Attachment</span>
+                                @else
                                 <a href="{{ $issue->generatePresignedUrl() }}" target="_blank" title="{{$issue->ticket_no}}.{{$issue->get_extension()}}">
                                     @if(($issue->get_extension() == 'jpg') || ($issue->get_extension() == 'png' ) || ($issue->get_extension() == 'webp' ) || ($issue->get_extension() == 'svg' ) || (($issue->get_extension() == 'jpeg')))
                                         <span class="btn btn-secondary">View Attachment</span>
                                     @else
-                                        <span class="btn btn-secondary">View Attachment</span>
+                                        <p>{{ $issue->get_extension() }}</p>
                                     @endif
                                 </a>
+                                @endif
                                 @if($issue->status == 'Open')
                                     <span class="btn btn-primary" id="status-update">Set InProgress</span>
                                 @endif

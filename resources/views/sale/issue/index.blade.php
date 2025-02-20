@@ -63,13 +63,17 @@
                                 <td>{{ $issue->ticket_no }}</td>
                                 <td>
                                 <div class="image">
-                                    <a href="{{ $issue->generatePresignedUrl() }}" target="_blank" title="{{$issue->ticket_no}}.{{$issue->get_extension()}}">
-                                    @if(($issue->get_extension() == 'jpg') || ($issue->get_extension() == 'png' ) || ($issue->get_extension() == 'webp' ) || ($issue->get_extension() == 'svg' ) || (($issue->get_extension() == 'jpeg')))
-                                        <img src="{{ $issue->generatePresignedUrl() }}" alt="{{$issue->ticket_no}}" width="40">
+                                @if($issue->file_path == null)
+                                        <p>No File</p>
                                     @else
-                                        <p>{{ $issue->get_extension() }}</p>
+                                        <a href="{{ $issue->generatePresignedUrl() }}" target="_blank" title="{{$issue->ticket_no}}.{{$issue->get_extension()}}">
+                                        @if(($issue->get_extension() == 'jpg') || ($issue->get_extension() == 'png' ) || ($issue->get_extension() == 'webp' ) || ($issue->get_extension() == 'svg' ) || (($issue->get_extension() == 'jpeg')))
+                                            <img src="{{ $issue->generatePresignedUrl() }}" alt="{{$issue->ticket_no}}" width="40">
+                                        @else
+                                            <p>{{ $issue->get_extension() }}</p>
+                                        @endif
+                                        </a>
                                     @endif
-                                    </a>
                                 </div>
                                 </td>
                                 <td><button class="btn btn-secondary btn-sm">{{ $issue->brands->name }}</button></td>

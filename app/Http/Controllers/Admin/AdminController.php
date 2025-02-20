@@ -47,29 +47,10 @@ class AdminController extends Controller
             ->orderBy('invoice_date', 'asc')
             ->get();
         
-            // ->select(
-            //     DB::raw('YEAR(created_at) as year'),
-            //     DB::raw('MONTH(created_at) as month'),
-            //     DB::raw('SUM(amount) as sum')
-            // )
-            // ->where('payment_status', 2)
-            // ->where()
-            // ->groupBy('year', 'month')
-            // ->orderBy('month', 'desc')
-            // ->take(2)
-            // ->get();
-
-        // $sale = DB::table("invoices")
-	    //             ->select(DB::raw("SUM(amount) as count"), 'currency')
-        //             ->where('payment_status', 2)
-	    //             ->groupBy(DB::raw("currency"))
-	    //             ->get();
-        // $unsale = DB::table("invoices")
-	    //             ->select(DB::raw("SUM(amount) as count"), 'currency')
-        //             ->where('payment_status', 1)
-	    //             ->groupBy(DB::raw("currency"))
-	    //             ->get();
-        return view('admin.dashboard', compact('category_count', 'brand_count', 'production_count', 'member_count', 'currency_count', 'leads_count', 'project_count', 'paid_invoice', 'un_paid_invoice', 'data', 'invoice_year', 'invoice_month'));
+        $tickets_open = DB::table('issues')->where('status', 'Open')->count();
+        $tickets_total = DB::table('issues')->count();
+            
+        return view('admin.dashboard', compact('category_count', 'brand_count', 'production_count', 'member_count', 'currency_count', 'leads_count', 'project_count', 'paid_invoice', 'un_paid_invoice', 'data', 'invoice_year', 'invoice_month','tickets_open', 'tickets_total'));
     }
 
     public function editProfile(){

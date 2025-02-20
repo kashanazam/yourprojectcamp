@@ -91,8 +91,8 @@ class IssueController extends Controller
         $issue->description = $request->description;
         $issue->issue = json_encode($filter_issues);
         $issue->generated_by = Auth::user()->id;
-        $issue->file_path = $fileDataArray[0]['file'];
-        $issue->filename = $fileDataArray[0]['name'];
+        $issue->file_path = isset($fileDataArray) ? $fileDataArray[0]['file'] : null;
+        $issue->filename = isset($fileDataArray) ? $fileDataArray[0]['name'] : null;
         $issue->save();
 
 

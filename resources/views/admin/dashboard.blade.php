@@ -106,6 +106,26 @@
                     </a>
                 </div>
             </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <div class="card card-icon mb-4">
+                    <a href="{{ route('admin.invoice') }}?status=1">
+                        <div class="card-body text-center"><i class="i-Arrow-Up-in-Circle"></i>
+                            <p class="text-muted mt-2 mb-2">Open Reports (QA)</p>
+                            <p class="text-primary text-24 line-height-1 m-0">{{$tickets_open}}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <div class="card card-icon mb-4">
+                    <a href="{{ route('admin.invoice') }}?status=1">
+                        <div class="card-body text-center"><i class="i-Thread"></i>
+                            <p class="text-muted mt-2 mb-2">Total Reports (QA)</p>
+                            <p class="text-primary text-24 line-height-1 m-0">{{$tickets_total}}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-lg-12 col-md-12">

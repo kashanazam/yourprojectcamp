@@ -86,6 +86,7 @@ class AdminClientController extends Controller
             'brand_id' => 'required',
         ]);
         $request->request->add(['user_id' => auth()->user()->id]);
+        $request->request->add(['assign_id' => auth()->user()->id]);
         Client::create($request->all());
         return redirect()->back()->with('success', 'Client created Successfully.');
     }

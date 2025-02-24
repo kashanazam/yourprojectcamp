@@ -108,7 +108,7 @@
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="card card-icon mb-4">
-                    <a href="{{ route('admin.invoice') }}?status=1">
+                    <a href="javascript:;">
                         <div class="card-body text-center"><i class="i-Arrow-Up-in-Circle"></i>
                             <p class="text-muted mt-2 mb-2">Pending Tickets (QA)</p>
                             <p class="text-primary text-24 line-height-1 m-0">{{$tickets_open}}</p>
@@ -118,7 +118,7 @@
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="card card-icon mb-4">
-                    <a href="{{ route('admin.invoice') }}?status=1">
+                    <a href="{{ route('admin.tickets') }}">
                         <div class="card-body text-center"><i class="i-Thread"></i>
                             <p class="text-muted mt-2 mb-2">Total Reports (QA)</p>
                             <p class="text-primary text-24 line-height-1 m-0">{{$tickets_total}}</p>

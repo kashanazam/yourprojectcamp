@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        \App\Console\Commands\FetchBrandLeads::class,
+        \App\Console\Commands\FetchTelnyxCallData::class,
     ];
 
     /**
@@ -25,6 +26,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('fetch:calldata')->dailyAt('07:00');
+        $schedule->command('fetch:brand-leads')->dailyAt('07:30')->withoutOverlapping();
     }
 
     /**

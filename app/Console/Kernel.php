@@ -26,8 +26,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('fetch:calldata')->cron('30 3 * * *')->withoutOverlapping();
-        $schedule->command('fetch:calldata')->cron('15 5 * * *')->withoutOverlapping();
+        $schedule->command('fetch:telnyx-data')->cron('30 3 * * *')->withoutOverlapping();
+        $schedule->command('fetch:telnyx-data')->cron('15 5 * * *')->withoutOverlapping();
         $schedule->command('fetch:brand-leads')->twiceDaily(3, 5)->withoutOverlapping();
     }
 

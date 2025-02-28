@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('fetch:telnyx-data')->cron('30 3 * * *')->withoutOverlapping();
-        $schedule->command('fetch:telnyx-data')->cron('15 5 * * *')->withoutOverlapping();
+        $schedule->command('fetch:invoice-data')->cron('15 5 * * *')->withoutOverlapping();
         $schedule->command('fetch:brand-leads')->twiceDaily(3, 5)->withoutOverlapping();
         $schedule->command('fetch:transactions')->twiceDaily(2, 4)->withoutOverlapping();
     }

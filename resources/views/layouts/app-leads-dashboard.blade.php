@@ -226,10 +226,10 @@
                             </a>
                         </li>
 
-                        <li class="{{ request()->routeIs('admin.leads.index') || request()->routeIs('leads.details') ? 'mm-active' : '' }}">
-                            <a class="{{ request()->routeIs('admin.leads.index') || request()->routeIs('leads.details') ? 'active' : '' }}" href="{{ route('admin.leads.index') }}">
-                            <i class="mdi mdi-note-text-outline"></i>
-                                <span data-key="t-dashboard">Leads</span>
+                        <li class="{{ request()->routeIs('data-bank.index') || request()->routeIs('data-bank.details') ? 'mm-active' : '' }}">
+                            <a class="{{ request()->routeIs('data-bank.index') || request()->routeIs('data-bank.details') ? 'active' : '' }}" href="{{ route('data-bank.index') }}">
+                            <i class="mdi mdi-bank-outline"></i>
+                                <span data-key="t-dashboard">Data Bank</span>
                             </a>
                         </li>
 

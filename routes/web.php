@@ -3,6 +3,7 @@
 use App\Http\Controllers\CallDataController;
 use App\Http\Controllers\DataBankController;
 use App\Http\Controllers\LeadsDashboardController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClientChatController;
@@ -57,6 +58,13 @@ Route::any('pay-now/{id}', [InvoiceController::class, 'payNow'])->name('client.p
 Route::post('/payment', [InvoiceController::class, 'paymentProcess'])->name('client.payment');
 Route::any('thank-you/{id}', [InvoiceController::class, 'thankYou'])->name('thankYou');
 Route::any('failed/{id}', [InvoiceController::class, 'failed'])->name('failed');
+
+// TELNYX API
+Route::get('/call-data', [CallDataController::class, 'fetchCallData'])->name('call-data.index');
+// RINGCENTRAL API
+// Route::get('/ring-central', [CallDataController::class, 'fetchRCCallData'])->name('ring.index');
+// Authorize.net API
+Route::get('/fetch-transactions', [TransactionController::class, 'fetchAndStoreTransactions']);
 
 Route::group(['middleware' => 'auth'], function () {
     Route::post('change/mode', function(){
@@ -199,25 +207,23 @@ Route::group(['middleware' => 'auth'], function () {
         
         // LEADS DASHBOARD ROUTES
         Route::get('leads-dashboard', [LeadsDashboardController::class, 'dashboard'])->name('admin.leads.dashboard');
-        Route::get('/leads', [LeadsDashboardController::class, 'index'])->name('admin.leads.index');
+        // Route::get('/leads', [LeadsDashboardController::class, 'index'])->name('admin.leads.index');
         Route::post('/leads', [LeadsDashboardController::class, 'store'])->name('admin.leads.store');
-        Route::get('/leads/{id}', [LeadsDashboardController::class, 'edit'])->name('admin.leads.edit');
-        Route::put('/leads/{id}', [LeadsDashboardController::class, 'update'])->name('admin.leads.update');
-        Route::delete('/leads/{id}', [LeadsDashboardController::class, 'destroy'])->name('admin.leads.destroy');
-        Route::get('/leads/details/{contact}', [LeadsDashboardController::class, 'detailView'])->name('leads.details');
+        
+
+        Route::get('/dataBank' , [DataBankController::class, 'index'])->name('data-bank.index');
+        Route::get('/dataBank/details/{contact}', [DataBankController::class, 'detailView'])->name('data-bank.details');
 
         Route::get('/data-bank/telnyx-call-log', [DataBankController::class, 'telnyx_call_log'])->name('data-bank.telnyx-call-log');
         Route::get('/data-bank/ringCentral-call-log', [DataBankController::class, 'ringCentral_call_log'])->name('data-bank.ringCentral-call-log');
         Route::get('/data-bank/designnes-chat', [DataBankController::class, 'designnes_chat'])->name('data-bank.designnes-chat');
         Route::get('/data-bank/marketingNotch-chat', [DataBankController::class, 'marketingNotch_chat'])->name('data-bank.marketingNotch-chat');
-        Route::get('/data-bank/web-forms', [DataBankController::class, 'webForms'])->name('data-bank.web-forms');
+        Route::get('/data-bank/web-forms', [DataBankController::class, 'webForms'])->name('data-bank.web-forms');        
+        
+        Route::get('/transactions', [TransactionController::class, 'index']);
 
-        // TELNYX API
-        Route::get('/call-data', [CallDataController::class, 'fetchCallData'])->name('call-data.index');
-        // RINGCENTRAL API
-        Route::get('/ring-central', [CallDataController::class, 'fetchRCCallData'])->name('ring.index');
-        //GET BRANDS API
-        Route::get('/fetch-brand-leads', [LeadsDashboardController::class, 'getBrandAPIData'])->name('fetch.brand.leads');
+        Route::get('/databank/search', [LeadsDashboardController::class, 'search'])->name('databank.search');
+
     });
 });
 

@@ -10,6 +10,10 @@ class DBInvoice extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable = [
+        'id'
+    ];
+
     const CLIENT_PAYMENT_STATUS = [
         1 => 'Unpaid',
         2 => 'Paid',
@@ -43,7 +47,7 @@ class DBInvoice extends Model
     }
 
     public function brands(){
-        return $this->hasOne(Brand::class, 'id', 'brand');
+        return $this->hasOne(PWBrand::class, 'id', 'brand');
     }
 
     public function currency_show(){

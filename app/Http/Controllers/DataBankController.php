@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PWBrand;
 use Illuminate\Http\Request;
 use App\Models\BrandLeads;
 use App\Models\DesignnesChatDump;
@@ -44,7 +45,7 @@ class DataBankController extends Controller
     public function index(Request $request)
     {
 
-        $brands = Brand::all();
+        $brands = PWBrand::all();
 
         $filters = $request->only([
             'search_phone',

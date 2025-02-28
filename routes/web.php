@@ -60,11 +60,11 @@ Route::any('thank-you/{id}', [InvoiceController::class, 'thankYou'])->name('than
 Route::any('failed/{id}', [InvoiceController::class, 'failed'])->name('failed');
 
 // TELNYX API
-Route::get('/call-data', [CallDataController::class, 'fetchCallData'])->name('call-data.index');
+// Route::get('/call-data', [CallDataController::class, 'fetchCallData'])->name('call-data.index');
 // RINGCENTRAL API
 // Route::get('/ring-central', [CallDataController::class, 'fetchRCCallData'])->name('ring.index');
 // Authorize.net API
-Route::get('/fetch-transactions', [TransactionController::class, 'fetchAndStoreTransactions']);
+// Route::get('/fetch-transactions', [TransactionController::class, 'fetchAndStoreTransactions']);
 
 Route::group(['middleware' => 'auth'], function () {
     Route::post('change/mode', function(){

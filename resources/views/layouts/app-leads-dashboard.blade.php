@@ -235,35 +235,42 @@
 
                         <li class="menu-title" data-key="t-apps">Data Logs</li>
 
+                        <li class="{{ request()->routeIs('data-bank.merchant-log') ? 'mm-active' : '' }}">
+                            <a class="{{ request()->routeIs('data-bank.merchant-log') ? 'active' : '' }}" href="{{ route('data-bank.merchant-log') }}">
+                            <i class="mdi mdi-credit-card-multiple-outline"></i>
+                                <span data-key="t-dashboard">Merhcnat Logs</span>
+                            </a>
+                        </li>
+
                         <li class="{{ request()->routeIs('data-bank.telnyx-call-log') ? 'mm-active' : '' }}">
                             <a class="{{ request()->routeIs('data-bank.telnyx-call-log') ? 'active' : '' }}" href="{{ route('data-bank.telnyx-call-log') }}">
-                            <i class="mdi mdi-math-log"></i>
+                            <i class="mdi mdi-file-phone-outline"></i>
                                 <span data-key="t-dashboard">Telnyx Call</span>
                             </a>
                         </li>
 
                         <li class="{{ request()->routeIs('data-bank.ringCentral-call-log') ? 'mm-active' : '' }}">
                             <a class="{{ request()->routeIs('data-bank.ringCentral-call-log') ? 'active' : '' }}" href="{{ route('data-bank.ringCentral-call-log') }}">
-                            <i class="mdi mdi-math-log"></i>
+                            <i class="mdi mdi-file-phone-outline"></i>
                                 <span data-key="t-dashboard">RingCentral Call</span>
                             </a>
                         </li>
 
                         <li class="{{ request()->routeIs('data-bank.designnes-chat') ? 'mm-active' : '' }}">
                             <a class="{{ request()->routeIs('data-bank.designnes-chat') ? 'active' : '' }}" href="{{ route('data-bank.designnes-chat') }}">
-                            <i class="mdi mdi-math-log"></i>
+                            <i class="mdi mdi-message-text-lock-outline"></i>
                                 <span data-key="t-dashboard">Designnes Chat</span>
                             </a>
                         </li>
                         <li class="{{ request()->routeIs('data-bank.marketingNotch-chat') ? 'mm-active' : '' }}">
                             <a class="{{ request()->routeIs('data-bank.marketingNotch-chat') ? 'active' : '' }}" href="{{ route('data-bank.marketingNotch-chat') }}">
-                            <i class="mdi mdi-math-log"></i>
+                            <i class="mdi mdi-message-text-lock-outline"></i>
                                 <span data-key="t-dashboard">MarketingNotch Chat</span>
                             </a>
                         </li>
                         <li class="{{ request()->routeIs('data-bank.web-forms') ? 'mm-active' : '' }}">
                             <a class="{{ request()->routeIs('data-bank.web-forms') ? 'active' : '' }}" href="{{ route('data-bank.web-forms') }}">
-                            <i class="mdi mdi-math-log"></i>
+                            <i class="mdi mdi-web"></i>
                                 <span data-key="t-dashboard">WebForms Data</span>
                             </a>
                         </li>

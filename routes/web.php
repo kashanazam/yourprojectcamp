@@ -214,6 +214,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/dataBank' , [DataBankController::class, 'index'])->name('data-bank.index');
         Route::get('/dataBank/details/{contact}', [DataBankController::class, 'detailView'])->name('data-bank.details');
 
+        Route::get('/data-bank/merchant-log', [DataBankController::class, 'merchant_data'])->name('data-bank.merchant-log');
         Route::get('/data-bank/telnyx-call-log', [DataBankController::class, 'telnyx_call_log'])->name('data-bank.telnyx-call-log');
         Route::get('/data-bank/ringCentral-call-log', [DataBankController::class, 'ringCentral_call_log'])->name('data-bank.ringCentral-call-log');
         Route::get('/data-bank/designnes-chat', [DataBankController::class, 'designnes_chat'])->name('data-bank.designnes-chat');

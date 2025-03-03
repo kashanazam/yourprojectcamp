@@ -354,6 +354,11 @@ class DataBankController extends Controller
         return view('data-bank.details', compact('transactions', 'invoices', 'callLogs', 'designnesChats', 'marketingNotchChats', 'webForms', 'leadData'));
     }
 
+    public function merchant_data(Request $request)
+    {
+        $transactions = Transaction::orderBy('id', 'desc')->get();
+        return view('data-bank.merchant', compact('transactions'));
+    }
 
     public function telnyx_call_log(Request $request)
     {

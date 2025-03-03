@@ -23,7 +23,7 @@ class FetchAuthorizeTransactions extends Command
 
         $firstSettlementDate = new DateTime("2025-01-1T06:00:00Z");
         $lastSettlementDate = new DateTime();
-        $lastSettlementDate->setDate(2025, 01, 31);
+        $lastSettlementDate->setDate(2025, 02, 01);
         $lastSettlementDate->setTime(23, 59, 59);
         $lastSettlementDate->setTimezone(new DateTimeZone('UTC'));
 

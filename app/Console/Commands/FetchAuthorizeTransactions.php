@@ -21,9 +21,9 @@ class FetchAuthorizeTransactions extends Command
         $merchantAuthentication->setName('5zPvH3n5xC3Z');
         $merchantAuthentication->setTransactionKey('656LNL953kBT7hyF');
 
-        $firstSettlementDate = new DateTime("2024-07-1T06:00:00Z");
+        $firstSettlementDate = new DateTime("2024-08-1T06:00:00Z");
         $lastSettlementDate = new DateTime();
-        $lastSettlementDate->setDate(2024, 7, 31);
+        $lastSettlementDate->setDate(2024, 8, 31);
         $lastSettlementDate->setTime(23, 59, 59);
         $lastSettlementDate->setTimezone(new DateTimeZone('UTC'));
 

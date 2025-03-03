@@ -21,8 +21,14 @@ class FetchAuthorizeTransactions extends Command
         $merchantAuthentication->setName('5zPvH3n5xC3Z');
         $merchantAuthentication->setTransactionKey('656LNL953kBT7hyF');
 
-        $firstSettlementDate = new DateTime('first day of this month 00:00:00', new DateTimeZone('UTC'));
-        $lastSettlementDate = new DateTime('last day of this month 23:59:59', new DateTimeZone('UTC'));
+        $firstSettlementDate = new DateTime("2024-04-18T06:00:00Z");
+        $lastSettlementDate = new DateTime();
+        $lastSettlementDate->setDate(2024, 4, 31);
+        $lastSettlementDate->setTime(23, 59, 59);
+        $lastSettlementDate->setTimezone(new DateTimeZone('UTC'));
+
+        // $firstSettlementDate = new DateTime('first day of this month 00:00:00', new DateTimeZone('UTC'));
+        // $lastSettlementDate = new DateTime('last day of this month 23:59:59', new DateTimeZone('UTC'));
 
 
         $request = new AnetAPI\GetSettledBatchListRequest();
@@ -57,9 +63,24 @@ class FetchAuthorizeTransactions extends Command
         if ($response != null && $response->getMessages()->getResultCode() == "Ok") {
             foreach ($response->getTransactions() as $transaction) {
                 $transId = $transaction->getTransId();
-                if (Transaction::where('transaction_id', $transId)->exists()) {
-                    continue; // Skip inserting if transaction exists
+
+                // Check if transaction exists and if name is missing
+                $existingTransaction = Transaction::where('transaction_id', $transId)->first();
+
+                if ($existingTransaction) {
+                    if (empty($existingTransaction->name)) {
+                        // ✅ Fetch billing info only if name is missing
+                        $billingInfo = $this->getBillingInfo($merchantAuthentication, $transId);
+
+                        if (!empty(trim($billingInfo['name'])) && $billingInfo['name'] !== "N/A") {
+                            // ✅ Update only the name field
+                            $existingTransaction->update(['name' => $billingInfo['name']]);
+                        }
+                    }
+                    continue; // Skip inserting if transaction already exists
                 }
+
+                // ✅ Insert new transaction if it doesn't exist
                 $billingInfo = $this->getBillingInfo($merchantAuthentication, $transId);
                 Transaction::updateOrCreate(
                     ['transaction_id' => $transId],
@@ -67,6 +88,7 @@ class FetchAuthorizeTransactions extends Command
                         'status' => $transaction->getTransactionStatus(),
                         'amount' => $transaction->getSettleAmount(),
                         'payment_date' => $transaction->getSubmitTimeUTC(),
+                        'name' => $billingInfo['name'],
                         'email' => $billingInfo['email'],
                         'phone' => $billingInfo['phone'],
                         'batch_id' => $batchId
@@ -75,6 +97,7 @@ class FetchAuthorizeTransactions extends Command
             }
         }
     }
+
 
     private function getBillingInfo($merchantAuthentication, $transId)
     {
@@ -91,6 +114,7 @@ class FetchAuthorizeTransactions extends Command
             $customer = $transaction->getCustomer();
 
             return [
+                'name' => ($billingInfo) ? $billingInfo->getFirstName() . ' ' . $billingInfo->getLastName() : "N/A",
                 'email' => $customer ? $customer->getEmail() : 'N/A',
                 'phone' => $billingInfo && $billingInfo->getPhoneNumber() ? $billingInfo->getPhoneNumber() : 'N/A',
             ];

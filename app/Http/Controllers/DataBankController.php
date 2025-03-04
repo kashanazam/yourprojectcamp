@@ -159,10 +159,10 @@ class DataBankController extends Controller
                         ->first();
 
                     $leadsData = DB::table('leads_data')
-                    ->whereRaw("RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ?", [$p2])
-                    ->orWhere('email', $txn->email)
-                    ->orWhere('transaction_id', $txn->transaction_id)
-                    ->first();
+                        ->whereRaw("RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ?", [$p2])
+                        ->orWhere('email', $txn->email)
+                        ->orWhere('transaction_id', $txn->transaction_id)
+                        ->first();
 
                     // Store merged data
                     $mergedData[] = [
@@ -326,7 +326,7 @@ class DataBankController extends Controller
             return $display;
         }
 
-        return view('data-bank.databank', compact('mergedData','brands'));
+        return view('data-bank.databank', compact('mergedData', 'brands'));
     }
 
     public function detailView($contact)
@@ -356,9 +356,27 @@ class DataBankController extends Controller
 
     public function merchant_data(Request $request)
     {
-        $transactions = Transaction::orderBy('id', 'desc')->get();
+        $transactions = Transaction::select(
+            DB::raw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', '') AS formatted_phone"), 
+            'name', 
+            'email',
+            'payment_date',
+            'status',
+            DB::raw("MAX(payment_date) as latest_payment_date"), 
+            DB::raw("GROUP_CONCAT(transaction_id ORDER BY payment_date DESC SEPARATOR ', ') as transaction_ids"),
+            DB::raw("SUM(CASE WHEN status = 'settledSuccessfully' THEN amount ELSE 0 END) as total_settled"),
+            DB::raw("SUM(CASE WHEN status = 'refundSettledSuccessfully' THEN amount ELSE 0 END) as total_refunded")
+        )
+        ->groupBy(
+            DB::raw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', '')"),
+            'email',
+        )
+        ->orderBy('total_settled', 'desc')
+        ->get();
+
         return view('data-bank.merchant', compact('transactions'));
     }
+
 
     public function telnyx_call_log(Request $request)
     {

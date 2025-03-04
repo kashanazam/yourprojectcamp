@@ -46,7 +46,8 @@ function coverDateTime($datetime){
                                     <tr>
                                         <th>Email</th>
                                         <th>Phone</th>
-                                        <th>Amount</th>
+                                        <th>Setteled Amount</th>
+                                        <th>Refunded Amount</th>
                                         <th>Payment Date</th>
                                         <th>Transaction ID</th>
                                         <th>Status</th>
@@ -56,10 +57,11 @@ function coverDateTime($datetime){
                                     @foreach($transactions as $transaction)
                                     <tr>
                                         <td>{{ $transaction->email }}</td>
-                                        <td>{{ $transaction->phone }}</td>
-                                        <td>{{ $transaction->amount }}</td>
+                                        <td>{{ $transaction->formatted_phone }}</td>
+                                        <td>{{ $transaction->total_settled }}</td>
+                                        <td>{{ $transaction->total_refunded }}</td>
                                         <td>{{ coverDateTime($transaction->payment_date) }}</td>
-                                        <td>{{ $transaction->transaction_id }}</td>
+                                        <td>{{ $transaction->transaction_ids }}</td>
                                         <td>{{ $transaction->status }}</td>
                                     </tr>
                                     @endforeach

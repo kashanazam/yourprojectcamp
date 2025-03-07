@@ -82,13 +82,13 @@ function coverDateTime($datetime){
     $(document).ready(function() {
         $('#datatable-merchant').DataTable({
             "columnDefs": [{
-                "targets": 3, // Change to the actual column index
+                "targets": 4, // Change to the actual column index
                 "type": "date",
                 "render": function(data, type, row) {
                     return type === 'sort' ? new Date(data).getTime() : data;
                 }
             }],
-            "order": [[3, "desc"]]
+            "order": [[4, "desc"]]
         });
     });
 </script>

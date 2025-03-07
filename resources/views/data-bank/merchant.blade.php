@@ -78,14 +78,19 @@ function coverDateTime($datetime){
 
 @push('scripts')
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
 <script>
     $(document).ready(function() {
         $('#datatable-merchant').DataTable({
             "columnDefs": [{
-                "targets": 4, // Change to the actual column index
+                "targets": 4, // Column index for datetime
                 "type": "date",
                 "render": function(data, type, row) {
-                    return type === 'sort' ? new Date(data).getTime() : data;
+                    if (type === 'sort') {
+                        return moment(data, "MM/DD/YYYY hh:mm:ss A").valueOf();
+                    }
+                    return data;
                 }
             }],
             "order": [[4, "desc"]]

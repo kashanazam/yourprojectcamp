@@ -218,7 +218,7 @@ return date('d/m/Y h:i:s A', $timestamp);
                                         <td style="overflow-wrap: anywhere;background: #1212;font-weight: bolder;">
                                             <p class="copy-text" style="display: none;">{{ $data['transaction']->transaction_id }}</p>
                                             <span style="display: flex;justify-content: center;" class="copy-btn-transaction btn btn-sm btn-secondary"><strong>ID:</strong>
-                                                {{ $data['transaction']->transaction_id }} </span>
+                                                {{ $data['transaction']->transaction_id }} &nbsp;<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14" x="0" y="0" viewBox="0 0 699.428 699.428" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><path d="M502.714 0H240.428C194.178 0 153 42.425 153 87.429l-25.267.59c-46.228 0-84.019 41.834-84.019 86.838V612c0 45.004 41.179 87.428 87.429 87.428H459c46.249 0 87.428-42.424 87.428-87.428h21.857c46.25 0 87.429-42.424 87.429-87.428v-349.19L502.714 0zM459 655.715H131.143c-22.95 0-43.714-21.441-43.714-43.715V174.857c0-22.272 18.688-42.993 41.638-42.993l23.933-.721v393.429C153 569.576 194.178 612 240.428 612h262.286c0 22.273-20.765 43.715-43.714 43.715zm153-131.143c0 22.271-20.765 43.713-43.715 43.713H240.428c-22.95 0-43.714-21.441-43.714-43.713V87.429c0-22.272 20.764-43.714 43.714-43.714H459c-.351 50.337 0 87.975 0 87.975 0 45.419 40.872 86.882 87.428 86.882H612v306zm-65.572-349.715c-23.277 0-43.714-42.293-43.714-64.981V44.348L612 174.857h-65.572zm-43.714 131.537H306c-12.065 0-21.857 9.77-21.857 21.835 0 12.065 9.792 21.835 21.857 21.835h196.714c12.065 0 21.857-9.771 21.857-21.835 0-12.065-9.792-21.835-21.857-21.835zm0 109.176H306c-12.065 0-21.857 9.77-21.857 21.834 0 12.066 9.792 21.836 21.857 21.836h196.714c12.065 0 21.857-9.77 21.857-21.836 0-12.064-9.792-21.834-21.857-21.834z" fill="#ffffff" opacity="1" data-original="#000000" class=""></path></g></svg></span>
                                             <ul style="padding-left: 15px;list-style: disclosure-open;">
                                                 <li class="pt-2">
                                                     <strong>Amount:</strong> ${{ $data['transaction']->amount }}
@@ -246,7 +246,7 @@ return date('d/m/Y h:i:s A', $timestamp);
                                             style="overflow-wrap: anywhere;background: #4fa843b8;font-weight: 450;color: #fff;">
                                             <p class="copy-text-invoice" style="display: none;">{{ $data['invoice']->invoice_number }}</p>
                                             <span class="copy-btn-invoice btn btn-sm btn-danger" style="display: flex;justify-content: center;"><strong>Invoice No:</strong>
-                                                {{ $data['invoice']->invoice_number }} </span>
+                                                {{ $data['invoice']->invoice_number }}  &nbsp;<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14" x="0" y="0" viewBox="0 0 699.428 699.428" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><path d="M502.714 0H240.428C194.178 0 153 42.425 153 87.429l-25.267.59c-46.228 0-84.019 41.834-84.019 86.838V612c0 45.004 41.179 87.428 87.429 87.428H459c46.249 0 87.428-42.424 87.428-87.428h21.857c46.25 0 87.429-42.424 87.429-87.428v-349.19L502.714 0zM459 655.715H131.143c-22.95 0-43.714-21.441-43.714-43.715V174.857c0-22.272 18.688-42.993 41.638-42.993l23.933-.721v393.429C153 569.576 194.178 612 240.428 612h262.286c0 22.273-20.765 43.715-43.714 43.715zm153-131.143c0 22.271-20.765 43.713-43.715 43.713H240.428c-22.95 0-43.714-21.441-43.714-43.713V87.429c0-22.272 20.764-43.714 43.714-43.714H459c-.351 50.337 0 87.975 0 87.975 0 45.419 40.872 86.882 87.428 86.882H612v306zm-65.572-349.715c-23.277 0-43.714-42.293-43.714-64.981V44.348L612 174.857h-65.572zm-43.714 131.537H306c-12.065 0-21.857 9.77-21.857 21.835 0 12.065 9.792 21.835 21.857 21.835h196.714c12.065 0 21.857-9.771 21.857-21.835 0-12.065-9.792-21.835-21.857-21.835zm0 109.176H306c-12.065 0-21.857 9.77-21.857 21.834 0 12.066 9.792 21.836 21.857 21.836h196.714c12.065 0 21.857-9.77 21.857-21.836 0-12.064-9.792-21.834-21.857-21.834z" fill="#ffffff" opacity="1" data-original="#000000" class=""></path></g></svg></span>
                                             <ul style="padding-left: 15px;list-style: disclosure-open;">
                                                 <li class="pt-2">
                                                     <strong>Amount:</strong> ${{ $data['invoice']->amount }}
@@ -492,43 +492,43 @@ $(document).ready(function() {
     $(document).on("click", ".copy-btn-transaction", function() {
             // Get the associated paragraph text
             var textToCopy = $(this).siblings(".copy-text").text();
-    
+
             // Create a temporary textarea
             var tempInput = $("<textarea>");
             $("body").append(tempInput);
             tempInput.val(textToCopy).select();
-    
+
             // Copy to clipboard
             document.execCommand("copy");
-    
+
             // Remove the temporary element
             tempInput.remove();
-    
+
             // Optional: Change button text to indicate copied
             $(this).text("Copied!").prop("disabled", true);
             setTimeout(() => {
-                $(this).html('<strong>ID:</strong>' + textToCopy).prop("disabled", false);
+                $(this).html('<strong>ID:</strong>' + textToCopy + '&nbsp;<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14" x="0" y="0" viewBox="0 0 699.428 699.428" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><path d="M502.714 0H240.428C194.178 0 153 42.425 153 87.429l-25.267.59c-46.228 0-84.019 41.834-84.019 86.838V612c0 45.004 41.179 87.428 87.429 87.428H459c46.249 0 87.428-42.424 87.428-87.428h21.857c46.25 0 87.429-42.424 87.429-87.428v-349.19L502.714 0zM459 655.715H131.143c-22.95 0-43.714-21.441-43.714-43.715V174.857c0-22.272 18.688-42.993 41.638-42.993l23.933-.721v393.429C153 569.576 194.178 612 240.428 612h262.286c0 22.273-20.765 43.715-43.714 43.715zm153-131.143c0 22.271-20.765 43.713-43.715 43.713H240.428c-22.95 0-43.714-21.441-43.714-43.713V87.429c0-22.272 20.764-43.714 43.714-43.714H459c-.351 50.337 0 87.975 0 87.975 0 45.419 40.872 86.882 87.428 86.882H612v306zm-65.572-349.715c-23.277 0-43.714-42.293-43.714-64.981V44.348L612 174.857h-65.572zm-43.714 131.537H306c-12.065 0-21.857 9.77-21.857 21.835 0 12.065 9.792 21.835 21.857 21.835h196.714c12.065 0 21.857-9.771 21.857-21.835 0-12.065-9.792-21.835-21.857-21.835zm0 109.176H306c-12.065 0-21.857 9.77-21.857 21.834 0 12.066 9.792 21.836 21.857 21.836h196.714c12.065 0 21.857-9.77 21.857-21.836 0-12.064-9.792-21.834-21.857-21.834z" fill="#ffffff" opacity="1" data-original="#000000" class=""></path></g></svg>').prop("disabled", false);
             }, 1500);
         });
         $(document).on("click", ".copy-btn-invoice", function() {
             // Get the associated paragraph text
             var textToCopy = $(this).siblings(".copy-text-invoice").text();
-    
+
             // Create a temporary textarea
             var tempInput = $("<textarea>");
             $("body").append(tempInput);
             tempInput.val(textToCopy).select();
-    
+
             // Copy to clipboard
             document.execCommand("copy");
-    
+
             // Remove the temporary element
             tempInput.remove();
-    
+
             // Optional: Change button text to indicate copied
             $(this).text("Copied!").prop("disabled", true);
             setTimeout(() => {
-                $(this).html('<strong>Invoice No:</strong>' + textToCopy).prop("disabled", false);
+                $(this).html('<strong>Invoice No:</strong>' + textToCopy + '&nbsp;<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14" x="0" y="0" viewBox="0 0 699.428 699.428" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><path d="M502.714 0H240.428C194.178 0 153 42.425 153 87.429l-25.267.59c-46.228 0-84.019 41.834-84.019 86.838V612c0 45.004 41.179 87.428 87.429 87.428H459c46.249 0 87.428-42.424 87.428-87.428h21.857c46.25 0 87.429-42.424 87.429-87.428v-349.19L502.714 0zM459 655.715H131.143c-22.95 0-43.714-21.441-43.714-43.715V174.857c0-22.272 18.688-42.993 41.638-42.993l23.933-.721v393.429C153 569.576 194.178 612 240.428 612h262.286c0 22.273-20.765 43.715-43.714 43.715zm153-131.143c0 22.271-20.765 43.713-43.715 43.713H240.428c-22.95 0-43.714-21.441-43.714-43.713V87.429c0-22.272 20.764-43.714 43.714-43.714H459c-.351 50.337 0 87.975 0 87.975 0 45.419 40.872 86.882 87.428 86.882H612v306zm-65.572-349.715c-23.277 0-43.714-42.293-43.714-64.981V44.348L612 174.857h-65.572zm-43.714 131.537H306c-12.065 0-21.857 9.77-21.857 21.835 0 12.065 9.792 21.835 21.857 21.835h196.714c12.065 0 21.857-9.771 21.857-21.835 0-12.065-9.792-21.835-21.857-21.835zm0 109.176H306c-12.065 0-21.857 9.77-21.857 21.834 0 12.066 9.792 21.836 21.857 21.836h196.714c12.065 0 21.857-9.77 21.857-21.836 0-12.064-9.792-21.834-21.857-21.834z" fill="#ffffff" opacity="1" data-original="#000000" class=""></path></g></svg>').prop("disabled", false);
             }, 1500);
         });
     </script>

@@ -147,7 +147,7 @@ class DataBankController extends Controller
                         ->first();
 
                     $callLog = DB::table('telnyx_call_logs')
-                        ->whereRaw("RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cli, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ? 
+                        ->whereRaw("RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cli, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ?
                                 OR RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cld, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ?", [$p2, $p2])
                         ->orderBy('id', 'DESC')
                         ->first();
@@ -197,7 +197,7 @@ class DataBankController extends Controller
                     ->first();
 
                 $callLog = DB::table('telnyx_call_logs')
-                    ->whereRaw("RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cli, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ? 
+                    ->whereRaw("RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cli, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ?
                                 OR RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cld, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ?", [$p2, $p2])
                     ->orderBy('id', 'DESC')
                     ->first();
@@ -340,7 +340,7 @@ class DataBankController extends Controller
 
         $invoices = DBInvoice::with('brands')->whereRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(contact, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', '') LIKE ?", ["%$contact%"])->get();
 
-        $callLogs = TelnyxCallLog::whereRaw("RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cli, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ? 
+        $callLogs = TelnyxCallLog::whereRaw("RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cli, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ?
         OR RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(cld, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ?", [$p2, $p2])->get();
 
         $designnesChats = DesignnesChatDump::whereRaw("RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(visitor_phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', ''), 6) = ?", [$p2])->get();
@@ -357,12 +357,11 @@ class DataBankController extends Controller
     public function merchant_data(Request $request)
     {
         $transactions = Transaction::select(
-            DB::raw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', '') AS formatted_phone"), 
-            'name', 
+            DB::raw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', '') AS formatted_phone"),
+            'name',
             'email',
-            'payment_date',
+            DB::raw("MAX(payment_date) as latest_payment_date"),  // Select the latest payment date
             'status',
-            DB::raw("MAX(payment_date) as latest_payment_date"), 
             DB::raw("GROUP_CONCAT(transaction_id ORDER BY payment_date DESC SEPARATOR ', ') as transaction_ids"),
             DB::raw("SUM(CASE WHEN status = 'settledSuccessfully' THEN amount ELSE 0 END) as total_settled"),
             DB::raw("SUM(CASE WHEN status = 'refundSettledSuccessfully' THEN amount ELSE 0 END) as total_refunded")
@@ -374,8 +373,29 @@ class DataBankController extends Controller
         ->orderBy('total_settled', 'desc')
         ->get();
 
+
         return view('data-bank.merchant', compact('transactions'));
     }
+
+    public function refund_merchant_data(Request $request)
+    {
+        // Fetch all transactions with 'refundSettledSuccessfully' status
+        $refunds = Transaction::select(
+                DB::raw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', '') AS formatted_phone"),
+                'name',
+                'email',
+                'payment_date',
+                'status',
+                'transaction_id',
+                'amount' // Include the amount for each refund transaction
+            )
+            ->where('status', 'refundSettledSuccessfully') // Filter to only include refunds
+            ->orderBy('payment_date', 'desc') // Order by the most recent date
+            ->get(); // Get the data without grouping or aggregation
+
+        return view('data-bank.refunded-logs', compact('refunds'));
+    }
+
 
 
     public function telnyx_call_log(Request $request)

@@ -139,7 +139,7 @@
                                                     <i class="bx bx-money"></i>
                                                 @else
                                                     <i class="bx bx-list-ol"></i>
-                                                @endif    
+                                                @endif
                                             </span>
                                         </div>
                                         <div class="flex-grow-1">
@@ -152,7 +152,7 @@
                                     </div>
                                 </a>
                                 @if($loop->last)
-                    
+
                                 @endif
                                 @php
                                     $k++;
@@ -241,6 +241,12 @@
                                 <span data-key="t-dashboard">Merhcnat Logs</span>
                             </a>
                         </li>
+                        <li class="{{ request()->routeIs('data-bank.refund-log') ? 'mm-active' : '' }}">
+                            <a class="{{ request()->routeIs('data-bank.refund-log') ? 'active' : '' }}" href="{{ route('data-bank.refund-log') }}">
+                            <i class="mdi mdi-credit-card-multiple"></i>
+                                <span data-key="t-dashboard">Refund Logs</span>
+                            </a>
+                        </li>
 
                         <li class="{{ request()->routeIs('data-bank.telnyx-call-log') ? 'mm-active' : '' }}">
                             <a class="{{ request()->routeIs('data-bank.telnyx-call-log') ? 'active' : '' }}" href="{{ route('data-bank.telnyx-call-log') }}">
@@ -299,7 +305,7 @@
                             </a>
                         </li>
 
-                        
+
                         <li>
                             <a href="{{ route('admin.brief.pending') }}">
                             <i class="mdi mdi-briefcase-clock-outline"></i>
@@ -329,7 +335,7 @@
                         </li>
 
                         <li class="menu-title mt-2" data-key="t-components">Components & Settings</li>
-                        
+
                         <li>
                             <a href="{{ route('admin.merchant.index') }}">
                                 <i data-feather="briefcase"></i>
@@ -378,17 +384,17 @@
                                 </li>
                             </ul>
                         </li>
-                        
+
                         <li class="menu-title" data-key="t-pages">Sales/Production</li>
 
-                        
+
                         <li>
                             <a href="{{ route('admin.user.production') }}">
                             <i class="mdi mdi-account-hard-hat"></i>
                                 <span data-key="t-chat">Production</span>
                             </a>
                         </li>
-                        
+
                         <li>
                             <a href="{{ route('admin.user.sales') }}">
                             <i class="mdi mdi-account-convert-outline"></i>
@@ -431,7 +437,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
-                            
+
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
@@ -492,7 +498,7 @@
 
     <script src="{{ asset('leadsglobal/libs/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ asset('leadsglobal/libs/datatables.net-select/js/dataTables.select.min.js') }}"></script>
-    
+
     <!-- Responsive examples -->
     <script src="{{ asset('leadsglobal/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('leadsglobal/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>

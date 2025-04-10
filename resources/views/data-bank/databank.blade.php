@@ -234,7 +234,7 @@ return date('d/m/Y h:i:s A', $timestamp);
                                                 </li>
                                                 <li>
                                                     <strong>Date:</strong>
-                                                    {{ coverDateTime($data['transaction']->payment_date) }}
+                                                    {{ $data['transaction']->payment_date }}
                                                 </li>
                                             </ul>
                                             <a href="{{ route('data-bank.details', ['contact' => $data['transaction']->phone]) }}" class="btn btn-sm btn-warning more-detail" style="display: flex;justify-content: center;">More Details</a>

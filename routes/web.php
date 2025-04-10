@@ -127,7 +127,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('client/read/notification', [ClientController::class, 'markAsRead'])->name('client.read.notification');
         Route::post('client/message/seen', [ClientController::class, 'messageSeen'])->name('message.seen');
         Route::post('client/message/chunks', [SupportController::class, 'sendMessageChunks'])->name('client.message.send.chunks');
-        
+
     });
 });
 Route::group(['middleware' => 'auth'], function () {
@@ -200,27 +200,28 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update/ticket/{id}', [IssueController::class, 'update'])->name('admin.issue.update');
         Route::get('/issue/{id}', [IssueController::class, 'show'])->name('admin.issue.show');
         Route::delete('/issue/{id}', [IssueController::class, 'destroy'])->name('admin.issue.destroy');
-        
+
         Route::get('/get/brand/users', [IssueController::class, 'getUserBrands'])->name('admin.user.brand');
         Route::post('/ticket/chunks', [IssueController::class, 'sendTicketChunks'])->name('admin.send.chunks');
 
-        
+
         // LEADS DASHBOARD ROUTES
         Route::get('leads-dashboard', [LeadsDashboardController::class, 'dashboard'])->name('admin.leads.dashboard');
         // Route::get('/leads', [LeadsDashboardController::class, 'index'])->name('admin.leads.index');
         Route::post('/leads', [LeadsDashboardController::class, 'store'])->name('admin.leads.store');
-        
+
 
         Route::get('/dataBank' , [DataBankController::class, 'index'])->name('data-bank.index');
         Route::get('/dataBank/details/{contact}', [DataBankController::class, 'detailView'])->name('data-bank.details');
 
         Route::get('/data-bank/merchant-log', [DataBankController::class, 'merchant_data'])->name('data-bank.merchant-log');
+        Route::get('/data-bank/refund-log', [DataBankController::class, 'refund_merchant_data'])->name('data-bank.refund-log');
         Route::get('/data-bank/telnyx-call-log', [DataBankController::class, 'telnyx_call_log'])->name('data-bank.telnyx-call-log');
         Route::get('/data-bank/ringCentral-call-log', [DataBankController::class, 'ringCentral_call_log'])->name('data-bank.ringCentral-call-log');
         Route::get('/data-bank/designnes-chat', [DataBankController::class, 'designnes_chat'])->name('data-bank.designnes-chat');
         Route::get('/data-bank/marketingNotch-chat', [DataBankController::class, 'marketingNotch_chat'])->name('data-bank.marketingNotch-chat');
-        Route::get('/data-bank/web-forms', [DataBankController::class, 'webForms'])->name('data-bank.web-forms');        
-        
+        Route::get('/data-bank/web-forms', [DataBankController::class, 'webForms'])->name('data-bank.web-forms');
+
         Route::get('/transactions', [TransactionController::class, 'index']);
 
         Route::get('/databank/search', [LeadsDashboardController::class, 'search'])->name('databank.search');

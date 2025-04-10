@@ -36,7 +36,7 @@ function coverDateTime($datetime){
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Merchant Logs</h4>
+                    <h4 class="card-title">Refund Transactions Logs</h4>
                 </div>
                 <div class="card-body">
                     <div class="table-rep-plugin">
@@ -46,7 +46,6 @@ function coverDateTime($datetime){
                                     <tr>
                                         <th>Email</th>
                                         <th>Phone</th>
-                                        <th>Setteled Amount</th>
                                         <th>Refunded Amount</th>
                                         <th>Payment Date</th>
                                         <th>Transaction ID</th>
@@ -54,28 +53,15 @@ function coverDateTime($datetime){
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($transactions as $transaction)
-                                    @if($transaction->status == 'declined')
-                                    <tr class="bg-danger text-light">
-                                        <td>{{ $transaction->email }}</td>
-                                        <td>{{ $transaction->formatted_phone }}</td>
-                                        <td>{{ $transaction->total_settled }}</td>
-                                        <td>{{ $transaction->total_refunded }}</td>
-                                        <td>{{ $transaction->latest_payment_date }}</td>
-                                        <td>{{ $transaction->transaction_ids }}</td>
-                                        <td>{{ $transaction->status }}</td>
-                                    </tr>
-                                    @else
+                                    @foreach($refunds as $refund)
                                     <tr>
-                                        <td>{{ $transaction->email }}</td>
-                                        <td>{{ $transaction->formatted_phone }}</td>
-                                        <td>{{ $transaction->total_settled }}</td>
-                                        <td>{{ $transaction->total_refunded }}</td>
-                                        <td>{{ $transaction->latest_payment_date }}</td>
-                                        <td>{{ $transaction->transaction_ids }}</td>
-                                        <td>{{ $transaction->status }}</td>
+                                        <td>{{ $refund->email }}</td>
+                                        <td>{{ $refund->formatted_phone }}</td>
+                                        <td>{{ $refund->amount }}</td>
+                                        <td>{{ $refund->payment_date }}</td>
+                                        <td>{{ $refund->transaction_id }}</td>
+                                        <td>{{ $refund->status }}</td>
                                     </tr>
-                                    @endif
                                     @endforeach
                                 </tbody>
                             </table>
@@ -96,7 +82,7 @@ function coverDateTime($datetime){
     $(document).ready(function() {
         $('#datatable-merchant').DataTable({
            "columnDefs": [{
-                "targets": 4, // Column index for datetime
+                "targets": 3, // Column index for datetime
                 "type": "datetime",
                 "render": function(data, type, row) {
                     if (type === 'sort') {
@@ -105,7 +91,7 @@ function coverDateTime($datetime){
                     return data;
                 }
             }],
-            "order": [[4, "desc"]]
+            "order": [[3, "desc"]]
         });
     });
 </script>

@@ -14,6 +14,7 @@ class FetchRingCentralLogs extends Command
 
     public function handle()
     {
+        // Retrieve the required credentials from the environment
         $clientId = env('RC_CLIENT_ID');
         $clientSecret = env('RC_CLIENT_SECRET');
         $jwtToken = env('RC_JWT_TOKEN');
@@ -27,14 +28,16 @@ class FetchRingCentralLogs extends Command
         // Base64 encode Client ID and Secret
         $authHeader = base64_encode("$clientId:$clientSecret");
 
+        // Set the URL for the OAuth token request
         $url = "$server/restapi/oauth/token";
 
+        // Prepare the POST data for the OAuth token request
         $data = [
             'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
             'assertion' => $jwtToken
         ];
 
-        // Use Laravel HTTP Client to make the request
+        // Use Laravel HTTP Client to make the request for the token
         $response = Http::withHeaders([
             'Authorization' => "Basic $authHeader",
             'Content-Type' => 'application/x-www-form-urlencoded',
@@ -46,6 +49,7 @@ class FetchRingCentralLogs extends Command
             return;
         }
 
+        // Decode the JSON response
         $result = $response->json();
 
         if (!isset($result['access_token'])) {
@@ -54,13 +58,14 @@ class FetchRingCentralLogs extends Command
         }
 
         $accessToken = $result['access_token'];
+
+        // Define the URL for retrieving the call logs
         $server_access = "https://platform.ringcentral.com";
         $dateFrom = "2024-03-01T00:00:00Z";
         $dateTo   = "2024-03-31T23:59:59Z";
-
         $url_access = "$server_access/restapi/v1.0/account/~/call-log?dateFrom=$dateFrom&dateTo=$dateTo";
 
-        // Use Laravel's HTTP Client to fetch the call logs
+        // Use Laravel HTTP Client to make the request for call logs
         $response_access = Http::withHeaders([
             'Authorization' => "Bearer $accessToken",
             'Content-Type' => 'application/json',
@@ -72,8 +77,10 @@ class FetchRingCentralLogs extends Command
             return;
         }
 
+        // Decode the JSON response for call logs
         $callLogs = $response_access->json();
 
+        // Check if call logs exist
         if (!isset($callLogs['records']) || empty($callLogs['records'])) {
             Log::info('No call log records returned from RingCentral.', ['response' => $response_access->body()]);
             return;
@@ -81,6 +88,7 @@ class FetchRingCentralLogs extends Command
 
         $allData = [];
 
+        // Iterate over the call logs and prepare data for insertion
         foreach ($callLogs['records'] as $record) {
             // Check for duplicates before inserting
             $existingRecord = RingCentralCallLog::where('started_at', $record['started_at'])
@@ -105,6 +113,7 @@ class FetchRingCentralLogs extends Command
             }
         }
 
+        // If new records are found, insert them into the database
         if (!empty($allData)) {
             RingCentralCallLog::insert($allData); // Bulk insert for better performance
             Log::info('RingCentral logs fetched successfully', ['new_records' => count($allData)]);

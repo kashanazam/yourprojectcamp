@@ -207,8 +207,7 @@ return date('d/m/Y h:i:s A', $timestamp);
                                         <th>Invoices</th>
                                         <th>Call Logs</th>
                                         <th>Brand Forms</th>
-                                        <th>MN Chat</th>
-                                        <th>DN Chat</th>
+                                        <th>Chat Logs</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -356,17 +355,13 @@ return date('d/m/Y h:i:s A', $timestamp);
                                                         <strong>Duration:</strong>
                                                         {{ gmdate("H:i:s", intval($data['marketing_chat']->duration)) }}
                                                     </li>
+                                                    <li>
+                                                        <strong>Source:</strong>
+                                                        Marketing Notch
+                                                    </li>
                                                 </ul>
                                         </td>
-                                        @else
-                                        <td
-                                            style="overflow-wrap: anywhere;background: white;font-weight: 450;color: #000;">
-                                            No Data
-                                        </td>
-                                        @endif
-
-                                        <!-- Designnes Chat Dumps Column -->
-                                        @if ($data['designnes_chat'])
+                                        @elseif ($data['designnes_chat'])
                                         <td
                                             style="overflow-wrap: anywhere;background:rgba(17, 17, 16, 0.67);color: #fff;font-weight: 450;">
                                             <span class="btn btn-sm btn-success" style="display: flex;justify-content: center;"><strong>Agent:</strong>
@@ -381,6 +376,10 @@ return date('d/m/Y h:i:s A', $timestamp);
                                                     <li>
                                                         <strong>Duration:</strong>
                                                         {{ gmdate("H:i:s", intval($data['designnes_chat']->duration)) }}
+                                                    </li>
+                                                    <li>
+                                                        <strong>Source:</strong>
+                                                        Designness
                                                     </li>
                                                 </ul>
                                         </td>

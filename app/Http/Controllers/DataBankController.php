@@ -71,7 +71,7 @@ class DataBankController extends Controller
             $input = $datetime;
             $timestamp = strtotime($input);
 
-            return date('m/d/Y h:i:s A', $timestamp);
+            return date('d/m/Y h:i:s A', $timestamp);
         }
         // Base query
         $query = DB::table('transactions')
@@ -246,7 +246,7 @@ class DataBankController extends Controller
                             <li><strong>Status:</strong> " . $data['transaction']->status . "</li>
                             <li><strong>Date:</strong> " . coverDateTime($data['transaction']->payment_date) . "</li>
                         </ul>
-                        <a href='" . route('data-bank.details', ['contact' => $data['transaction']->phone]) . "' class='btn btn-sm btn-warning more-detail' style='display: flex;justify-content: center;'>More Details</a>
+                        <a href='" . route('data-bank.details', ['contact' => normalizePhone($data['transaction']->phone)]) . "' class='btn btn-sm btn-warning more-detail' style='display: flex;justify-content: center;'>More Details</a>
                     </td>";
 
                 if ($data['invoice']) {
@@ -302,19 +302,23 @@ class DataBankController extends Controller
                             <li class='pt-2'><strong>Visitor:</strong> " . $data['marketing_chat']->visitor_name . "</li>
                             <li><strong>Email:</strong> " . $data['marketing_chat']->visitor_email . "</li>
                             <li><strong>Duration:</strong> " . gmdate('H:i:s', intval($data['marketing_chat']->duration)) . "</li>
+                            <li>
+                                <strong>Source:</strong>
+                                Marketing Notch
+                            </li>
                         </ul>
                     </td>";
-                } else {
-                    $display .= "<td style='overflow-wrap: anywhere;background: white;font-weight: 450;color: #000;'>No Data</td>";
-                }
-
-                if ($data['designnes_chat']) {
+                } else if ($data['designnes_chat']) {
                     $display .= "<td style='overflow-wrap: anywhere;background:rgba(17, 17, 16, 0.67);color: #fff;font-weight: 450;'>
                         <span class='btn btn-sm btn-success' style='display: flex;justify-content: center;'><strong>Agent:</strong> " . $data['designnes_chat']->agent_names . "</span>
                         <ul style='padding-left: 15px;list-style: disclosure-open;'>
                             <li class='pt-2'><strong>Visitor:</strong> " . $data['designnes_chat']->visitor_name . "</li>
                             <li><strong>Email:</strong> " . $data['designnes_chat']->visitor_email . "</li>
                             <li><strong>Duration:</strong> " . gmdate('H:i:s', intval($data['designnes_chat']->duration)) . "</li>
+                            <li>
+                                <strong>Source:</strong>
+                                Designness
+                            </li>
                         </ul>
                     </td>";
                 } else {

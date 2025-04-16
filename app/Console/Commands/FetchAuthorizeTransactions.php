@@ -77,11 +77,25 @@ class FetchAuthorizeTransactions extends Command
                             $existingTransaction->update(['name' => $billingInfo['name']]);
                         }
                     }
+
+                    // Update last_4 field if it's empty
+                    if (empty($existingTransaction->last_4)) {
+                        // Use getLastFourDigits() method to get the actual last 4 digits of the card number
+                        $masked_card = $transaction->getAccountNumber(); // Correct way to get last 4 digits
+                        preg_match('/\d+/', $masked_card, $matches);
+                        $lastFour = $matches[0];
+
+                        if (!empty(trim($lastFour)) && $lastFour !== "N/A") {
+                            $existingTransaction->update(['last_4' => $lastFour]);
+                        }
+                    }
                     continue; // Skip inserting if transaction already exists
                 }
 
                 // ✅ Insert new transaction if it doesn't exist
                 $billingInfo = $this->getBillingInfo($merchantAuthentication, $transId);
+                $lastFour = $transaction->getPayment()->getCreditCard()->getLastFourDigits(); // Correct way to get last 4 digits
+
                 Transaction::updateOrCreate(
                     ['transaction_id' => $transId],
                     [
@@ -91,11 +105,13 @@ class FetchAuthorizeTransactions extends Command
                         'name' => $billingInfo['name'],
                         'email' => $billingInfo['email'],
                         'phone' => $billingInfo['phone'],
-                        'batch_id' => $batchId
+                        'batch_id' => $batchId,
+                        'last_4' => $lastFour // Correct field for last 4 digits
                     ]
                 );
             }
         }
+
     }
 
 

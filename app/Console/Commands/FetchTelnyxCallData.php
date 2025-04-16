@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 class FetchTelnyxCallData extends Command
 {
     protected $signature = 'fetch:telnyx-data'; // Command name for cron job
-    protected $description = 'Fetch new brand leads from API and store in database';
+    protected $description = 'Fetch new TelnyxCall Logs from API and store in database';
 
     public function handle()
     {

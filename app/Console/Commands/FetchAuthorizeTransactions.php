@@ -94,7 +94,9 @@ class FetchAuthorizeTransactions extends Command
 
                 // ✅ Insert new transaction if it doesn't exist
                 $billingInfo = $this->getBillingInfo($merchantAuthentication, $transId);
-                $lastFour = $transaction->getPayment()->getCreditCard()->getLastFourDigits(); // Correct way to get last 4 digits
+                $masked_card = $transaction->getAccountNumber();
+                preg_match('/\d+/', $masked_card, $matches);
+                $lastFour = $matches[0]; // Correct way to get last 4 digits
 
                 Transaction::updateOrCreate(
                     ['transaction_id' => $transId],

@@ -74,9 +74,14 @@ class DataBankController extends Controller
             return date('d/m/Y h:i:s A', $timestamp);
         }
         // Base query
-        $query = DB::table('transactions')
-            ->whereNotIn('status', ['declined', 'voided'])
-            ->orderBy('id', 'DESC');
+        $query =  DB::table(DB::raw('(
+            SELECT *, "Core Digitals" AS table_name FROM transactions
+            WHERE status NOT IN ("declined", "voided")
+            UNION ALL
+            SELECT *, "NexByte" AS table_name FROM nexbyte_transactions
+            WHERE status NOT IN ("declined", "voided")
+        ) as combined'))
+            ->orderBy('payment_date', 'DESC');
 
         if (!empty($filters['search_phone'])) {
             $query->where('phone', '=', $filters['search_phone']);
@@ -113,20 +118,30 @@ class DataBankController extends Controller
         // Check if search filters are applied
         if (!empty($filters['search_invoice']) || !empty($filters['search_brand'])) {
             // Fetch invoices matching the search criteria
-            $invoiceQuery = DBInvoice::with('brands');
+            $invoiceQuery = DB::table('d_b_invoices')
+                ->join('p_w_brands', 'd_b_invoices.brand', '=', 'p_w_brands.id')
+                ->select('d_b_invoices.*', 'p_w_brands.name as brand_name'); // Select columns from both tables
 
             if (!empty($filters['search_invoice'])) {
-                $invoiceQuery->where('invoice_number', $filters['search_invoice']);
+                $invoiceQuery->where('d_b_invoices.invoice_number', $filters['search_invoice']);
             }
             if (!empty($filters['search_brand'])) {
-                $invoiceQuery->orWhere('brand', $filters['search_brand']);
+                $invoiceQuery->orWhere('d_b_invoices.brand', $filters['search_brand']);
             }
 
             $invoices = $invoiceQuery->get();
 
             foreach ($invoices as $invoice) {
                 // Get transactions related to the matched invoices
-                $transactions = DB::table('transactions')->where('transaction_id', $invoice->transaction_id)->get();
+                $transactions = DB::table(DB::raw('(
+                    SELECT *, "CoreDigitals" AS table_name FROM transactions
+                    WHERE transaction_id = :transaction_id
+                    UNION ALL
+                    SELECT *, "Nexbyte" AS table_name FROM nexbyte_transactions
+                    WHERE transaction_id = :transaction_id
+                ) as combined'))
+                ->addBinding($invoice->transaction_id, 'select')  // Bind the transaction_id for both SELECT queries
+                ->get();
 
                 foreach ($transactions as $txn) {
                     $normalizedPhone = normalizePhone($txn->phone);
@@ -214,7 +229,13 @@ class DataBankController extends Controller
                     ->orWhere('transaction_id', $txn->transaction_id)
                     ->first();
 
-                $invoice = DBInvoice::with('brands')->where('transaction_id', $txn->transaction_id)->first();
+                $invoice = DB::table('d_b_invoices')
+                    ->join('p_w_brands', 'd_b_invoices.brand', '=', 'p_w_brands.id')
+                    ->select('d_b_invoices.*', 'p_w_brands.id as brand_id', 'p_w_brands.name as brand_name') // Select columns from both tables
+                    ->where('d_b_invoices.transaction_id', $txn->transaction_id) // Filter by transaction_id
+                    ->first();
+                // dd($invoice);
+                // $invoice = DBInvoice::with('brands')->where('transaction_id', $txn->transaction_id)->first();
 
                 // Store merged data
                 $mergedData[] = [
@@ -242,7 +263,8 @@ class DataBankController extends Controller
                         <ul style='padding-left: 15px;list-style: disclosure-open;'>
                             <li class='pt-2'><strong>Amount:</strong> $" . $data['transaction']->amount . "</li>
                             <li><strong>Email:</strong> " . $data['transaction']->email . "</li>
-                            <li><strong>Phone:</strong> " . $data['transaction']->phone . "</li>
+                            <li class='pb-2'><strong>Phone:</strong> " . $data['transaction']->phone . "</li>
+                            <li><strong>Company:</strong><span style='color: #d81717;'>". $data['transaction']->table_name ."</span></li>
                             <li><strong>Status:</strong> " . $data['transaction']->status . "</li>
                             <li><strong>Date:</strong> " . coverDateTime($data['transaction']->payment_date) . "</li>
                         </ul>
@@ -370,12 +392,12 @@ class DataBankController extends Controller
             DB::raw("SUM(CASE WHEN status = 'settledSuccessfully' THEN amount ELSE 0 END) as total_settled"),
             DB::raw("SUM(CASE WHEN status = 'refundSettledSuccessfully' THEN amount ELSE 0 END) as total_refunded")
         )
-        ->groupBy(
-            DB::raw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', '')"),
-            'email',
-        )
-        ->orderBy('total_settled', 'desc')
-        ->get();
+            ->groupBy(
+                DB::raw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', '')"),
+                'email',
+            )
+            ->orderBy('total_settled', 'desc')
+            ->get();
 
 
         return view('data-bank.merchant', compact('transactions'));
@@ -385,14 +407,14 @@ class DataBankController extends Controller
     {
         // Fetch all transactions with 'refundSettledSuccessfully' status
         $refunds = Transaction::select(
-                DB::raw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', '') AS formatted_phone"),
-                'name',
-                'email',
-                'payment_date',
-                'status',
-                'transaction_id',
-                'amount' // Include the amount for each refund transaction
-            )
+            DB::raw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '(', ''), ')', ''), '.', ''), '+', '') AS formatted_phone"),
+            'name',
+            'email',
+            'payment_date',
+            'status',
+            'transaction_id',
+            'amount' // Include the amount for each refund transaction
+        )
             ->where('status', 'refundSettledSuccessfully') // Filter to only include refunds
             ->orderBy('payment_date', 'desc') // Order by the most recent date
             ->get(); // Get the data without grouping or aggregation

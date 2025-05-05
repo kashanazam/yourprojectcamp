@@ -152,7 +152,7 @@ return date('d/m/Y h:i:s A', $timestamp);
                             </div>
                              <div class="col-md-4 p-2">
                                 <label for="invoice_number">Invoice Search</label>
-                                <input readonly class="form-control" type="text" id="invoice_number" name="invoice_number"
+                                <input class="form-control" type="text" id="invoice_number" name="invoice_number"
                             placeholder="Search by Invoice Number">
                             </div>
                             <div class="col-md-4 p-2">
@@ -170,8 +170,13 @@ return date('d/m/Y h:i:s A', $timestamp);
                             placeholder="Search by Date From">
                             </div>
                             <div class="col-md-4 p-2">
+                                <style>
+                                    #status{
+                                        display: block !important;
+                                    }
+                                </style>
                                 <label for="status">Transactions Search</label>
-                                <select class="form-control" id="status" name="status" style="display: block !important;">
+                                <select class="form-control" id="status" name="status">
                                     <option value="" selected>Any Status</option>
                                     <option value="settledSuccessfully">settledSuccessfully</option>
                                     <option value="refundSettledSuccessfully">refundSettledSuccessfully</option>
@@ -212,6 +217,9 @@ return date('d/m/Y h:i:s A', $timestamp);
                                 </thead>
                                 <tbody>
                                     @foreach ($mergedData as $data)
+                                    {{-- @php
+                                        dd($data);
+                                    @endphp --}}
                                     <tr>
                                         <!-- Transactions Column -->
                                         <td style="overflow-wrap: anywhere;background: #1212;font-weight: bolder;">
@@ -227,6 +235,9 @@ return date('d/m/Y h:i:s A', $timestamp);
                                                 </li>
                                                 <li class="pb-2">
                                                     <strong>Phone:</strong> {{ $data['transaction']->phone }}
+                                                </li>
+                                                <li>
+                                                    <strong>Company:</strong><span style="color: #d81717;">{{ $data['transaction']->table_name }}</span>
                                                 </li>
                                                 <li>
                                                     <strong>Status:</strong> {{ $data['transaction']->status }}
@@ -258,7 +269,7 @@ return date('d/m/Y h:i:s A', $timestamp);
                                                 </li>
                                                 <li class="pt-2">
                                                     <strong>Brand:</strong> <span
-                                                        class="text-dark fw-bold">{{ isset($data['invoice']->brands->name) ? $data['invoice']->brands->name : 'No Brand Attached' }}</span>
+                                                        class="text-dark fw-bold">{{ isset($data['invoice']->brand_name) ? $data['invoice']->brand_name : 'No Brand Attached' }}</span>
                                                 </li>
                                                 <li>
                                                     <strong>Created At:</strong>

@@ -3,33 +3,32 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Transaction;
+use App\Models\NexbyteTransaction;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Support\Facades\Log;
 
-class FetchAuthorizeTransactions extends Command
+class FetchNexByteTransactions extends Command
 {
-    protected $signature = 'fetch:transactions';
+    protected $signature = 'fetch:nexbyte';
     protected $description = 'Fetch new transactions from API and store in database';
 
     public function handle()
     {
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
-        $merchantAuthentication->setName(env('MARKETING_NOTCH_LOG_KEY'));
-        $merchantAuthentication->setTransactionKey(env('MARKETING_NOTCH_LOG_SECRET'));
+        $merchantAuthentication->setName(env('NEXBYTE_LOG_KEY'));
+        $merchantAuthentication->setTransactionKey(env('NEXBYTE_LOG_SECRET'));
 
-        // $firstSettlementDate = new DateTime("2025-02-1T06:00:00Z");
+        // $firstSettlementDate = new DateTime("2025-05-01T00:00:00Z");
         // $lastSettlementDate = new DateTime();
-        // $lastSettlementDate->setDate(2025, 03, 01);
+        // $lastSettlementDate->setDate(2025, 05, 05);
         // $lastSettlementDate->setTime(23, 59, 59);
         // $lastSettlementDate->setTimezone(new DateTimeZone('UTC'));
 
         $firstSettlementDate = new DateTime('first day of this month 00:00:00', new DateTimeZone('UTC'));
         $lastSettlementDate = new DateTime('last day of this month 23:59:59', new DateTimeZone('UTC'));
-
 
         $request = new AnetAPI\GetSettledBatchListRequest();
         $request->setMerchantAuthentication($merchantAuthentication);
@@ -40,11 +39,16 @@ class FetchAuthorizeTransactions extends Command
         $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
 
         if ($response != null && $response->getMessages()->getResultCode() == "Ok") {
-            foreach ($response->getBatchList() as $batch) {
-                $batchId = $batch->getBatchId();
-                $this->getTransactionsForBatch($merchantAuthentication, $batchId);
+            $batchList = $response->getBatchList();
+            if ($batchList && is_array($batchList)) {
+                foreach ($batchList as $batch) {
+                    $batchId = $batch->getBatchId();
+                    $this->getTransactionsForBatch($merchantAuthentication, $batchId);
+                }
+                Log::info('New Transactions stored successfully');
+            } else {
+                Log::warning('No batches found in the response.');
             }
-            Log::info('New Transactions stored successfully');
         } else {
             Log::info('Failed to fetch transactions');
         }
@@ -65,7 +69,7 @@ class FetchAuthorizeTransactions extends Command
                 $transId = $transaction->getTransId();
 
                 // Check if transaction exists and if name is missing
-                $existingTransaction = Transaction::where('transaction_id', $transId)->first();
+                $existingTransaction = NexbyteTransaction::where('transaction_id', $transId)->first();
 
                 if ($existingTransaction) {
                     if (empty($existingTransaction->name)) {
@@ -98,7 +102,7 @@ class FetchAuthorizeTransactions extends Command
                 preg_match('/\d+/', $masked_card, $matches);
                 $lastFour = $matches[0]; // Correct way to get last 4 digits
 
-                Transaction::updateOrCreate(
+                NexbyteTransaction::updateOrCreate(
                     ['transaction_id' => $transId],
                     [
                         'status' => $transaction->getTransactionStatus(),

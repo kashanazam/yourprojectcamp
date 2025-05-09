@@ -231,6 +231,9 @@ return date('d/m/Y h:i:s A', $timestamp);
                                                     <strong>Amount:</strong> ${{ $data['transaction']->amount }}
                                                 </li>
                                                 <li>
+                                                    <strong>Name:</strong> {{ $data['transaction']->name }}
+                                                </li>
+                                                <li>
                                                     <strong>Email:</strong> {{ $data['transaction']->email }}
                                                 </li>
                                                 <li class="pb-2">
